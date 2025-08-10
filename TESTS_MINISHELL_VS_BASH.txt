@@ -1,0 +1,130 @@
+MiniShell tests: command and expected result vs bash
+
+Note: Lines starting with $ are the commands to run inside each shell.
+Run every pair in bash and then in minishell and compare outputs/exit codes.
+
+1) Echo basics
+$ echo hello
+bash: hello
+minishell: hello
+
+$ echo -n a b
+bash: ab
+minishell: ab
+
+$ echo "a b"
+bash: a b
+minishell: a b
+
+$ echo 'a $USER'
+bash: a $USER
+minishell: a $USER
+
+$ echo "$USER"
+bash: <your-username>
+minishell: <your-username>
+
+2) PWD/CD
+$ pwd
+bash: <absolute-path>
+minishell: <absolute-path>
+
+$ cd ..; pwd
+bash: <parent-path>
+minishell: <parent-path>
+
+3) Environment: export/unset/expansion
+$ export FOO=bar; echo $FOO
+bash: bar
+minishell: bar
+
+$ unset FOO; echo $FOO
+bash: 
+minishell: 
+
+$ /bin/sh -c 'exit 7'; echo $?
+bash: 7
+minishell: 7
+
+4) PATH resolution and external commands
+$ ls | wc -l
+bash: <number>
+minishell: <number>
+
+5) Redirections
+$ echo hi > out_test; cat < out_test
+bash: hi
+minishell: hi
+
+$ echo a > out_test; echo b >> out_test; cat out_test
+bash: a
+b
+minishell: a
+b
+
+6) Heredoc (no expansion when quoted delimiter, expansion when unquoted)
+$ cat << EOF
+$USER
+EOF
+bash: <prints your username>
+minishell: <prints your username>
+
+$ cat << 'EOF'
+$USER
+EOF
+bash: $USER
+minishell: $USER
+
+7) Pipelines with builtins
+$ echo hi | wc -c
+bash: 3
+minishell: 3
+
+8) Command not found and exit status
+$ nonexistent_cmd; echo $?
+bash: 127
+minishell: 127
+
+9) Permission denied (non-executable file)
+$ echo 'echo hi' > script.sh; chmod 644 script.sh; ./script.sh; echo $?
+bash: 126
+minishell: 126
+
+10) Quotes concatenation
+$ echo he"ll"o
+bash: hello
+minishell: hello
+
+$ echo "a""b"
+bash: ab
+minishell: ab
+
+11) Ambiguous redirect case (unquoted expansion splits)
+$ export A="x y"; cat > $A
+bash: ambiguous redirect
+minishell: ambiguous redirect
+
+12) Exit builtin
+$ exit 42   (run inside the shell)
+bash: shell exits with status 42
+minishell: shell exits with status 42
+
+13) Ctrl-D at empty prompt
+$ [press Ctrl-D]
+bash: exits (prints "exit")
+minishell: exits (prints "exit")
+
+14) Signals at prompt
+$ [press Ctrl-C at empty prompt]
+bash: new prompt on new line, status 130
+minishell: new prompt on new line, status 130
+
+15) env and pwd builtins
+$ env | grep ^PATH=
+bash: PATH=...
+minishell: PATH=...
+
+$ pwd
+bash: <absolute-path>
+minishell: <absolute-path>
+
