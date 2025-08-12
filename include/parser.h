@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/07/22 17:36:58 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/12 16:18:13 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct s_redir
 {
 	char				*file;
 	int					type;
+	bool				quoted;
 	struct s_redir		*next;
 }	t_redir;
 
@@ -42,4 +43,6 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd);
 t_redir	*create_redir(t_token *cur);
 void	print_redirs(t_redir *redir);
 void	print_cmd_list(t_cmd *cmd_list);
+bool	is_quoted(const char *str);
+
 #endif
