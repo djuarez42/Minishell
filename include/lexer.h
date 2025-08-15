@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/07 16:13:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 12:59:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char			*remove_quotes(char *str);
 bool			are_quotes_closed(const char *input);
 char			*extract_quoted_segment(const char *input, int *len);
 int				skip_spaces(const char *s, int i);
-char			*str_append(char *base, const char *add);
+//char			*str_append(char *base, const char *add);
 char			*handle_quoted_part(const char *input, int *i, char *tmp);
 char			*handle_plain_text(const char *input, int *i, char *tmp);
 void			add_token(char **tokens, int *tok_i, char **tmp);
@@ -64,7 +64,5 @@ char			**reconstruct_words(const char *input);
 int				should_add_token(const char *input, int i, char *tmp);
 void			check_and_add_token(char **tokens, int *tok_i, char **tmp);
 int				process_spaces_and_quotes(const char *input, int i, char **tmp);
-
-
 
 #endif

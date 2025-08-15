@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/11 21:07:10 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 17:17:49 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ static int	wait_pipeline(pid_t *pids, size_t n)
 	return (last_status);
 }
 
-static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp)
+static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *state)
 {
 	int			(*pipes)[2];
 	size_t		n_pipes;
@@ -174,10 +174,24 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp)
 		free(pipes);
 		return (1);
 	}
+	cur = start;
+	while (cur)
+	{
+		if (expand_cmd_inplace(cur, envp, state) == -1)
+		{
+			if (pipes)
+				close_all_pipes(pipes, n_pipes);
+			free(pipes);
+			free(pids);
+			return (1);
+		}
+		cur = cur->next;
+	}
 	i = 0;
 	cur = start;
 	while (i < n_cmds && cur)
 	{
+		printf("DEBUG: cur->argv[0] = '%s'\n", cur->argv[0]);
 		pids[i] = fork();
 		if (pids[i] == -1)
 		{
@@ -199,10 +213,9 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp)
 			wire_child_pipes(i, n_cmds, pipes);
 			if (pipes)
 				close_all_pipes(pipes, n_pipes);
-			// Apply per-command redirections (override pipe ends if necessary)
-			handle_redirections_and_quotes(cur->redirs);
+			handle_redirections_and_quotes(cur->redirs, envp);
 			// Builtins within pipeline run in the child
-if (is_builtin(cur->argv[0]))
+			if (is_builtin(cur->argv[0]))
 				exit(run_builtin_in_child(cur, &envp));
 			// External command
 			execute_command(NULL, cur, envp);
@@ -223,7 +236,7 @@ if (is_builtin(cur->argv[0]))
 }
 
 /* ----------------------------- Entry point ------------------------------ */
-void	executor(t_cmd *cmd_list, char ***penvp)
+void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 {
 	t_cmd	*cur;
 	size_t	n;
@@ -239,8 +252,8 @@ void	executor(t_cmd *cmd_list, char ***penvp)
 		if (n == 1 && cur->argv && cur->argv[0] && is_builtin(cur->argv[0]) && cur->pipe == 0)
 			status = run_builtin_in_parent(cur, &envp);
 		else
-			status = run_pipeline(cur, n, envp);
-		(void)status; // TODO: store in shell state for $?
+			status = run_pipeline(cur, n, envp, state);
+		state->last_status = status; //update
 		// Advance cur by n commands
 		while (n-- > 0 && cur)
 			cur = cur->next;

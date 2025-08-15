@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/08/07 17:49:40 by djuarez          ###   ########.fr        #
+#    Updated: 2025/08/14 19:18:01 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,12 @@ SRC = main.c \
 		src/executor/executor_utils.c \
 		src/executor/env_utils.c \
 		src/executor/redir_utils.c \
-		src/builtins/builtins.c
+		src/executor/redir_utils2.c \
+		src/executor/expand_variables_utils.c \
+		src/executor/expand_variables_utils2.c \
+		src/executor/expand_variables.c \
+		src/builtins/builtins.c 
+		
 
 OBJ = $(SRC:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 19:53:41 by djuarez           #+#    #+#             */
-/*   Updated: 2025/07/21 21:20:32 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/13 17:21:18 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	is_name_char(int c, int start)
 
 int	env_identifier_valid(const char *name)
 {
-	int i;
+	int	i;
 
 	if (!name || !*name)
 		return (0);
@@ -58,7 +58,7 @@ int	env_find_index(char **envp, const char *name)
 
 char	*env_get_value(char **envp, const char *name)
 {
-	int idx;
+	int	idx;
 
 	idx = env_find_index(envp, name);
 	if (idx < 0)

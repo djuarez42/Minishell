@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/11 21:07:01 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/14 18:02:20 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	free_split(char **split)
 	free(split);
 }
 
-void	handle_redirections_and_quotes(t_redir *redirs)
+void	handle_redirections_and_quotes(t_redir *redirs, char **envp)
 {
 	t_redir	*redir;
 
@@ -33,7 +33,7 @@ void	handle_redirections_and_quotes(t_redir *redirs)
 		redir->file = remove_quotes(redir->file);
 		redir = redir->next;
 	}
-	handle_redirections(redirs);
+	handle_redirections(redirs, envp);
 }
 
 void	execute_command(char *exec_path, t_cmd *cmd, char **envp)
@@ -47,4 +47,19 @@ void	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 		exit(127);
 	}
 	execute_execve(exec_path, cmd->argv, envp);
+}
+
+char	*str_append(char *dest, const char *src)
+{
+	char	*new_str;
+
+	if (!src)
+		return (dest);
+	if (!dest)
+		return (ft_strdup(src));
+	new_str = ft_strjoin(dest, src);
+	if (!new_str)
+		return (NULL);
+	free (dest);
+	return (new_str);
 }

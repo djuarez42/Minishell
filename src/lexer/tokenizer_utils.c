@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:40:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/06 20:24:56 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 12:58:52 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	skip_spaces(const char *s, int i)
 	return (i);
 }
 
-char	*str_append(char *base, const char *add)
+/*char	*str_append(char *base, const char *add)
 {
 	char	*new;
 	size_t	len;
@@ -62,3 +62,4 @@ char	*str_append(char *base, const char *add)
 	free(base);
 	return (new);
 }
+*/

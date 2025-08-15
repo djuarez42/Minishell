@@ -1,0 +1,74 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_variables_utils.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/12 19:18:28 by djuarez           #+#    #+#             */
+/*   Updated: 2025/08/15 13:35:15 by djuarez          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+int	is_var_start(int c)
+{
+	if (ft_isalpha(c) || c == '_')
+		return (1);
+	return (0);
+}
+
+int	is_var_char(int c)
+{
+	if (ft_isalnum(c) || c == '_')
+		return (1);
+	return (0);
+}
+
+int	skip_variable_name(const char *s)
+{
+	int	i;
+
+	if (!s || !*s || !is_var_start((unsigned char)s[0]))
+	{
+		printf("DEBUG: skip_variable_name -> invalid start: '%c'\n", *s);
+		return (0);
+	}
+	i = 1;
+	while (s[i] && is_var_char((unsigned char)s[i]))
+		i++;
+	printf("DEBUG: skip_variable_name -> '%.*s', len=%d\n", i, s, i);
+	return (i);
+}
+
+char	*expand_exit_status(t_exec_state *state)
+{
+	int		code;
+	char	*num;
+
+	code = 0;
+	if (state)
+		code = state->last_status;
+	num = ft_itoa(code);
+	return (num);
+}
+
+char	*expand_env_var(const char *name, char **envp)
+{
+	char	*val;
+
+	if (!name || !*name)
+	{
+		printf("DEBUG: expand_env_var -> empty name\n");
+		return (ft_strdup(""));
+	}
+	val = env_get_value(envp, name);
+	if (val)
+	{
+		printf("DEBUG: expand_env_var -> found value: '%s'\n", val);
+		return (ft_strdup(val));
+	}
+	printf("DEBUG: expand_env_var -> not found, returning empty string\n");
+	return (ft_strdup(""));
+}
