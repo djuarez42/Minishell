@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 16:36:06 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 18:42:09 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,16 @@ char	*handle_special_dollar(const char *input, int *i, t_exec_state *state)
 	int	start;
 
 	start = *i + 1;
-	printf("DEBUG: handle_special_dollar called at index %d, char='%c'\n", *i, input[start]); // <- al inicio
 	if (!input[start])
 	{
 		*i = *i + 1;
-		printf("DEBUG: special dollar at end of string, returning '$'\n"); // <- antes de return
 		return (ft_strdup("$"));
 	}
 	if (input[start] == '?')
 	{
 		*i = start + 1;
-		printf("DEBUG: special dollar for $? , returning exit status\n"); // <- antes de return
 		return (expand_exit_status(state));
 	}
-	printf("DEBUG: not a special dollar, returning NULL\n"); // <- antes de return NULL
 	return (NULL);
 }
 
@@ -44,19 +40,14 @@ char	*handle_dollar(const char *input, int *i, char **envp,
 
 	if (!input || !i)
 		return (NULL);
-	printf("DEBUG: handle_dollar called at index %d, char='%c'\n", *i, input[*i + 1]); // <- al inicio
 	res = handle_special_dollar(input, i, state);
 	if (res)
-	{
-		printf("DEBUG: handle_special_dollar returned a value: '%s'\n", res); // <- si retorna algo
 		return (res);
-	}
 	start = *i + 1;
 	len = skip_variable_name(input + start);
 	if (len == 0)
 	{
 		*i = *i + 1;
-		printf("DEBUG: no variable name after $, returning '$'\n"); // <- antes de return
 		return (ft_strdup("$"));
 	}
 	name = ft_substr(input, start, len);
@@ -64,7 +55,6 @@ char	*handle_dollar(const char *input, int *i, char **envp,
 		return (NULL);
 	res = expand_env_var(name, envp);
 	free(name);
-	printf("DEBUG: expanded variable '%s' -> '%s'\n", name, res); // <- antes de return
 	*i = start + len;
 	return (res);
 }

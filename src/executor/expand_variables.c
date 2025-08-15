@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 16:40:04 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 18:43:06 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 		if (input[i] == '$')
 		{
 			piece = handle_dollar(input, &i, envp, state);
-			printf("DEBUG handle_dollar: input='%s', i=%d, piece='%s'\n", input, i, piece);
 			if (!piece)
 			{
 				free(tmp);

@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 18:46:30 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 13:51:21 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 18:44:53 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ t_token	*build_token_list(char **tokens)
 	i = 0;
 	while (tokens[i])
 	{
-		printf("DEBUG: building token='%s'\n", tokens[i]);  // <- aquí
 		new = malloc(sizeof(t_token));
 		if (!new)
 			return (NULL);

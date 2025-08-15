@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 17:17:49 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 18:42:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,6 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 	cur = start;
 	while (i < n_cmds && cur)
 	{
-		printf("DEBUG: cur->argv[0] = '%s'\n", cur->argv[0]);
 		pids[i] = fork();
 		if (pids[i] == -1)
 		{

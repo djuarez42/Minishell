@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 16:09:54 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 13:43:56 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 18:44:31 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ char	*handle_plain_text(const char *input, int *i, char *tmp)
 void	add_token(char **tokens, int *tok_i, char **tmp)
 {
 	tokens[*tok_i] = *tmp;
-	printf("DEBUG: token added='%s'\n", *tmp);  // <- aquí
 	(*tok_i)++;
 	*tmp = NULL;
 }
@@ -75,7 +74,6 @@ char	**reconstruct_words(const char *input)
 			break ;
 		if (should_add_token(input, i, tmp))
 			check_and_add_token(tokens, &tok_i, &tmp);
-		printf("DEBUG: i=%d, tmp='%s'\n", i, tmp);  // <- aquí
 		if (last_i == i)
 			i++;
 	}
