@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 20:06:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 20:29:21 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	execute_execve(char *exec_path, char **argv, char **envp);
 char	*find_executable(char *cmd);
 
 // expand variables
-//char	*str_append(char *dest, const char *src);
+
 int		is_var_start(int c);
 int		is_var_char(int c);
 int		skip_variable_name(const char *s);
