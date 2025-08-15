@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:40:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 18:45:16 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 20:05:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,26 @@ int	skip_spaces(const char *s, int i)
 		i++;
 	}
 	return (i);
+}
+
+char	*str_append(char *base, const char *add)
+{
+	char	*new;
+	size_t	len;
+
+	len = 0;
+	if (base)
+		len += ft_strlen(base);
+	if (add)
+		len += ft_strlen(add);
+	new = malloc(len + 1);
+	if (!new)
+		return (NULL);
+	new[0] = '\0';
+	if (base)
+		ft_strlcat(new, base, len + 1);
+	if (add)
+		ft_strlcat(new, add, len + 1);
+	free(base);
+	return (new);
 }

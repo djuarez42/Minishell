@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 18:45:33 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 20:02:22 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,5 @@ char			**reconstruct_words(const char *input);
 int				should_add_token(const char *input, int i, char *tmp);
 void			check_and_add_token(char **tokens, int *tok_i, char **tmp);
 int				process_spaces_and_quotes(const char *input, int i, char **tmp);
-
+char			*str_append(char *base, const char *add);
 #endif
