@@ -4,7 +4,7 @@ This document defines a concrete plan to address the current test failures and s
 
 **IMPORTANT**: This plan focuses on **mandatory functionality only**. Tests using bonus features (&&, ||, semicolon command separation) have been modified to use separate lines instead.
 
-Last updated: 2025-08-16
+Last updated: 2025-08-17
 
 ## How to run tests
 - Build and run all builtin tests: `make test-builtin`
@@ -14,24 +14,24 @@ Last updated: 2025-08-16
   - `bash ./tests/contributor_a_tests.sh` 
   - `bash ./tests/contributor_b_tests.sh`
 
-## Current test status (updated 2025-08-16)
+## Current test status (updated 2025-08-17)
 
-### Contributor A Tests (Builtins): PASS=0 FAIL=3
-Failing tests:
-- export_unset: Variable ordering differs (A=1,B=two vs B=two,A=1)
-- export_name_only: Shows ZED= in env when bash shows nothing
-- unset_invalid: Prints error when bash is silent
+### Contributor A Tests (Builtins): PASS=3 FAIL=0
+Passing tests:
+- export_unset: Variable ordering now matches bash (B then A)
+- export_name_only: No `ZED=` line appears after name-only export
+- unset_invalid: No stderr output; exit matches bash
 
-### Contributor B Tests (Parser/Executor): PASS=2 FAIL=3
+### Contributor B Tests (Parser/Executor): PASS=5 FAIL=0
 Tests status:
 - ✅ env_print: PASSES (comment handling already works)
 - ✅ cd_and_pwd: PASSES (PWD/OLDPWD updates work correctly with separate commands)
-- ❌ missing_cmd: Wrong error format (expected "bash: line 1: <cmd>: command not found")
-- ❌ echo_n: Second command on following line not executed (printf not run)
-- ❌ cd_missing: Prints "minishell: cd: missing operand" when bash is silent or goes to HOME
+- ✅ missing_cmd: Fixed exact stderr format
+- ✅ echo_n: Multi-line non-interactive execution fixed; prints `no-newline<END>`
+- ✅ cd_missing: No-arg cd behavior matches bash
 
 ### Overall Status:
-**Total Remaining Issues: 6** (3 for Contributor A + 3 for Contributor B)
+**Total Remaining Issues: 0**
 
 Note: The aggregate `tests/builtins_tests.sh` still includes bonus constructs like `;` and `&&`, which cause additional failures (e.g., echo_n, cd_and_pwd) in that suite. Use the contributor-specific suites to track mandatory behavior.
 
