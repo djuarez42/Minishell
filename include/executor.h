@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 20:29:21 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/18 19:57:38 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ char	*handle_special_dollar(const char *input, int *i, t_exec_state *state);
 char	*extract_plain_text(const char *input, int *i, char *tmp);
 char	*handle_dollar(const char *input, int *i, char **envp,
 			t_exec_state *state);
-int		expand_argv(char **argv, char **envp, t_exec_state *state);
+int		expand_argv(char **argv, t_quote_type *argv_quote,
+			char **envp, t_exec_state *state);
 int		expand_redirs(t_redir *redir, char **envp, t_exec_state *state);
 int		expand_cmd_inplace(t_cmd *cur, char **envp, t_exec_state *state);
 char	*expand_variables(const char *input, char **envp, t_exec_state *state);

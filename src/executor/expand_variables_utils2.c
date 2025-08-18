@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 18:42:09 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/18 17:16:18 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 	return (tmp);
 }
 
-int	expand_argv(char **argv, char **envp, t_exec_state *state)
+int	expand_argv(char **argv, t_quote_type *argv_quote,
+		char **envp, t_exec_state *state)
 {
 	size_t	j;
 	char	*expanded;
@@ -89,6 +90,11 @@ int	expand_argv(char **argv, char **envp, t_exec_state *state)
 	j = 0;
 	while (argv && argv[j])
 	{
+		if (argv_quote && argv_quote[j] == QUOTE_SINGLE)
+		{
+			j++;
+			continue ;
+		}
 		expanded = expand_variables(argv[j], envp, state);
 		if (!expanded)
 			return (-1);

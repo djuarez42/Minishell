@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 12:45:50 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/18 20:02:10 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	handle_redirections_append(const char *filename)
 }
 
 void	handle_redirections_heredoc(const char *delimiter, bool quoted,
-		char **envp, t_heredoc_args *args)
+			char **envp, t_heredoc_args *args)
 {
 	int	fd;
 
