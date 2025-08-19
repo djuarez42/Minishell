@@ -31,9 +31,14 @@ Tests status:
 - ✅ cd_missing: No-arg cd behavior matches bash
 
 ### Overall Status:
-**Total Remaining Issues: 0**
+**Total Remaining Issues: 0** (for mandatory functionality)
 
-Note: The aggregate `tests/builtins_tests.sh` still includes bonus constructs like `;` and `&&`, which cause additional failures (e.g., echo_n, cd_and_pwd) in that suite. Use the contributor-specific suites to track mandatory behavior.
+### Main Builtin Test Suite Issues:
+The aggregate `tests/builtins_tests.sh` shows 2 failures due to **bonus features**:
+- ❌ echo_n: Uses `;` separator (`echo -n "no-newline"; printf "<END>\n"`) - not implemented
+- ❌ cd_and_pwd: Uses `&&` operator (`mkdir -p sub && cd sub && pwd`) - not implemented
+
+**Note**: These failures are expected as `;` and `&&` are bonus features. Use contributor-specific test suites to track mandatory behavior compliance.
 
 ---
 
