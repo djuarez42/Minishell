@@ -90,7 +90,12 @@ PY
   # Cleanup temps
   rm -f "$b_out" "$b_err" "$m_out" "$m_err" "$m_out_f" "$m_err_f"
   popd >/dev/null
-  return $ok
+  # return 0 on success, 1 on failure
+  local rc=1
+  if [[ $ok -eq 1 ]]; then
+    rc=0
+  fi
+  return $rc
 }
 
 # Helper to build a here-document for the case
