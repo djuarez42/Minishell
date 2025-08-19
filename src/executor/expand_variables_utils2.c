@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/18 17:16:18 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/19 17:10:04 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ char	*handle_special_dollar(const char *input, int *i, t_exec_state *state)
 	{
 		*i = start + 1;
 		return (expand_exit_status(state));
+	}
+	if (input[start] == '$')
+	{
+		*i =  start + 1;
+		return (ft_strdup("$"));
 	}
 	return (NULL);
 }
