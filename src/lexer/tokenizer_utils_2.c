@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 18:46:30 by djuarez           #+#    #+#             */
-/*   Updated: 2025/07/26 17:48:57 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/17 18:00:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_token_type	determine_token_type(char *str)
 		return (TOKEN_WORD);
 }
 
-t_token	*build_token_list(char **tokens)
+t_token	*build_token_list(char **tokens, t_quote_type *quotes)
 {
 	t_token	*head;
 	t_token	*cur;
@@ -45,6 +45,7 @@ t_token	*build_token_list(char **tokens)
 			return (NULL);
 		new->value = ft_strdup(tokens[i]);
 		new->type = determine_token_type(tokens[i]);
+		new->quote_type = quotes[i];
 		new->next = NULL;
 		if (!head)
 			head = new;
@@ -60,8 +61,10 @@ void	print_token_list(t_token *token)
 {
 	while (token)
 	{
-		printf("Type: %-15s Value: \"%s\"\n",
-			token_type_str(token->type), token->value);
+		printf("Type: %-15s Quote: %-7s Value: \"%s\"\n",
+			token_type_str(token->type),
+			quote_type_str(token->quote_type),
+			token->value);
 		token = token->next;
 	}
 }
@@ -88,6 +91,7 @@ t_token	*append_token_eof(t_token *head, t_token *cur)
 		return (NULL);
 	new->value = NULL;
 	new->type = TOKEN_EOF;
+	new->quote_type = QUOTE_NONE;
 	new->next = NULL;
 	if (!head)
 		return (new);

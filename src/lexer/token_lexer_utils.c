@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 20:06:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/07 16:11:57 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/17 12:17:59 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,14 @@ void	check_and_add_token(char **tokens, int *tok_i, char **tmp)
 	add_token(tokens, tok_i, tmp);
 }
 
-int	process_spaces_and_quotes(const char *input, int i, char **tmp)
+int	process_spaces_and_quotes(const char *input, int i, char **tmp,
+		t_quote_type *last_quote)
 {
 	i = skip_spaces(input, i);
 	if (!input[i])
 		return (-1);
 	if (is_quote(input[i]))
-		*tmp = handle_quoted_part(input, &i, *tmp);
+		*tmp = handle_quoted_part(input, &i, *tmp, last_quote);
 	else if (!ft_isspace(input[i]) && input[i] != '\0')
 		*tmp = handle_plain_text(input, &i, *tmp);
 	return (i);

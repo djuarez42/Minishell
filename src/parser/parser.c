@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/06/10 15:30:12 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/19 16:35:30 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_cmd	*create_cmd_node(t_token **cur)
 	if (!cmd)
 		return (NULL);
 	cmd->argv = NULL;
+	cmd->argv_quote = NULL;
 	cmd->redirs = NULL;
 	cmd->pipe = 0;
 	cmd->next = NULL;

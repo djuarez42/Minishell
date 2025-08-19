@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/07/24 17:24:50 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/18 17:04:26 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,15 @@ t_redir	*create_redir(t_token *cur)
 	if (!redir)
 		return (NULL);
 	redir->type = cur->type;
-	redir->file = ft_strdup(cur->next->value);
+	redir->quoted = (cur->next->quote_type != QUOTE_NONE);
+	redir->file = remove_quotes(cur->next->value);
 	if (!redir->file)
-	{
-		free(redir);
-		return (NULL);
-	}
+		return (free(redir), NULL);
 	redir->next = NULL;
 	return (redir);
 }
 
-int	add_argument(t_cmd *cmd, char *value, int *argc)
+int	add_argument(t_cmd *cmd, char *value, t_quote_type quote, int *argc)
 {
 	cmd->argv[*argc] = ft_strdup(value);
 	if (!cmd->argv[*argc])
@@ -41,6 +39,7 @@ int	add_argument(t_cmd *cmd, char *value, int *argc)
 		cmd->argv = NULL;
 		return (0);
 	}
+	cmd->argv_quote[*argc] = quote;
 	(*argc)++;
 	return (1);
 }
@@ -80,4 +79,18 @@ void	print_cmd_list(t_cmd *cmd_list)
 		printf("\n");
 		cmd_list = cmd_list->next;
 	}
+}
+
+bool	is_quoted(const char *str)
+{
+	int	len;
+
+	len = ft_strlen(str);
+	if (len >= 2)
+	{
+		if ((str[0] == '"' && str[len - 1] == '"')
+			|| (str[0] == '\'' && str[len - 1] == '\''))
+			return (true);
+	}
+	return (false);
 }

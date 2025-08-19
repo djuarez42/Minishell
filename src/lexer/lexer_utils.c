@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 11:03:33 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/06 20:24:30 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/17 17:24:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,15 @@ void	free_tokens(char **tokens, int max)
 		}
 	}
 	free(tokens);
+}
+
+const char	*quote_type_str(t_quote_type q)
+{
+	if (q == QUOTE_NONE)
+		return ("NONE");
+	else if (q == QUOTE_SINGLE)
+		return ("SINGLE");
+	else if (q == QUOTE_DOUBLE)
+		return ("DOUBLE");
+	return ("UNKNOWN");
 }

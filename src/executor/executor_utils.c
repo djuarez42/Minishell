@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/07/27 13:03:19 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 20:29:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	free_split(char **split)
 	free(split);
 }
 
-void	handle_redirections_and_quotes(t_redir *redirs)
+void	handle_redirections_and_quotes(t_redir *redirs, char **envp)
 {
 	t_redir	*redir;
 
@@ -33,7 +33,7 @@ void	handle_redirections_and_quotes(t_redir *redirs)
 		redir->file = remove_quotes(redir->file);
 		redir = redir->next;
 	}
-	handle_redirections(redirs);
+	handle_redirections(redirs, envp);
 }
 
 void	execute_command(char *exec_path, t_cmd *cmd, char **envp)
@@ -41,10 +41,11 @@ void	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 	exec_path = find_executable(cmd->argv[0]);
 	if (!exec_path)
 	{
-		ft_putstr_fd("command not found: ", 2);
+		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->argv[0], 2);
-		ft_putchar_fd('\n', 2);
+		ft_putstr_fd(": command not found\n", 2);
 		exit(127);
 	}
 	execute_execve(exec_path, cmd->argv, envp);
 }
+
