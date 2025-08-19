@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 18:43:06 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/18 17:13:21 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 
 int	expand_cmd_inplace(t_cmd *cur, char **envp, t_exec_state *state)
 {
-	if (expand_argv(cur->argv, envp, state) == -1)
+	if (expand_argv(cur->argv, cur->argv_quote, envp, state) == -1)
 		return (-1);
 	if (expand_redirs(cur->redirs, envp, state) == -1)
 		return (-1);

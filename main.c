@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 18:47:30 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/19 18:10:34 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,11 @@ int	main(int argc, char **argv, char **envp)
 				exit (1);
 			cur = cur->next;
 		}
+
 		if (cmds)
 			executor(cmds, &envp_copy, &state);
-		//print_token_list(tokens);
 		free_token_list(tokens);
 		free_cmds(cmds);
-		free(input);
 	}
 	free_envp(envp_copy);
 	return (0);

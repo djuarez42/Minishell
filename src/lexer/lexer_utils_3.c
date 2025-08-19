@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 16:45:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/06 21:18:08 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/19 17:50:36 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,18 @@ const char	*token_type_str(t_token_type type)
 
 char	*remove_quotes(char *str)
 {
-	int	len;
+	int		len;
+	char	*result;
 
 	len = ft_strlen(str);
-	if (len > 1 && str[0] == '"' && str[len - 1] == '"')
-	{
-		str[len - 1] = '\0';
-		return (str + 1);
-	}
-	return (str);
+	if (len > 1 && ((str[0] == '"' && str[len - 1] == '"')
+			|| (str[0] == '\'' && str[len - 1] == '\'')))
+		result = ft_substr(str, 1, len - 2);
+	else
+		result = ft_strdup(str);
+	return (result);
 }
+
 
 bool	are_quotes_closed(const char *input)
 {

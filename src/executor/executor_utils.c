@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/14 18:02:20 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/15 20:29:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,3 @@ void	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 	execute_execve(exec_path, cmd->argv, envp);
 }
 
-char	*str_append(char *dest, const char *src)
-{
-	char	*new_str;
-
-	if (!src)
-		return (dest);
-	if (!dest)
-		return (ft_strdup(src));
-	new_str = ft_strjoin(dest, src);
-	if (!new_str)
-		return (NULL);
-	free (dest);
-	return (new_str);
-}

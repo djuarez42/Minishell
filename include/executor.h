@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 16:40:25 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/18 21:05:40 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	execute_execve(char *exec_path, char **argv, char **envp);
 char	*find_executable(char *cmd);
 
 // expand variables
-char	*str_append(char *dest, const char *src);
+
 int		is_var_start(int c);
 int		is_var_char(int c);
 int		skip_variable_name(const char *s);
@@ -73,7 +73,8 @@ char	*handle_special_dollar(const char *input, int *i, t_exec_state *state);
 char	*extract_plain_text(const char *input, int *i, char *tmp);
 char	*handle_dollar(const char *input, int *i, char **envp,
 			t_exec_state *state);
-int		expand_argv(char **argv, char **envp, t_exec_state *state);
+int		expand_argv(char **argv, t_quote_type *argv_quote,
+			char **envp, t_exec_state *state);
 int		expand_redirs(t_redir *redir, char **envp, t_exec_state *state);
 int		expand_cmd_inplace(t_cmd *cur, char **envp, t_exec_state *state);
 char	*expand_variables(const char *input, char **envp, t_exec_state *state);

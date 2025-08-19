@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/07/24 17:23:52 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/19 17:55:47 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,11 @@ void	free_cmds(t_cmd *cmd)
 		{
 			i = 0;
 			while (cmd->argv[i])
-			{
-				free(cmd->argv[i]);
-				i++;
-			}
+				free(cmd->argv[i++]);
 			free(cmd->argv);
 		}
+		/*if (cmd->argv_quote)
+			free(cmd->argv_quote);*/
 		free_redirs(cmd->redirs);
 		free(cmd);
 		cmd = tmp;
@@ -38,20 +37,26 @@ void	free_cmds(t_cmd *cmd)
 
 t_token	*parse_arguments(t_token *cur, t_cmd *cmd)
 {
-	int	argc;
+	int		argc;
+	char	*clean;
 
 	argc = 0;
 	cmd->argv = malloc (sizeof(char *) * MAX_ARGS);
-	if (!cmd->argv)
-		return (NULL);
+	cmd->argv_quote = malloc(sizeof(t_quote_type) * MAX_ARGS);
+	if (!cmd->argv || !cmd->argv_quote)
+		return (free(cmd->argv), free(cmd->argv_quote), NULL);
 	while (cur && cur->type != TOKEN_PIPE && cur->type != TOKEN_EOF)
 	{
 		if (cur->type == TOKEN_WORD)
 		{
 			if (argc >= MAX_ARGS - 1)
 				break ;
-			if (!add_argument(cmd, cur->value, &argc))
+			clean = remove_quotes(cur->value);
+			if (!clean)
 				return (NULL);
+			if (!add_argument(cmd, clean, cur->quote_type, &argc))
+				return (free(clean), NULL);
+			free(clean);
 		}
 		else if (cur->type == TOKEN_REDIRECT_OUT
 			|| cur->type == TOKEN_REDIRECT_IN
@@ -61,6 +66,7 @@ t_token	*parse_arguments(t_token *cur, t_cmd *cmd)
 		cur = cur->next;
 	}
 	cmd->argv[argc] = NULL;
+	cmd->argv_quote[argc] = QUOTE_NONE;
 	return (cur);
 }
 
