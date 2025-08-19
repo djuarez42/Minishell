@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:21:10 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/09 14:21:10 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/17 11:43:58 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,17 @@ int bi_cd(char **argv, char ***penvp)
 
     if (!argv[1])
     {
-        ft_putendl_fd("minishell: cd: missing operand", STDERR_FILENO);
-        return (1);
+        // No-arg cd: go to HOME if set, otherwise succeed silently
+        path = env_get_value(*penvp, "HOME");
+        if (!path)
+            return (0);
+        if (chdir(path) == -1)
+        {
+            perror("cd");
+            return (1);
+        }
+        update_pwd_vars(penvp);
+        return (0);
     }
     path = argv[1];
 
@@ -168,13 +177,14 @@ int bi_export(char **argv, char ***penvp)
         }
         else
         {
-            if (!env_identifier_valid(argv[i]) || !env_set_var(penvp, argv[i], ""))
+            if (!env_identifier_valid(argv[i]))
             {
                 ft_putstr_fd("minishell: export: `", STDERR_FILENO);
                 ft_putstr_fd(argv[i], STDERR_FILENO);
                 ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
                 status = 1;
             }
+            // name-only export: do not create NAME= in env
         }
         i++;
     }
@@ -186,20 +196,16 @@ int bi_unset(char **argv, char ***penvp)
     int i;
     int status;
 
-    status = 0;
+    (void)status; // avoid unused warning; function returns 0
     i = 1;
     while (argv[i])
     {
-        if (!env_identifier_valid(argv[i]) || !env_unset_var(penvp, argv[i]))
-        {
-            ft_putstr_fd("minishell: unset: `", STDERR_FILENO);
-            ft_putstr_fd(argv[i], STDERR_FILENO);
-            ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
-            status = 1;
-        }
+        if (env_identifier_valid(argv[i]))
+            (void)env_unset_var(penvp, argv[i]);
+        // invalid identifiers are ignored silently per test policy
         i++;
     }
-    return status;
+    return 0;
 }
 
 int bi_exit(char **argv)

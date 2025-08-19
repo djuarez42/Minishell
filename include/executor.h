@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2025/08/18 21:05:40 by djuarez          ###   ########.fr       */
+=======
+/*   Updated: 2025/08/17 12:23:47 by ekakhmad         ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +64,7 @@ void	handle_redirections_and_quotes(t_redir *redirs, char **envp);
 // Exec helpers
 void	execute_command(char *exec_path, t_cmd *cmd, char **envp);
 void	execute_execve(char *exec_path, char **argv, char **envp);
-char	*find_executable(char *cmd);
+char	*find_executable(char *cmd, char **envp);
 
 // expand variables
 

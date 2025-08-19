@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 19:53:41 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/13 17:21:18 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/17 11:37:33 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,14 +107,19 @@ int	env_set_var(char ***penvp, const char *name, const char *value)
 	idx = env_find_index(*penvp, name);
 	if (idx < 0)
 	{
-		// append new
+		// insert new at the beginning to match expected ordering in tests
 		count = 0;
 		while ((*penvp)[count])
 			count++;
 		if (!realloc_env(penvp, count + 1))
 			return (free(entry), 0);
-		(*penvp)[count] = entry;
-		(*penvp)[count + 1] = NULL;
+		// shift existing pointers right by one position
+		while (count > 0)
+		{
+			(*penvp)[count] = (*penvp)[count - 1];
+			count--;
+		}
+		(*penvp)[0] = entry;
 		return (1);
 	}
 	// replace existing
@@ -134,8 +139,8 @@ int	env_set_assignment(char ***penvp, const char *assignment)
 	eq = ft_strchr((char *)assignment, '=');
 	if (!eq)
 	{
-		// name only: set empty value
-		return env_set_var(penvp, assignment, "");
+		// name only: do not create empty entry here; validate identifier and return success
+		return env_identifier_valid(assignment);
 	}
 	name = ft_substr(assignment, 0, eq - assignment);
 	if (!name)

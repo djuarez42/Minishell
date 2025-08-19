@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
+#    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/08/14 19:18:01 by djuarez          ###   ########.fr        #
+#    Updated: 2025/08/17 12:38:40 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ ifeq ($(UNAME_S),Darwin)
 	READLINE_INC  =
 else
 	# Linux/Ubuntu: readline commonly requires ncurses (or tinfo)
-	READLINE_LIBS = -lreadline -lncurses
+	READLINE_LIBS = -lreadline -lncurses -ltinfo
 	READLINE_INC  =
 endif
 

@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils_4.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 16:09:54 by djuarez           #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2025/08/17 20:20:25 by djuarez          ###   ########.fr       */
+=======
+/*   Updated: 2025/08/17 12:09:11 by ekakhmad         ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +22,7 @@ char	*handle_quoted_part(const char *input, int *i, char *tmp,
 {
 	int		len;
 	char	*segment;
+    char    quote;
 
 	if (input[*i] == '\'')
 		*last_quote = QUOTE_SINGLE;
@@ -30,6 +35,9 @@ char	*handle_quoted_part(const char *input, int *i, char *tmp,
 		*i += 1;
 		return (tmp);
 	}
+	// Preserve double quotes content; treat single quotes similarly (no escape handling for now)
+	quote = input[*i];
+	(void)quote;
 	tmp = str_append(tmp, segment);
 	free (segment);
 	*i += len;

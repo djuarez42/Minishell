@@ -3,15 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2025/08/19 18:10:34 by djuarez          ###   ########.fr       */
+=======
+/*   Updated: 2025/08/17 11:46:38 by ekakhmad         ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "executor.h"
+
+static char	*read_stdin_line(void)
+{
+	char	buffer[1];
+	char	*line;
+	ssize_t	read_bytes;
+	char	tmp[2];
+
+	line = NULL;
+	while (1)
+	{
+		read_bytes = read(STDIN_FILENO, buffer, 1);
+		if (read_bytes <= 0)
+			break ;
+		if (buffer[0] == '\n')
+			break ;
+		tmp[0] = buffer[0];
+		tmp[1] = '\0';
+		line = ft_strjoin_free(line, tmp);
+		if (!line)
+			return (NULL);
+	}
+	if (!line && read_bytes <= 0)
+		return (NULL);
+	if (!line)
+		return (ft_strdup(""));
+	return (line);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -30,7 +62,10 @@ int	main(int argc, char **argv, char **envp)
 	state = (t_exec_state){0};
 	while (1)
 	{
-		input = readline("minishell$ ");
+		if (isatty(STDIN_FILENO))
+			input = readline("minishell$ ");
+		else
+			input = read_stdin_line();
 		if (!input)
 			break ;
 		if (*input)

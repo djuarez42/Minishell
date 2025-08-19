@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/15 18:42:43 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/17 12:23:47 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "builtins.h"
 
 /* ---------------- PATH search and exec helpers (existing) ---------------- */
-char	*find_executable(char *cmd)
+char	*find_executable(char *cmd, char **envp)
 {
 	char	*path_env;
 	char	**paths;
@@ -26,7 +26,7 @@ char	*find_executable(char *cmd)
 
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
-	path_env = getenv("PATH");
+	path_env = env_get_value(envp, "PATH");
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');
