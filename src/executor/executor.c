@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/20 17:34:05 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/20 22:04:47 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,10 +251,33 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 		// Single non-piped builtin: run in parent
 		if (n == 1 && cur->argv && cur->argv[0] && is_builtin(cur->argv[0]) && cur->pipe == 0)
 		{
+			int save_in;
+			int save_out;
+			int save_err;
+
+			save_in = dup(STDIN_FILENO);
+			save_out = dup(STDOUT_FILENO);
+			save_err = dup(STDERR_FILENO);
 			if (handle_redirections_and_quotes(cur->redirs, envp) == 130)
+			{
 				status = 130;
+			}
 			else
+			{
 				status = run_builtin_in_parent(cur, &envp);
+			}
+			if (save_in != -1)
+				dup2(save_in, STDIN_FILENO);
+			if (save_out != -1)
+				dup2(save_out, STDOUT_FILENO);
+			if (save_err != -1)
+				dup2(save_err, STDERR_FILENO);
+			if (save_in != -1)
+				close(save_in);
+			if (save_out != -1)
+				close(save_out);
+			if (save_err != -1)
+				close(save_err);
 		}
 		else
 			status = run_pipeline(cur, n, envp, state);
