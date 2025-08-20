@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/19 20:59:42 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/17 12:38:39 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "executor.h"
+#include "signals.h"
 
 static char	*read_stdin_line(void)
 {
@@ -56,6 +57,8 @@ int	main(int argc, char **argv, char **envp)
 	if (!envp_copy)
 		return (1);
 	state = (t_exec_state){0};
+	if (isatty(STDIN_FILENO))
+		signals_setup_interactive(&state);
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
@@ -63,7 +66,11 @@ int	main(int argc, char **argv, char **envp)
 		else
 			input = read_stdin_line();
 		if (!input)
+		{
+			if (isatty(STDIN_FILENO))
+				ft_putendl_fd("exit", STDOUT_FILENO);
 			break ;
+		}
 		if (*input)
 			add_history(input);
 		tokens = tokenize_input(input);
@@ -81,12 +88,15 @@ int	main(int argc, char **argv, char **envp)
 				exit (1);
 			cur = cur->next;
 		}
-
 		if (cmds)
 			executor(cmds, &envp_copy, &state);
+		//print_token_list(tokens);
 		free_token_list(tokens);
 		free_cmds(cmds);
+		free(input);
 	}
+	if (isatty(STDIN_FILENO))
+		signals_teardown_interactive();
 	free_envp(envp_copy);
 	return (0);
 }

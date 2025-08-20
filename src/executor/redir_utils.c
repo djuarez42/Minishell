@@ -66,23 +66,28 @@ void	handle_redirections_append(const char *filename)
 	}
 }
 
-void	handle_redirections_heredoc(const char *delimiter, bool quoted,
+int	handle_redirections_heredoc(const char *delimiter, bool quoted,
 			char **envp, t_heredoc_args *args)
 {
 	int	fd;
+	int	res;
 
 	fd = open_heredoc_file();
 	args->fd = fd;
 	args->delimiter = delimiter;
 	args->quoted = quoted;
 	args->envp = envp;
-	write_heredoc_lines(args);
+	res = write_heredoc_lines(args);
 	close(fd);
+	if (res == 130)
+		return (130);
 	redirect_stdin_heredoc();
+	return (0);
 }
 
-void	handle_redirections(t_redir *redir, char **envp)
+int	handle_redirections(t_redir *redir, char **envp)
 {
+	int			res;
 	t_heredoc_args	args;
 
 	while (redir)
@@ -94,8 +99,13 @@ void	handle_redirections(t_redir *redir, char **envp)
 		else if (redir->type == TOKEN_APPEND)
 			handle_redirections_append(redir->file);
 		else if (redir->type == TOKEN_HEREDOC)
-			handle_redirections_heredoc(redir->file, redir->quoted, envp,
-				&args);
+		{
+			res = handle_redirections_heredoc(redir->file, redir->quoted, envp,
+					&args);
+			if (res == 130)
+				return (130);
+		}
 		redir = redir->next;
 	}
+	return (0);
 }
