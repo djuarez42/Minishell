@@ -6,7 +6,7 @@
 #    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/08/17 12:38:40 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/08/20 16:01:37 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,8 @@ SRC = main.c \
 		src/executor/expand_variables_utils.c \
 		src/executor/expand_variables_utils2.c \
 		src/executor/expand_variables.c \
-		src/builtins/builtins.c 
+		src/builtins/builtins.c \
+		src/signals/signals.c 
 		
 
 OBJ = $(SRC:.c=.o)
@@ -99,3 +100,7 @@ test-smoke: $(NAME)
 	@bash ./tests/smoke_tests.sh
 
 .PHONY: all clean fclean re
+
+.PHONY: test-subject
+test-subject: $(NAME)
+	@bash ./tests/subject_full_tests.sh
