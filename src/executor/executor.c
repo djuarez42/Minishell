@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/17 12:23:47 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/17 12:38:40 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,8 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 			wire_child_pipes(i, n_cmds, pipes);
 			if (pipes)
 				close_all_pipes(pipes, n_pipes);
-			handle_redirections_and_quotes(cur->redirs, envp);
+			if (handle_redirections_and_quotes(cur->redirs, envp) == 130)
+				exit(130);
 			// Builtins within pipeline run in the child
 			if (is_builtin(cur->argv[0]))
 				exit(run_builtin_in_child(cur, &envp));
@@ -249,7 +250,12 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 		n = count_pipeline_cmds(cur);
 		// Single non-piped builtin: run in parent
 		if (n == 1 && cur->argv && cur->argv[0] && is_builtin(cur->argv[0]) && cur->pipe == 0)
-			status = run_builtin_in_parent(cur, &envp);
+		{
+			if (handle_redirections_and_quotes(cur->redirs, envp) == 130)
+				status = 130;
+			else
+				status = run_builtin_in_parent(cur, &envp);
+		}
 		else
 			status = run_pipeline(cur, n, envp, state);
 		state->last_status = status; //update

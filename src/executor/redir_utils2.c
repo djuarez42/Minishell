@@ -25,7 +25,7 @@ int	open_heredoc_file(void)
 	return (fd);
 }
 
-void	write_heredoc_lines(t_heredoc_args *args)
+int	write_heredoc_lines(t_heredoc_args *args)
 {
 	char	*line;
 	char	*expanded_line;
@@ -33,7 +33,12 @@ void	write_heredoc_lines(t_heredoc_args *args)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || (ft_strncmp(line, args->delimiter,
+		if (!line)
+		{
+			// interrupted by SIGINT or EOF
+			return (130);
+		}
+		if ((ft_strncmp(line, args->delimiter,
 					ft_strlen(args->delimiter)) == 0
 				&& line[ft_strlen(args->delimiter)] == '\0'))
 		{
@@ -49,6 +54,7 @@ void	write_heredoc_lines(t_heredoc_args *args)
 		free(expanded_line);
 		free(line);
 	}
+	return (0);
 }
 
 void	redirect_stdin_heredoc(void)

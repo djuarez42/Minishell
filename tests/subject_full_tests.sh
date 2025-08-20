@@ -1,0 +1,252 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Minishell — Subject Compliance Test Suite
+# This script exercises mandatory features and many edge cases.
+# It compares minishell with bash whenever applicable. For cases
+# where the subject requires DIFFERENT behavior (e.g., ';' not interpreted),
+# it asserts explicit expectations.
+
+ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
+MINI_SHELL=${MINI_SHELL:-"$ROOT_DIR/minishell"}
+
+if [[ ! -x "$MINI_SHELL" ]]; then
+  echo "Error: minishell binary not found at $MINI_SHELL" >&2
+  echo "Build it first (make)." >&2
+  exit 1
+fi
+
+WORK_BASE=${WORK_BASE:-"$ROOT_DIR/.test_tmp_subject"}
+mkdir -p "$WORK_BASE"
+
+# Remove potential prompt artifacts
+filter_ms_prompt() {
+  sed -e 's/^minishell\$ \(.*\)/\1/' -e '/^minishell\$ $/d'
+}
+
+run_vs_bash() {
+  local name="$1"; shift
+  local script="$1"
+  local tdir="$WORK_BASE/$name"
+  rm -rf "$tdir" && mkdir -p "$tdir"
+
+  pushd "$tdir" >/dev/null
+  local b_out b_err b_ec m_out m_err m_ec
+  b_out=$(mktemp); b_err=$(mktemp)
+  bash -lc "$script" >"$b_out" 2>"$b_err" || true
+  b_ec=$?
+
+  m_out=$(mktemp); m_err=$(mktemp)
+  cat >"$tdir/script.ms" <<'MS'
+__SCRIPT_CONTENT_PLACEHOLDER__
+MS
+  python3 - "$tdir/script.ms" "$script" <<'PY'
+import sys
+path, content = sys.argv[1], sys.argv[2]
+with open(path, 'w', encoding='utf-8') as f:
+    f.write(content)
+PY
+  "$MINI_SHELL" <"$tdir/script.ms" >"$m_out" 2>"$m_err" || true
+  m_ec=$?
+  local m_out_f m_err_f
+  m_out_f=$(mktemp); m_err_f=$(mktemp)
+  filter_ms_prompt <"$m_out" >"$m_out_f"
+  filter_ms_prompt <"$m_err" >"$m_err_f"
+
+  local ok=0
+  if ! diff -u "$b_out" "$m_out_f" >/dev/null; then
+    echo "[FAIL] $name: stdout differs"
+    echo "--- bash stdout"; cat "$b_out"
+    echo "--- minishell stdout"; cat "$m_out_f"
+    ok=1
+  fi
+  if ! diff -u "$b_err" "$m_err_f" >/dev/null; then
+    echo "[FAIL] $name: stderr differs"
+    echo "--- bash stderr"; cat "$b_err"
+    echo "--- minishell stderr"; cat "$m_err_f"
+    ok=1
+  fi
+  if [[ "$b_ec" != "$m_ec" ]]; then
+    echo "[FAIL] $name: exit status differs (bash=$b_ec, minishell=$m_ec)"
+    ok=1
+  fi
+  if [[ $ok -eq 0 ]]; then
+    echo "[PASS] $name"
+  fi
+  rm -f "$b_out" "$b_err" "$m_out" "$m_err" "$m_out_f" "$m_err_f"
+  popd >/dev/null
+  return $ok
+}
+
+# Run with explicit expected stdout (literal match)
+run_expect_stdout() {
+  local name="$1"; shift
+  local script="$1"; shift
+  local expected="$1"
+
+  local tdir="$WORK_BASE/$name"
+  rm -rf "$tdir" && mkdir -p "$tdir"
+  pushd "$tdir" >/dev/null
+
+  local out_file; out_file=$(mktemp)
+  cat >"$tdir/script.ms" <<'MS'
+__SCRIPT_CONTENT_PLACEHOLDER__
+MS
+  python3 - "$tdir/script.ms" "$script" <<'PY'
+import sys
+path, content = sys.argv[1], sys.argv[2]
+with open(path, 'w', encoding='utf-8') as f:
+    f.write(content)
+PY
+  "$MINI_SHELL" <"$tdir/script.ms" 2>/dev/null | filter_ms_prompt >"$out_file" || true
+
+  if diff -u <(printf '%s' "$expected") "$out_file" >/dev/null; then
+    echo "[PASS] $name"
+    popd >/dev/null
+    return 0
+  else
+    echo "[FAIL] $name: stdout mismatch"
+    echo "--- expected"; printf '%s\n' "$expected"
+    echo "--- got"; cat "$out_file"
+    popd >/dev/null
+    return 1
+  fi
+}
+
+pass=0; fail=0
+run_or_count_vs_bash() { if run_vs_bash "$1" "$2"; then pass=$((pass+1)); else fail=$((fail+1)); fi; }
+run_or_count_expect()  { if run_expect_stdout "$1" "$2" "$3"; then pass=$((pass+1)); else fail=$((fail+1)); fi; }
+
+########################################
+# 1) PATH & executable search
+########################################
+run_or_count_vs_bash "path_basic" $(cat <<'SH'
+ls | head -1
+SH
+)
+
+run_or_count_vs_bash "path_unset_then_restore" $(cat <<'SH'
+unset PATH
+ls || true
+export PATH=/bin:/usr/bin
+ls >/dev/null
+SH
+)
+
+########################################
+# 2) Quotes
+########################################
+run_or_count_vs_bash "single_quotes_literal" $(cat <<'SH'
+echo '$USER'
+SH
+)
+
+run_or_count_vs_bash "double_quotes_expand" $(cat <<'SH'
+export X=ok
+echo "X=$X"
+SH
+)
+
+########################################
+# 3) Pipes
+########################################
+run_or_count_vs_bash "pipes_simple" $(cat <<'SH'
+echo hola | grep h
+SH
+)
+
+run_or_count_vs_bash "pipes_chain" $(cat <<'SH'
+echo hola | cat | grep h | wc -l
+SH
+)
+
+########################################
+# 4) Redirections
+########################################
+run_or_count_vs_bash "redir_out_in_append" $(cat <<'SH'
+echo a > t1.txt
+echo b >> t1.txt
+cat t1.txt
+SH
+)
+
+run_or_count_vs_bash "redir_in" $(cat <<'SH'
+echo data > in.txt
+cat < in.txt
+SH
+)
+
+# Heredoc: quoted vs unquoted variable expansion
+run_or_count_vs_bash "heredoc_unquoted_expand" $(cat <<'SH'
+export V=YES
+cat << EOF
+$V
+EOF
+SH
+)
+
+run_or_count_vs_bash "heredoc_quoted_no_expand" $(cat <<'SH'
+export V=YES
+cat << 'EOF'
+$V
+EOF
+SH
+)
+
+########################################
+# 5) Env expansion and $?
+########################################
+run_or_count_vs_bash "expand_env_and_status" $(cat <<'SH'
+export A=1
+echo "$A"
+false || true
+echo $?
+SH
+)
+
+########################################
+# 6) Builtins
+########################################
+run_or_count_vs_bash "echo_flags" $(cat <<'SH'
+echo -n hi; echo X
+echo -nnn hi
+SH
+)
+
+run_or_count_vs_bash "pwd_and_cd" $(cat <<'SH'
+pwd
+mkdir -p d && cd d && pwd
+SH
+)
+
+run_or_count_vs_bash "export_unset_env" $(cat <<'SH'
+export A=1 B=2
+env | grep -E '^(A|B)='
+unset A
+env | grep -E '^(A|B)=' | sort
+SH
+)
+
+run_or_count_vs_bash "exit_code_42" $(cat <<'SH'
+exit 42
+SH
+)
+
+########################################
+# 7) Subject-specific differences
+########################################
+# ';' must NOT be interpreted as a command separator.
+run_or_count_expect "semicolon_not_separator" \
+  "echo foo; echo bar" \
+  "foo; echo bar\n"
+
+# Backslash is not a special escape per subject; treat as regular char
+run_or_count_expect "backslash_literal" \
+  "echo a\\ b" \
+  "a\\ b\n"
+
+echo
+echo "Subject suite: PASS=$pass FAIL=$fail"
+exit $(( fail > 0 ))
+
+
