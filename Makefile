@@ -93,4 +93,9 @@ test-a: $(NAME)
 test-b: $(NAME)
 	@bash ./tests/contributor_b_tests.sh
 
+# Smoke tests: mandatory-only quick suite
+.PHONY: test-smoke
+test-smoke: $(NAME)
+	@bash ./tests/smoke_tests.sh
+
 .PHONY: all clean fclean re
