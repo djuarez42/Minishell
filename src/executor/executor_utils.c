@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/17 12:38:40 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/20 16:28:05 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,4 @@ void	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 		exit(127);
 	}
 	execute_execve(exec_path, cmd->argv, envp);
-}
-
-char	*str_append(char *dest, const char *src)
-{
-	char	*new_str;
-
-	if (!src)
-		return (dest);
-	if (!dest)
-		return (ft_strdup(src));
-	new_str = ft_strjoin(dest, src);
-	if (!new_str)
-		return (NULL);
-	free (dest);
-	return (new_str);
 }

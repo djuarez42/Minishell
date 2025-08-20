@@ -73,7 +73,7 @@ char	*handle_special_dollar(const char *input, int *i, t_exec_state *state);
 char	*extract_plain_text(const char *input, int *i, char *tmp);
 char	*handle_dollar(const char *input, int *i, char **envp,
 			t_exec_state *state);
-int		expand_argv(char **argv, char **envp, t_exec_state *state);
+int		expand_argv(char **argv, t_quote_type *argv_quote, char **envp, t_exec_state *state);
 int		expand_redirs(t_redir *redir, char **envp, t_exec_state *state);
 int		expand_cmd_inplace(t_cmd *cur, char **envp, t_exec_state *state);
 char	*expand_variables(const char *input, char **envp, t_exec_state *state);
