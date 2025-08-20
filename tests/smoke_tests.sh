@@ -48,24 +48,24 @@ PY
   filter_ms_prompt <"$m_out" >"$m_out_f"
   filter_ms_prompt <"$m_err" >"$m_err_f"
 
-  local ok=1
+  local ok=0
   if ! diff -u "$b_out" "$m_out_f" >/dev/null; then
     echo "[FAIL] $name: stdout differs"
     echo "--- bash stdout"; cat "$b_out"
     echo "--- minishell stdout"; cat "$m_out_f"
-    ok=0
+    ok=1
   fi
   if ! diff -u "$b_err" "$m_err_f" >/dev/null; then
     echo "[FAIL] $name: stderr differs"
     echo "--- bash stderr"; cat "$b_err"
     echo "--- minishell stderr"; cat "$m_err_f"
-    ok=0
+    ok=1
   fi
   if [[ "$b_ec" != "$m_ec" ]]; then
     echo "[FAIL] $name: exit status differs (bash=$b_ec, minishell=$m_ec)"
-    ok=0
+    ok=1
   fi
-  if [[ $ok -eq 1 ]]; then
+  if [[ $ok -eq 0 ]]; then
     echo "[PASS] $name"
   fi
   rm -f "$b_out" "$b_err" "$m_out" "$m_err" "$m_out_f" "$m_err_f"
