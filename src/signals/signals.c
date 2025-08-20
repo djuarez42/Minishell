@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 16:25:10 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/20 16:25:10 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/20 16:28:05 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <termios.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include "minishell.h"
 #include "signals.h"
 
@@ -42,7 +44,7 @@ static void	sigint_handler(int signo)
     (void)signo;
     write(STDOUT_FILENO, "\n", 1);
     rl_on_new_line();
-    rl_replace_line("", 0);
+    /* rl_replace_line is not available on all platforms; skip clearing explicitly */
     rl_redisplay();
     if (g_state_ptr)
         g_state_ptr->last_status = 130;
@@ -58,7 +60,6 @@ void	signals_setup_interactive(t_exec_state *state)
         if (tcgetattr(STDIN_FILENO, &g_termios_orig) == 0)
             g_termios_saved = true;
     }
-    rl_catch_signals = 0;
     set_echoctl(false);
 
     sigemptyset(&sa.sa_mask);
