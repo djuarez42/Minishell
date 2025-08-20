@@ -150,4 +150,80 @@ echo
 echo "Subject suite: PASS=$pass FAIL=$fail"
 exit $(( fail > 0 ))
 
+# -----------------------------------------------------------------------------
+# Appendix: All tested cases and their command snippets (manual copy/paste)
+#
+# path_basic
+#   ls | head -1
+#
+# path_unset_then_restore
+#   unset PATH
+#   ls || true
+#   export PATH=/bin:/usr/bin
+#   ls >/dev/null
+#
+# single_quotes_literal
+#   echo '$USER'
+#
+# double_quotes_expand
+#   export X=ok
+#   echo "X=$X"
+#
+# pipes_simple
+#   echo hola | grep h
+#
+# pipes_chain
+#   echo hola | cat | grep h | wc -l
+#
+# redir_out_in_append
+#   echo a > t1.txt
+#   echo b >> t1.txt
+#   cat t1.txt
+#
+# redir_in
+#   echo data > in.txt
+#   cat < in.txt
+#
+# heredoc_unquoted_expand
+#   export V=YES
+#   cat << EOF
+#   $V
+#   EOF
+#
+# heredoc_quoted_no_expand
+#   export V=YES
+#   cat << 'EOF'
+#   $V
+#   EOF
+#
+# expand_env_and_status
+#   export A=1
+#   echo "$A"
+#   false || true
+#   echo $?
+#
+# echo_flags
+#   echo -n hi; echo X
+#   echo -nnn hi
+#
+# pwd_and_cd
+#   pwd
+#   mkdir -p d && cd d && pwd
+#
+# export_unset_env
+#   export A=1 B=2
+#   env | grep -E '^(A|B)='
+#   unset A
+#   env | grep -E '^(A|B)=' | sort
+#
+# exit_code_42
+#   exit 42
+#
+# semicolon_not_separator
+#   echo foo; echo bar
+#   # expected literal: foo; echo bar\n
+# backslash_literal
+#   echo a\ b
+#   # expected literal: a\ b\n
+
 
