@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 19:20:01 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/17 20:23:52 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/21 19:27:16 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,34 @@ t_token	*tokenize_input(const char *input)
 	free_tokens(tokens, -1);
 	free(quotes);
 	return (token_list);
+}
+
+char	**reconstruct_words(const char *input, t_quote_type *last_quote,
+			t_quote_type **quotes_out)
+{
+	t_reconstruct	r;
+
+	if (!init_tokens_and_quotes(&r.tokens, quotes_out))
+		return (NULL);
+	r.i = 0;
+	r.tok_i = 0;
+	r.tmp = NULL;
+	while (input[r.i])
+	{
+		r.last_i = r.i;
+		r.i = process_spaces_and_quotes(input, r.i, &r.tmp, last_quote);
+		if (r.i == -1)
+			break ;
+		if (should_add_token(input, r.i, r.tmp))
+		{
+			r.token_quote = *last_quote;
+			check_and_add_token(r.tokens, &r.tok_i, &r.tmp);
+			(*quotes_out)[r.tok_i - 1] = r.token_quote;
+		}
+		if (r.last_i == r.i)
+			r.i++;
+	}
+	r.tokens[r.tok_i] = NULL;
+	(*quotes_out)[r.tok_i] = QUOTE_NONE;
+	return (r.tokens);
 }

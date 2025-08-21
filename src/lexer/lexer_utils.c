@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 11:03:33 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/21 18:55:36 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/21 19:15:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,11 @@ char	**clean_input_quotes(const char *input, t_quote_type **quotes_out)
 	result = reconstruct_words(comment_free_input, &last_quote, quotes_out);
 	free(comment_free_input);
 	return (result);
+}
+
+void	add_token(char **tokens, int *tok_i, char **tmp)
+{
+	tokens[*tok_i] = *tmp;
+	(*tok_i)++;
+	*tmp = NULL;
 }
