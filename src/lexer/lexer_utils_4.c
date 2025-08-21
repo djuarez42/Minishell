@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 16:09:54 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/21 18:29:34 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/21 18:59:55 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	init_tokens_and_quotes(char ***tokens_out, t_quote_type **quotes_out)
 	return (1);
 }
 
-static char	*strip_comments(const char *input)
+char	*strip_comments(const char *input)
 {
 	int		i;
 	int		quote_state;
