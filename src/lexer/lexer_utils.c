@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 11:03:33 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/17 17:24:41 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/21 18:29:26 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,26 @@ const char	*quote_type_str(t_quote_type q)
 	else if (q == QUOTE_DOUBLE)
 		return ("DOUBLE");
 	return ("UNKNOWN");
+}
+
+char	**clean_input_quotes(const char *input, t_quote_type **quotes_out)
+{
+	char			*comment_free_input;
+	char			**result;
+	t_quote_type	last_quote;
+
+	if (!input)
+		return (NULL);
+	comment_free_input = strip_comments(input);
+	if (!comment_free_input)
+		return (NULL);
+	last_quote = QUOTE_NONE;
+	if (!are_quotes_closed(comment_free_input))
+	{
+		free(comment_free_input);
+		return (NULL);
+	}
+	result = reconstruct_words(comment_free_input, &last_quote, quotes_out);
+	free(comment_free_input);
+	return (result);
 }

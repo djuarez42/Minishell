@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils_4.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 16:09:54 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/19 19:52:46 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:29:34 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*handle_quoted_part(const char *input, int *i, char *tmp,
 {
 	int		len;
 	char	*segment;
-    char    quote;
+	char	quote;
 
 	if (input[*i] == '\'')
 		*last_quote = QUOTE_SINGLE;
@@ -31,7 +31,6 @@ char	*handle_quoted_part(const char *input, int *i, char *tmp,
 		*i += 1;
 		return (tmp);
 	}
-	// Preserve double quotes content; treat single quotes similarly (no escape handling for now)
 	quote = input[*i];
 	(void)quote;
 	tmp = str_append(tmp, segment);
@@ -104,8 +103,7 @@ int	init_tokens_and_quotes(char ***tokens_out, t_quote_type **quotes_out)
 	}
 	return (1);
 }
-// Helper to strip comments from input line
-// Comments start with # when not inside quotes and after whitespace or at start of line
+
 static char	*strip_comments(const char *input)
 {
 	int		i;
@@ -147,27 +145,5 @@ static char	*strip_comments(const char *input)
 		i++;
 	}
 	result[i] = '\0';
-	return (result);
-}
-
-char	**clean_input_quotes(const char *input, t_quote_type **quotes_out)
-{
-	char			*comment_free_input;
-	char			**result;
-	t_quote_type	last_quote;
-
-	if (!input)
-		return (NULL);
-	comment_free_input = strip_comments(input);
-	if (!comment_free_input)
-		return (NULL);
-	last_quote = QUOTE_NONE;
-	if (!are_quotes_closed(comment_free_input))
-	{
-		free(comment_free_input);
-		return (NULL);
-	}
-	result = reconstruct_words(comment_free_input, &last_quote, quotes_out);
-	free(comment_free_input);
 	return (result);
 }

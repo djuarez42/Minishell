@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 16:45:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/19 17:50:36 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/21 18:27:42 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ char	*remove_quotes(char *str)
 		result = ft_strdup(str);
 	return (result);
 }
-
 
 bool	are_quotes_closed(const char *input)
 {
