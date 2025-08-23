@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/19 17:55:47 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/23 22:06:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	free_cmds(t_cmd *cmd)
 				free(cmd->argv[i++]);
 			free(cmd->argv);
 		}
-		/*if (cmd->argv_quote)
-			free(cmd->argv_quote);*/
+		if (cmd->argv_quote)
+			free(cmd->argv_quote);
 		free_redirs(cmd->redirs);
 		free(cmd);
 		cmd = tmp;
