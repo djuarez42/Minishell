@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/21 19:04:31 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/23 20:46:54 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	free_cmds(t_cmd *cmd)
 				free(cmd->argv[i++]);
 			free(cmd->argv);
 		}
+		if (cmd->argv_quote)
+			free(cmd->argv_quote);
 		free_redirs(cmd->redirs);
 		free(cmd);
 		cmd = tmp;
