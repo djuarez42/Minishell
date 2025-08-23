@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:21:10 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/17 11:43:58 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:35:01 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,14 @@ static void update_pwd_vars(char ***penvp)
     char    *newpwd;
     char    *env_old;
 
-    // Determine oldpwd: prefer PWD from env, fallback to getcwd
+    /* Determine oldpwd: prefer PWD from env, fallback to getcwd */
     env_old = env_get_value(*penvp, "PWD");
     if (env_old)
         oldpwd = ft_strdup(env_old);
     else
         oldpwd = getcwd(NULL, 0);
 
-    // Determine newpwd from current directory after chdir
+    /* Determine newpwd from current directory after chdir */
     newpwd = getcwd(NULL, 0);
 
     if (oldpwd)
@@ -122,36 +122,44 @@ static void update_pwd_vars(char ***penvp)
     free(newpwd);
 }
 
-int bi_cd(char **argv, char ***penvp)
+/* Resolve target path for cd: argv[1] or $HOME when no argument. */
+static const char *resolve_cd_target(char **argv, char ***penvp)
 {
     const char *path;
 
-    if (!argv[1])
-    {
-        // No-arg cd: go to HOME if set, otherwise succeed silently
-        path = env_get_value(*penvp, "HOME");
-        if (!path)
-            return (0);
-        if (chdir(path) == -1)
-        {
-            perror("cd");
-            return (1);
-        }
-        update_pwd_vars(penvp);
-        return (0);
-    }
-    path = argv[1];
+    if (argv[1])
+        return (argv[1]);
+    path = env_get_value(*penvp, "HOME");
+    return (path);
+}
 
-    // Attempt to change directory
+/* Change directory and update PWD/OLDPWD. Prints error on failure. */
+static int change_dir_and_update(const char *path, char ***penvp)
+{
+    if (!path)
+        return (0);
     if (chdir(path) == -1)
     {
         perror("cd");
         return (1);
     }
-
-    // Update PWD and OLDPWD in environment
     update_pwd_vars(penvp);
     return (0);
+}
+
+int bi_cd(char **argv, char ***penvp)
+{
+    const char *path;
+
+    path = resolve_cd_target(argv, penvp);
+    return (change_dir_and_update(path, penvp));
+}
+
+static void print_export_ident_error(const char *s)
+{
+    ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+    write(STDERR_FILENO, s, ft_strlen(s));
+    ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
 int bi_export(char **argv, char ***penvp)
@@ -169,9 +177,7 @@ int bi_export(char **argv, char ***penvp)
         {
             if (!env_set_assignment(penvp, argv[i]))
             {
-                ft_putstr_fd("minishell: export: `", STDERR_FILENO);
-                ft_putstr_fd(argv[i], STDERR_FILENO);
-                ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+                print_export_ident_error(argv[i]);
                 status = 1;
             }
         }
@@ -179,12 +185,10 @@ int bi_export(char **argv, char ***penvp)
         {
             if (!env_identifier_valid(argv[i]))
             {
-                ft_putstr_fd("minishell: export: `", STDERR_FILENO);
-                ft_putstr_fd(argv[i], STDERR_FILENO);
-                ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+                print_export_ident_error(argv[i]);
                 status = 1;
             }
-            // name-only export: do not create NAME= in env
+            /* name-only export: do not create NAME= in env */
         }
         i++;
     }
@@ -194,15 +198,12 @@ int bi_export(char **argv, char ***penvp)
 int bi_unset(char **argv, char ***penvp)
 {
     int i;
-    int status;
-
-    (void)status; // avoid unused warning; function returns 0
     i = 1;
     while (argv[i])
     {
         if (env_identifier_valid(argv[i]))
             (void)env_unset_var(penvp, argv[i]);
-        // invalid identifiers are ignored silently per test policy
+        /* invalid identifiers are ignored silently per test policy */
         i++;
     }
     return 0;
@@ -215,7 +216,7 @@ int bi_exit(char **argv)
     status = 0;
     if (argv[1])
         status = ft_atoi(argv[1]);
-    // In child, caller will exit(status). In parent, run_builtin_in_parent will exit.
+    /* In child, caller will exit(status). In parent, run_builtin_in_parent will exit. */
     return (status & 0xFF);
 }
 
