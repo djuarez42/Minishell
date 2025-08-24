@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/23 19:06:01 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/24 17:03:40 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 	if (start == *i)
 		return (tmp);
 	segment = ft_substr(input, start, *i - start);
-	printf("[DBG] extract_plain_text malloc segment=%p\n", segment);
 	if (!segment)
 	{
 		free(tmp);
@@ -87,12 +86,10 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 	new_tmp = str_append(tmp, segment);
 	if (!new_tmp)
 	{
-		printf("[DBG] extract_plain_text str_append fallo, liberando segment=%p\n", segment);
 		free(segment);
 		free(tmp);
 		return (NULL);
 	}
-	printf("[DBG] extract_plain_text free segment=%p\n", segment);
 	free(segment);
 	return (new_tmp);
 }
@@ -114,10 +111,8 @@ int	expand_argv(char **argv, t_quote_type *argv_quote,
 		expanded = expand_variables(argv[j], envp, state);
 		if (!expanded)
 			return (-1);
-		printf("[DBG] expand_argv free argv[%zu]=%p\n", j, argv[j]);
 		free (argv[j]);
 		argv[j] = expanded;
-		printf("[DBG] expand_argv assign argv[%zu]=%p\n", j, argv[j]);
 		j++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/18 20:07:56 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/24 17:02:49 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	write_heredoc_lines(t_heredoc_args *args)
 		line = readline("> ");
 		if (!line)
 		{
-			// interrupted by SIGINT or EOF
 			return (130);
 		}
 		if ((ft_strncmp(line, args->delimiter,

@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:40:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/23 18:00:25 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/24 17:02:16 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ char	*str_append(char *base, const char *add)
 	if (add)
 		len += ft_strlen(add);
 	new = malloc(len + 1);
-	printf("[DBG] str_append malloc new=%p (base=%p, add=%p)\n", new, base, add);
 	if (!new)
 		return (NULL);
 	new[0] = '\0';
@@ -61,6 +60,5 @@ char	*str_append(char *base, const char *add)
 	if (add)
 		ft_strlcat(new, add, len + 1);
 	free(base);
-	printf("[DBG] str_append free base=%p\n", base);
 	return (new);
 }
