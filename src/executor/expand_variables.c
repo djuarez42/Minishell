@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/23 18:29:08 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/24 17:03:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 		if (input[i] == '$')
 		{
 			piece = handle_dollar(input, &i, envp, state);
-			printf("[DBG] expand_variables malloc piece=%p\n", piece);
 			if (!piece)
 			{
 				free(tmp);
@@ -37,11 +36,9 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 			tmp = str_append(tmp, piece);
 			if (!tmp)
 			{
-				printf("[DBG] expand_variables free piece=%p\n", piece);
 				free(piece);
 				return (NULL);
 			}
-			printf("[DBG] expand_variables free piece=%p\n", piece);
 			free(piece);
 		}
 		else
@@ -51,7 +48,6 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 				return (NULL);
 		}
 	}
-	printf("[DBG] expand_variables return tmp=%p\n", tmp);
 	return (tmp);
 }
 
