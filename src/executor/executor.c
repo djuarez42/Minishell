@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/20 22:04:47 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/24 20:50:15 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 	n_pipes = (n_cmds > 1) ? (n_cmds - 1) : 0;
 	if (create_pipes(&pipes, n_pipes) == -1)
 		return (perror("pipe"), 1);
+
 	pids = (pid_t *)malloc(sizeof(pid_t) * n_cmds);
 	if (!pids)
 	{
@@ -174,6 +175,7 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 		free(pipes);
 		return (1);
 	}
+
 	cur = start;
 	while (cur)
 	{
@@ -187,6 +189,7 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 		}
 		cur = cur->next;
 	}
+
 	i = 0;
 	cur = start;
 	while (i < n_cmds && cur)
@@ -195,7 +198,6 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 		if (pids[i] == -1)
 		{
 			perror("fork");
-			// Parent cleanup: close all pipes and wait spawned children
 			if (pipes)
 				close_all_pipes(pipes, n_pipes);
 			while (i > 0)
@@ -204,34 +206,37 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 			free(pids);
 			return (1);
 		}
+
 		if (pids[i] == 0)
 		{
-			// Child process
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
+
 			wire_child_pipes(i, n_cmds, pipes);
 			if (pipes)
 				close_all_pipes(pipes, n_pipes);
+
 			if (handle_redirections_and_quotes(cur->redirs, envp) == 130)
 				exit(130);
-			// Builtins within pipeline run in the child
+
 			if (is_builtin(cur->argv[0]))
 				exit(run_builtin_in_child(cur, &envp));
-			// External command
+
 			execute_command(NULL, cur, envp);
-			// If execute_command returns, something went wrong
 			exit(127);
 		}
-		// Parent proceeds to next
+
 		i++;
 		cur = cur->next;
 	}
-	// Parent: close all pipe fds and wait children
+
 	if (pipes)
 		close_all_pipes(pipes, n_pipes);
 	free(pipes);
+
 	i = wait_pipeline(pids, n_cmds);
 	free(pids);
+
 	return (i);
 }
 
@@ -247,9 +252,19 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 	cur = cmd_list;
 	while (cur)
 	{
+		// Prevención de comandos vacíos (ej: echo hola | | cat)
+		if (!cur->argv || !cur->argv[0])
+		{
+			fprintf(stderr, "minishell: syntax error near unexpected token `|'\n");
+			state->last_status = 2;
+			cur = cur->next;
+			continue;
+		}
+
 		n = count_pipeline_cmds(cur);
+
 		// Single non-piped builtin: run in parent
-		if (n == 1 && cur->argv && cur->argv[0] && is_builtin(cur->argv[0]) && cur->pipe == 0)
+		if (n == 1 && is_builtin(cur->argv[0]) && cur->pipe == 0)
 		{
 			int save_in;
 			int save_out;
@@ -258,20 +273,19 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 			save_in = dup(STDIN_FILENO);
 			save_out = dup(STDOUT_FILENO);
 			save_err = dup(STDERR_FILENO);
+
 			if (handle_redirections_and_quotes(cur->redirs, envp) == 130)
-			{
 				status = 130;
-			}
 			else
-			{
 				status = run_builtin_in_parent(cur, &envp);
-			}
+
 			if (save_in != -1)
 				dup2(save_in, STDIN_FILENO);
 			if (save_out != -1)
 				dup2(save_out, STDOUT_FILENO);
 			if (save_err != -1)
 				dup2(save_err, STDERR_FILENO);
+
 			if (save_in != -1)
 				close(save_in);
 			if (save_out != -1)
@@ -281,8 +295,10 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 		}
 		else
 			status = run_pipeline(cur, n, envp, state);
-		state->last_status = status; //update
-		// Advance cur by n commands
+
+		state->last_status = status;
+
+		// Avanzar cur por n comandos (pipeline)
 		while (n-- > 0 && cur)
 			cur = cur->next;
 	}
