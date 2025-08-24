@@ -35,74 +35,6 @@ void	free_cmds(t_cmd *cmd)
 	}
 }
 
-t_token	*parse_arguments(t_token *cur, t_cmd *cmd)
-{
-	int		argc;
-	char	*clean;
-
-	argc = 0;
-	cmd->argv = malloc (sizeof(char *) * MAX_ARGS);
-	cmd->argv_quote = malloc(sizeof(t_quote_type) * MAX_ARGS);
-	if (!cmd->argv || !cmd->argv_quote)
-		return (free(cmd->argv), free(cmd->argv_quote), NULL);
-	while (cur && cur->type != TOKEN_PIPE && cur->type != TOKEN_EOF)
-	{
-		if (cur->type == TOKEN_WORD)
-		{
-			if (argc >= MAX_ARGS - 1)
-				break ;
-			clean = remove_quotes(cur->value);
-			if (!clean)
-				return (NULL);
-			if (!add_argument(cmd, clean, cur->quote_type, &argc))
-				return (free(clean), NULL);
-			free(clean);
-		}
-		else if (cur->type == TOKEN_REDIRECT_OUT
-			|| cur->type == TOKEN_REDIRECT_IN
-			|| cur->type == TOKEN_APPEND
-			|| cur->type == TOKEN_HEREDOC)
-			break ;
-		cur = cur->next;
-	}
-	cmd->argv[argc] = NULL;
-	cmd->argv_quote[argc] = QUOTE_NONE;
-	return (cur);
-}
-
-t_token	*parse_cmd_block(t_token *cur, t_cmd *cmd)
-{
-	cur = parse_arguments(cur, cmd);
-	while (cur && (cur->type == TOKEN_REDIRECT_OUT
-			|| cur->type == TOKEN_REDIRECT_IN
-			|| cur->type == TOKEN_APPEND
-			|| cur->type == TOKEN_HEREDOC))
-		cur = parse_redirections(cur, cmd);
-	return (cur);
-}
-
-t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
-{
-	t_redir	*new_redir;
-	t_redir	*last;
-
-	if (!cur || !cur->next || cur->next->type != TOKEN_WORD)
-		return (NULL);
-	new_redir = create_redir(cur);
-	if (!new_redir)
-		return (NULL);
-	if (!cmd->redirs)
-		cmd->redirs = new_redir;
-	else
-	{
-		last = cmd->redirs;
-		while (last->next)
-			last = last->next;
-		last->next = new_redir;
-	}
-	return (cur->next->next);
-}
-
 void	free_redirs(t_redir *redir)
 {
 	t_redir	*tmp;
@@ -114,4 +46,35 @@ void	free_redirs(t_redir *redir)
 		free(redir);
 		redir = tmp;
 	}
+}
+
+int	init_cmd_args(t_cmd *cmd)
+{
+	cmd->argv = malloc(sizeof(char *) * MAX_ARGS);
+	cmd->argv_quote = malloc(sizeof(t_quote_type) * MAX_ARGS);
+	if (!cmd->argv || !cmd->argv_quote)
+	{
+		free(cmd->argv);
+		free(cmd->argv_quote);
+		return (0);
+	}
+	return (1);
+}
+
+int	process_token(t_cmd *cmd, t_token *cur, int *argc)
+{
+	char	*clean;
+
+	if (*argc >= MAX_ARGS - 1)
+		return (0);
+	clean = remove_quotes(cur->value);
+	if (!clean)
+		return (0);
+	if (!add_argument(cmd, clean, cur->quote_type, argc))
+	{
+		free(clean);
+		return (0);
+	}
+	free(clean);
+	return (1);
 }

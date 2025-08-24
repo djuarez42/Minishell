@@ -1,0 +1,25 @@
+ekaterina
+Process:         minishell [17034]
+Path:            /Users/USER/*/minishell
+Load Address:    0x10d1a5000
+Identifier:      minishell
+Version:         0
+Code Type:       X86-64
+Platform:        macOS
+Parent Process:  leaks [17031]
+
+Date/Time:       2025-08-23 20:59:48.860 +0200
+Launch Time:     2025-08-23 20:59:47.927 +0200
+OS Version:      macOS 13.7.7 (22H722)
+Report Version:  7
+Analysis Tool:   /usr/bin/leaks
+
+Physical footprint:         2204K
+Physical footprint (peak):  2204K
+Idle exit:                  untracked
+----
+
+leaks Report Version: 4.0, multi-line stacks
+Process 17034: 283 nodes malloced for 179 KB
+Process 17034: 0 leaks for 0 total leaked bytes.
+
