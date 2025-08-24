@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 20:06:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/17 12:17:59 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/21 19:16:50 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,23 @@ int	process_spaces_and_quotes(const char *input, int i, char **tmp,
 	else if (!ft_isspace(input[i]) && input[i] != '\0')
 		*tmp = handle_plain_text(input, &i, *tmp);
 	return (i);
+}
+
+const char	*token_type_str(t_token_type type)
+{
+	if (type == TOKEN_WORD)
+		return ("WORD");
+	if (type == TOKEN_PIPE)
+		return ("PIPE");
+	if (type == TOKEN_REDIRECT_IN)
+		return ("REDIRECT_IN");
+	if (type == TOKEN_REDIRECT_OUT)
+		return ("REDIRECT_OUT");
+	if (type == TOKEN_HEREDOC)
+		return ("HEREDOC");
+	if (type == TOKEN_APPEND)
+		return ("APPEND");
+	if (type == TOKEN_EOF)
+		return ("EOF");
+	return ("UNKNOWN");
 }

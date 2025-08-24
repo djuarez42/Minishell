@@ -6,30 +6,37 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 16:45:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/19 17:50:36 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/21 19:18:50 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "minishell.h"
 
-const char	*token_type_str(t_token_type type)
+char	*handle_quoted_part(const char *input, int *i, char *tmp,
+	t_quote_type *last_quote)
 {
-	if (type == TOKEN_WORD)
-		return ("WORD");
-	if (type == TOKEN_PIPE)
-		return ("PIPE");
-	if (type == TOKEN_REDIRECT_IN)
-		return ("REDIRECT_IN");
-	if (type == TOKEN_REDIRECT_OUT)
-		return ("REDIRECT_OUT");
-	if (type == TOKEN_HEREDOC)
-		return ("HEREDOC");
-	if (type == TOKEN_APPEND)
-		return ("APPEND");
-	if (type == TOKEN_EOF)
-		return ("EOF");
-	return ("UNKNOWN");
+	int		len;
+	char	*segment;
+	char	quote;
+
+	if (input[*i] == '\'')
+		*last_quote = QUOTE_SINGLE;
+	else if (input[*i] == '\"')
+		*last_quote = QUOTE_DOUBLE;
+	segment = extract_quoted_segment(&input[*i], &len);
+	if (!segment)
+	{
+		printf("❌ extract_quoted_segment falló en i = %d\n", *i);
+		*i += 1;
+		return (tmp);
+	}
+	quote = input[*i];
+	(void)quote;
+	tmp = str_append(tmp, segment);
+	free (segment);
+	*i += len;
+	return (tmp);
 }
 
 char	*remove_quotes(char *str)
@@ -45,7 +52,6 @@ char	*remove_quotes(char *str)
 		result = ft_strdup(str);
 	return (result);
 }
-
 
 bool	are_quotes_closed(const char *input)
 {
@@ -95,4 +101,18 @@ char	*extract_quoted_segment(const char *input, int *len)
 	}
 	result[j] = '\0';
 	return (result);
+}
+
+int	init_tokens_and_quotes(char ***tokens_out, t_quote_type **quotes_out)
+{
+	*tokens_out = malloc(sizeof(char *) * 1024);
+	if (!*tokens_out)
+		return (0);
+	*quotes_out = malloc(sizeof(t_quote_type) * 1024);
+	if (!*quotes_out)
+	{
+		free(*tokens_out);
+		return (0);
+	}
+	return (1);
 }

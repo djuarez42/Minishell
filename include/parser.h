@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/18 16:49:37 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/21 19:03:36 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,9 @@ t_redir	*create_redir(t_token *cur);
 void	print_redirs(t_redir *redir);
 void	print_cmd_list(t_cmd *cmd_list);
 bool	is_quoted(const char *str);
+int		init_cmd_args(t_cmd *cmd);
+int		process_token(t_cmd *cmd, t_token *cur, int *argc);
+t_cmd	*create_cmd_node(t_token **cur);
+void	add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd);
 
 #endif

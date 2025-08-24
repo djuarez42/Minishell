@@ -3,17 +3,18 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/08/23 20:21:11 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/08/24 17:40:12 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 NAME = minishell
 
 CC = cc 
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address -g
 
 INCLUDES = -Iinclude -Ilibft
 
@@ -46,6 +47,7 @@ SRC = main.c \
 		src/parser/parser.c \
 		src/parser/parser_utils.c \
 		src/parser/parser_utils2.c \
+		src/parser/parser_print_utils.c \
 		src/executor/executor.c \
 		src/executor/executor_utils.c \
 		src/executor/env_utils.c \
