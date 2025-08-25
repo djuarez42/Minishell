@@ -50,27 +50,12 @@ char	**reconstruct_words(const char *input, t_quote_type *last_quote,
 	{
 		r.last_i = r.i;
 		r.i = process_spaces_and_quotes(input, r.i, &r.tmp, last_quote);
-<<<<<<< HEAD
 		if (r.i == -1)
 			break ;
 		/* Add token when:
 		 * - we're at end or space boundary, AND
 		 * - tmp is non-empty OR it is empty but came from quotes ("" or '') */
 		if (r.tmp && (input[r.i] == '\0' || ft_isspace((unsigned char)input[r.i])))
-=======
-	/* CORRRETED ths for casee /bin/rm ./-f ">"*/
-{
-if (r.tmp)
-{
-free(r.tmp);
-r.tmp = NULL;
-}
-break;
-} 
-	/* 	if (r.i == -1)
-			break ; */
-		if (should_add_token(input, r.i, r.tmp))
->>>>>>> 78360fa27b4289310631088017a384aa179b923b
 		{
 			r.token_quote = *last_quote;
 			check_and_add_token(r.tokens, &r.tok_i, &r.tmp);
