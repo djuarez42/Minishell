@@ -12,6 +12,35 @@
 
 #include "parser.h"
 
+/* Free argv entries up to argc (if argc >= 0), and argv/argv_quote arrays.
+   Does not free cmd itself. */
+void	free_partial_cmd(t_cmd *cmd, int argc)
+{
+	int i;
+
+	if (!cmd)
+		return;
+	if (cmd->argv)
+	{
+		if (argc >= 0)
+		{
+			i = 0;
+			while (i < argc)
+			{
+				free(cmd->argv[i]);
+				i++;
+			}
+		}
+		free(cmd->argv);
+		cmd->argv = NULL;
+	}
+	if (cmd->argv_quote)
+	{
+		free(cmd->argv_quote);
+		cmd->argv_quote = NULL;
+	}
+}
+
 void	free_cmds(t_cmd *cmd)
 {
 	t_cmd	*tmp;
