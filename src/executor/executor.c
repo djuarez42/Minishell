@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/25 15:01:15 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/25 19:03:31 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,14 @@ char	*find_executable(char *cmd, char **envp)
 	return (NULL);
 }
 
-void	execute_execve(char *exec_path, char **argv, char **envp)
+int	execute_execve(char *exec_path, char **argv, char **envp)
 {
 	if (execve(exec_path, argv, envp) == -1)
 	{
 		perror("execve");
-		exit (1);
+		return (1);
 	}
+	return (0);
 }
 
 /* --------------------------- Pipeline helpers --------------------------- */
@@ -162,6 +163,7 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 	size_t		i;
 	t_cmd		*cur;
 	int			res;
+	int			code;
 
 	pipes = NULL;
 	n_pipes = (n_cmds > 1) ? (n_cmds - 1) : 0;
@@ -223,8 +225,8 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 				exit (1);
 			if (is_builtin(cur->argv[0]))
 				exit(run_builtin_in_child(cur, &envp));
-			execute_command(NULL, cur, envp);
-			exit(127);
+			code = execute_command(NULL, cur, envp);
+			exit(code);
 		}
 		i++;
 		cur = cur->next;

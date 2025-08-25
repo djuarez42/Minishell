@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 20:06:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/21 19:16:50 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/25 20:30:51 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,17 @@ int	token_len(const char *s)
 	return (i);
 }
 
-int	should_add_token(const char *input, int i, char *tmp)
+int	should_add_token(const char *input, int i)
 {
-	if (!tmp)
-		return (0);
 	if (input[i] == '\0' || ft_isspace(input[i]))
-		return (tmp[0] != '\0');
+		return (1);
 	return (0);
 }
 
 void	check_and_add_token(char **tokens, int *tok_i, char **tmp)
 {
+	if (!*tmp)
+		*tmp = ft_strdup("");
 	add_token(tokens, tok_i, tmp);
 }
 

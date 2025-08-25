@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/25 14:20:10 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/25 19:05:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,18 @@ int	handle_redirections_and_quotes(t_redir *redirs, char **envp)
 	return (res);
 }
 
-void	execute_command(char *exec_path, t_cmd *cmd, char **envp)
+int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 	{
 		fprintf(stderr, "minishell: syntax error near unexpected token `|'\n");
-		exit(2);
+		return (2);
 	}
 	exec_path = find_executable(cmd->argv[0], envp);
 	if (!exec_path)
 	{
 		fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
-		exit(127);
+		return (127);
 	}
-	execute_execve(exec_path, cmd->argv, envp);
+	return (execute_execve(exec_path, cmd->argv, envp));
 }
