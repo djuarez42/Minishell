@@ -9,3 +9,7 @@ C. Redirección ambigua o fallo en open
 Objetivo: Detectar leaks si falla la creación de archivo/redirección.
 Comando a probar:
 echo > "$HOME/nonexistent_dir/file/file.txt"
+
+djuarez@cbr12s4 ~/minishell % ./minishell                 
+minishell$ echo hola > /nonestistendt_dir/file.txt
+open (redirect out): No such file or directory
