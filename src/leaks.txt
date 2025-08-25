@@ -1,4 +1,4 @@
-completed
+ -completed
 
 syntax error 
 echo hola | | cat  -> fiexed
@@ -54,3 +54,52 @@ echo '' ""
 
 unset ""
 
+
+CASE OF ECHO ""
+change in tokenizer.C
+
+char	**reconstruct_words(const char *input, t_quote_type *last_quote,
+			t_quote_type **quotes_out)
+{
+	t_reconstruct	r;
+
+	if (!init_tokens_and_quotes(&r.tokens, quotes_out))
+		return (NULL);
+	r.i = 0;
+	r.tok_i = 0;
+	r.tmp = NULL;
+	while (input[r.i])
+	{
+		r.last_i = r.i;
+		r.i = process_spaces_and_quotes(input, r.i, &r.tmp, last_quote);
+		if (r.i == -1)
+			break ;
+>>>>		/* Add token when:
+		 * - we're at end or space boundary, AND
+		 * - tmp is non-empty OR it is empty but came from quotes ("" or '') */
+		if (r.tmp && (input[r.i] == '\0' || ft_isspace((unsigned char)input[r.i])))
+		{
+			r.token_quote = *last_quote;
+			check_and_add_token(r.tokens, &r.tok_i, &r.tmp);
+			(*quotes_out)[r.tok_i - 1] = r.token_quote;
+>>			/* reset quote context after emitting a token */
+			*last_quote = QUOTE_NONE;
+		}
+		if (r.last_i == r.i)
+			r.i++;
+	}
+	r.tokens[r.tok_i] = NULL;
+	(*quotes_out)[r.tok_i] = QUOTE_NONE;
+	return (r.tokens);
+}
+
+in token_lexer_utils
+/* No longer used for quoted-empty handling; kept for compatibility if needed */
+int	should_add_token(const char *input, int i, char *tmp)
+{
+	if (!tmp)
+		return (0);
+	if (input[i] == '\0' || ft_isspace((unsigned char)input[i]))
+		return (tmp[0] != '\0');
+	return (0);
+}
