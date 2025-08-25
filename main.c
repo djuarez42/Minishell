@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/21 19:39:21 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/24 19:08:54 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "executor.h"
 #include "signals.h"
 
-static char	*read_stdin_line(void)
+/*static char	*read_stdin_line(void)
 {
 	char	buffer[1];
 	char	*line;
@@ -42,35 +42,115 @@ static char	*read_stdin_line(void)
 	return (line);
 }
 
+int main(int argc, char **argv, char **envp)
+{
+	t_exec_state state;
+	char *input;
+	t_token *tokens;
+	t_cmd *cmds;
+	char **envp_copy;
+	t_cmd *cur;
+	int fail;
+
+	(void)argc;
+	(void)argv;
+
+	envp_copy = new_envp(envp);
+	if (!envp_copy)
+		return (1);
+
+	state = (t_exec_state){0};
+	if (isatty(STDIN_FILENO))
+		signals_setup_interactive(&state);
+
+	while (1)
+	{
+		fail = 0;
+		if (isatty(STDIN_FILENO))
+			input = readline("minishell$ ");
+		else
+			input = read_stdin_line();
+
+		if (!input)
+		{
+			if (isatty(STDIN_FILENO))
+				ft_putendl_fd("exit", STDOUT_FILENO);
+			break;
+		}
+
+		if (*input)
+			add_history(input);
+
+		tokens = tokenize_input(input);
+		if (!tokens)
+		{
+			free(input);
+			continue;
+		}
+
+		cmds = parser_tokens(tokens);
+		if (!cmds)
+		{
+			free_token_list(tokens);
+			free(input);
+			continue;
+		}
+
+		cur = cmds;
+		while (cur)
+		{
+			if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
+			{
+				fail = 1;
+				break;
+			}
+			cur = cur->next;
+		}
+
+		if (!fail)
+			executor(cmds, &envp_copy, &state);
+
+		// Liberamos todo lo que se creó en esta iteración
+		free_token_list(tokens);
+		free_cmds(cmds);
+		free(input);
+
+		if (fail)
+		{
+			free_envp(envp_copy);
+			return (1);
+		}
+	}
+
+	if (isatty(STDIN_FILENO))
+		signals_teardown_interactive();
+
+	free_envp(envp_copy);
+	return (0);
+}*/
+
 int	main(int argc, char **argv, char **envp)
 {
-	t_exec_state	state;
 	char			*input;
 	t_token			*tokens;
 	t_cmd			*cmds;
 	char			**envp_copy;
+	t_exec_state	state;
 	t_cmd			*cur;
+	int				fail;
 
 	(void)argc;
 	(void)argv;
 	envp_copy = new_envp(envp);
 	if (!envp_copy)
 		return (1);
-	state = (t_exec_state){0};
-	if (isatty(STDIN_FILENO))
-		signals_setup_interactive(&state);
+	state.last_status = 0;
 	while (1)
 	{
-		if (isatty(STDIN_FILENO))
-			input = readline("minishell$ ");
-		else
-			input = read_stdin_line();
+		fail = 0;
+		input = readline("minishell$ ");
 		if (!input)
-		{
-			if (isatty(STDIN_FILENO))
-				ft_putendl_fd("exit", STDOUT_FILENO);
 			break ;
-		}
 		if (*input)
 			add_history(input);
 		tokens = tokenize_input(input);
@@ -79,24 +159,35 @@ int	main(int argc, char **argv, char **envp)
 			free(input);
 			continue ;
 		}
-		print_token_list(tokens);
 		cmds = parser_tokens(tokens);
+		if (!cmds)
+		{
+			free_token_list(tokens);
+			free(input);
+			continue ;
+		}
 		cur = cmds;
 		while (cur)
 		{
 			if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
-				exit (1);
+			{
+				fail = 1;
+				break ;
+			}
 			cur = cur->next;
 		}
-		if (cmds)
+		if (!fail)
 			executor(cmds, &envp_copy, &state);
-		//print_token_list(tokens);
 		free_token_list(tokens);
 		free_cmds(cmds);
 		free(input);
+		if (fail)
+		{
+			free_envp(envp_copy);
+			return (1);
+		}
 	}
-	if (isatty(STDIN_FILENO))
-		signals_teardown_interactive();
 	free_envp(envp_copy);
 	return (0);
 }
+

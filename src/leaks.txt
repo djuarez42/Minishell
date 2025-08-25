@@ -1,0 +1,56 @@
+completed
+
+syntax error 
+echo hola | | cat  -> fiexed
+
+pending 
+
+C. Redirección ambigua o fallo en open
+Objetivo: Detectar leaks si falla la creación de archivo/redirección.
+Comando a probar:
+echo > "$HOME/nonexistent_dir/file/file.txt"
+
+
+
+ERRORS
+<< builtin >>
+
+ 20:   STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅ /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:45  
+  21:   STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅ /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:47  
+echo "$ "
+echo hi >./outfiles/outfile01 | echo bye
+
+
+61:   STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅ /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:127  
+echo test1		test2
+
+
+minishell$ exit 42 42 42 42 42 
+ekakhmad@cbr13s3 ~/Minishell % echo $?    
+42
+BASH - >>
+ekakhmad@cbr13s3 ~/Minishell % exit 42 42 42 42 42 
+exit: too many arguments
+ekakhmad@cbr13s3 ~/Minishell % echo $?             
+1
+
+<<variables >>
+ 36:   STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(1) ]  LEAKS: ✅ /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_variables.sh:82  
+
+
+
+LEAKS
+
+<< builtin >>
+
+ 50:   STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ❌ /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:105  
+  51:   STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ❌ /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:107  
+  52:   STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ❌ /home
+  echo ''
+
+echo ""
+
+echo '' ""
+
+unset ""
+
