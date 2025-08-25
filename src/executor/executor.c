@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/24 20:50:15 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/25 15:01:15 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 	pid_t		*pids;
 	size_t		i;
 	t_cmd		*cur;
+	int			res;
 
 	pipes = NULL;
 	n_pipes = (n_cmds > 1) ? (n_cmds - 1) : 0;
@@ -215,28 +216,24 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 			wire_child_pipes(i, n_cmds, pipes);
 			if (pipes)
 				close_all_pipes(pipes, n_pipes);
-
-			if (handle_redirections_and_quotes(cur->redirs, envp) == 130)
-				exit(130);
-
+			res = handle_redirections_and_quotes(cur->redirs, envp);
+			if (res == 130)
+				exit (130);
+			else if (res == 1)
+				exit (1);
 			if (is_builtin(cur->argv[0]))
 				exit(run_builtin_in_child(cur, &envp));
-
 			execute_command(NULL, cur, envp);
 			exit(127);
 		}
-
 		i++;
 		cur = cur->next;
 	}
-
 	if (pipes)
 		close_all_pipes(pipes, n_pipes);
 	free(pipes);
-
 	i = wait_pipeline(pids, n_cmds);
 	free(pids);
-
 	return (i);
 }
 
@@ -247,12 +244,12 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 	size_t	n;
 	int		status;
 	char	**envp;
+	int		res;
 
 	envp = *penvp;
 	cur = cmd_list;
 	while (cur)
 	{
-		// Prevención de comandos vacíos (ej: echo hola | | cat)
 		if (!cur->argv || !cur->argv[0])
 		{
 			fprintf(stderr, "minishell: syntax error near unexpected token `|'\n");
@@ -260,10 +257,7 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 			cur = cur->next;
 			continue;
 		}
-
 		n = count_pipeline_cmds(cur);
-
-		// Single non-piped builtin: run in parent
 		if (n == 1 && is_builtin(cur->argv[0]) && cur->pipe == 0)
 		{
 			int save_in;
@@ -274,18 +268,19 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 			save_out = dup(STDOUT_FILENO);
 			save_err = dup(STDERR_FILENO);
 
-			if (handle_redirections_and_quotes(cur->redirs, envp) == 130)
+			res = handle_redirections_and_quotes(cur->redirs, envp);
+			if (res == 130)
 				status = 130;
+			else if (res == 1)
+				status = 1;
 			else
 				status = run_builtin_in_parent(cur, &envp);
-
 			if (save_in != -1)
 				dup2(save_in, STDIN_FILENO);
 			if (save_out != -1)
 				dup2(save_out, STDOUT_FILENO);
 			if (save_err != -1)
 				dup2(save_err, STDERR_FILENO);
-
 			if (save_in != -1)
 				close(save_in);
 			if (save_out != -1)
@@ -295,10 +290,7 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 		}
 		else
 			status = run_pipeline(cur, n, envp, state);
-
 		state->last_status = status;
-
-		// Avanzar cur por n comandos (pipeline)
 		while (n-- > 0 && cur)
 			cur = cur->next;
 	}
