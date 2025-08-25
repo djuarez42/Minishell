@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/25 20:46:38 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/25 21:15:16 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (!fail)
 			executor(cmds, &envp_copy, &state);
-		print_token_list(tokens);
+		//print_token_list(tokens);
 		free_token_list(tokens);
 		free_cmds(cmds);
 		free(input);

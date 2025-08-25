@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/24 17:03:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/25 21:07:37 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 	char	*piece;
 
 	if (!input)
-		return (NULL);
+		return (ft_strdup(""));
 	i = 0;
 	tmp = NULL;
 	piece = NULL;
@@ -29,17 +29,11 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 		{
 			piece = handle_dollar(input, &i, envp, state);
 			if (!piece)
-			{
-				free(tmp);
-				return (NULL);
-			}
+				piece = ft_strdup("");
 			tmp = str_append(tmp, piece);
+			free (piece);
 			if (!tmp)
-			{
-				free(piece);
 				return (NULL);
-			}
-			free(piece);
 		}
 		else
 		{
@@ -48,6 +42,8 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 				return (NULL);
 		}
 	}
+	if (!tmp)
+		tmp = ft_strdup("");
 	return (tmp);
 }
 
