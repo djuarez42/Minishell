@@ -24,10 +24,11 @@ echo hi >./outfiles/outfile01 | echo bye
 61:   STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅ /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:127  
 echo test1		test2
 
-
+MINISHELL
 minishell$ exit 42 42 42 42 42 
 ekakhmad@cbr13s3 ~/Minishell % echo $?    
 42
+
 BASH - >>
 ekakhmad@cbr13s3 ~/Minishell % exit 42 42 42 42 42 
 exit: too many arguments
@@ -55,6 +56,7 @@ echo '' ""
 unset ""
 
 
+<<<<<<< HEAD
 CASE OF ECHO ""
 change in tokenizer.C
 
@@ -103,3 +105,25 @@ int	should_add_token(const char *input, int i, char *tmp)
 		return (tmp[0] != '\0');
 	return (0);
 }
+=======
+
+
+ 
+ # **************************************************************************** #
+  #                                PARSING HELL                                  #
+  # **************************************************************************** #
+ 
+  2:    STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ❌ /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/10_parsing_hell.sh:7  
+
+ /bin/rm ./-f ">"
+
+
+minishell$ /bin/rm ./-f ">"
+
+==452372== LEAK SUMMARY:
+==452372==    definitely lost: 13 bytes in 2 blocks
+==452372==    indirectly lost: 0 bytes in 0 blocks
+==452372==      possibly lost: 0 bytes in 0 blocks
+==452372==    still reachable: 208,234 bytes in 225 blocks
+==452372==         suppressed: 0 bytes in 0 blocks
+>>>>>>> 78360fa27b4289310631088017a384aa179b923b
