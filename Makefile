@@ -3,12 +3,13 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
+#    By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/08/23 13:18:10 by djuarez          ###   ########.fr        #
+#    Updated: 2025/08/24 17:40:12 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 NAME = minishell
 
@@ -56,6 +57,10 @@ SRC = main.c \
 		src/executor/expand_variables_utils2.c \
 		src/executor/expand_variables.c \
 		src/builtins/builtins.c \
+		src/builtins/builtin_echo_pwd_env.c \
+		src/builtins/builtin_cd.c \
+		src/builtins/builtin_export.c \
+		src/builtins/builtin_unset_exit.c \
 		src/signals/signals.c 
 		
 
