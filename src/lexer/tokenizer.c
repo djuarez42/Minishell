@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 19:20:01 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/23 12:06:57 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/25 20:49:17 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,17 @@ char	**reconstruct_words(const char *input, t_quote_type *last_quote,
 	{
 		r.last_i = r.i;
 		r.i = process_spaces_and_quotes(input, r.i, &r.tmp, last_quote);
-		if (r.i == -1)
-			break ;
+	/* CORRRETED ths for casee /bin/rm ./-f ">"*/
+{
+if (r.tmp)
+{
+free(r.tmp);
+r.tmp = NULL;
+}
+break;
+} 
+	/* 	if (r.i == -1)
+			break ; */
 		if (should_add_token(input, r.i, r.tmp))
 		{
 			r.token_quote = *last_quote;
