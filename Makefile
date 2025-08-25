@@ -6,14 +6,14 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/08/14 19:18:01 by djuarez          ###   ########.fr        #
+#    Updated: 2025/08/23 13:18:10 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = cc 
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address -g
 
 INCLUDES = -Iinclude -Ilibft
 
@@ -28,7 +28,7 @@ ifeq ($(UNAME_S),Darwin)
 	READLINE_INC  =
 else
 	# Linux/Ubuntu: readline commonly requires ncurses (or tinfo)
-	READLINE_LIBS = -lreadline -lncurses
+	READLINE_LIBS = -lreadline -lncurses -ltinfo
 	READLINE_INC  =
 endif
 
@@ -46,6 +46,7 @@ SRC = main.c \
 		src/parser/parser.c \
 		src/parser/parser_utils.c \
 		src/parser/parser_utils2.c \
+		src/parser/parser_print_utils.c \
 		src/executor/executor.c \
 		src/executor/executor_utils.c \
 		src/executor/env_utils.c \
@@ -54,7 +55,8 @@ SRC = main.c \
 		src/executor/expand_variables_utils.c \
 		src/executor/expand_variables_utils2.c \
 		src/executor/expand_variables.c \
-		src/builtins/builtins.c 
+		src/builtins/builtins.c \
+		src/signals/signals.c 
 		
 
 OBJ = $(SRC:.c=.o)
@@ -93,4 +95,13 @@ test-a: $(NAME)
 test-b: $(NAME)
 	@bash ./tests/contributor_b_tests.sh
 
+# Smoke tests: mandatory-only quick suite
+.PHONY: test-smoke
+test-smoke: $(NAME)
+	@bash ./tests/smoke_tests.sh
+
 .PHONY: all clean fclean re
+
+.PHONY: test-subject
+test-subject: $(NAME)
+	@bash ./tests/subject_full_tests.sh

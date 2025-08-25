@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/19 17:10:04 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/24 17:03:40 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*handle_special_dollar(const char *input, int *i, t_exec_state *state)
 	}
 	if (input[start] == '$')
 	{
-		*i =  start + 1;
+		*i = start + 1;
 		return (ft_strdup("$"));
 	}
 	return (NULL);
@@ -68,6 +68,7 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 {
 	int		start;
 	char	*segment;
+	char	*new_tmp;
 
 	if (!input || !i)
 		return (NULL);
@@ -78,12 +79,19 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 		return (tmp);
 	segment = ft_substr(input, start, *i - start);
 	if (!segment)
+	{
+		free(tmp);
 		return (NULL);
-	tmp = str_append(tmp, segment);
-	free (segment);
-	if (!tmp)
+	}
+	new_tmp = str_append(tmp, segment);
+	if (!new_tmp)
+	{
+		free(segment);
+		free(tmp);
 		return (NULL);
-	return (tmp);
+	}
+	free(segment);
+	return (new_tmp);
 }
 
 int	expand_argv(char **argv, t_quote_type *argv_quote,
@@ -120,8 +128,12 @@ int	expand_redirs(t_redir *redir, char **envp, t_exec_state *state)
 		{
 			expanded = expand_variables(redir->file, envp, state);
 			if (!expanded)
+			{
+				free(redir->file);
 				return (-1);
-			free(redir->file);
+			}
+			if (redir->file != expanded)
+				free(redir->file);
 			redir->file = expanded;
 		}
 		redir = redir->next;

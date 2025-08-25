@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils_2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 18:46:30 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/17 18:00:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/19 19:48:28 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 t_token_type	determine_token_type(char *str)
 {
-	if (ft_strncmp(str, "<<", 2) == 0)
+	if (str && str[0] == '<' && str[1] == '<' && str[2] == '\0')
 		return (TOKEN_HEREDOC);
-	else if (ft_strncmp(str, ">>", 2) == 0)
+	else if (str && str[0] == '>' && str[1] == '>' && str[2] == '\0')
 		return (TOKEN_APPEND);
-	else if (ft_strncmp(str, "<", 1) == 0)
+	else if (str && str[0] == '<' && str[1] == '\0')
 		return (TOKEN_REDIRECT_IN);
-	else if (ft_strncmp(str, ">", 1) == 0)
+	else if (str && str[0] == '>' && str[1] == '\0')
 		return (TOKEN_REDIRECT_OUT);
-	else if (ft_strncmp(str, "|", 1) == 0)
+	else if (str && str[0] == '|' && str[1] == '\0')
 		return (TOKEN_PIPE);
 	else
 		return (TOKEN_WORD);
