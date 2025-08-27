@@ -18,16 +18,21 @@ char	*handle_quoted_part(const char *input, int *i, char *tmp,
 {
 	char	*segment;
 	int		len;
+	char	current_quote;
 
-	if (input[*i] == '\'')
+	current_quote = input[*i];
+	// Set the quote type based on the quote character
+	if (current_quote == '\'')
 		*last_quote = QUOTE_SINGLE;
-	else if (input[*i] == '\"')
+	else if (current_quote == '\"')
 		*last_quote = QUOTE_DOUBLE;
-
+	
+	// Extract the content inside the quotes
 	segment = extract_quoted_segment(&input[*i], &len);
 	if (!segment)
 		return (tmp);
 
+	// Append the segment to the result
 	tmp = str_append(tmp, segment);
 	free(segment);
 	*i += len;

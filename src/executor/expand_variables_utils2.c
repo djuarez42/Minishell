@@ -99,19 +99,25 @@ int	expand_argv(char **argv, t_quote_type *argv_quote,
 {
 	size_t	j;
 	char	*expanded;
+	t_quote_type quote_type;
 
 	j = 0;
 	while (argv && argv[j])
 	{
-		if (argv_quote && argv_quote[j] == QUOTE_SINGLE)
+		// For complex quotes, we need to use the quote type from argv_quote
+		quote_type = argv_quote ? argv_quote[j] : QUOTE_NONE;
+		
+		// Skip expansion only for pure single-quoted strings
+		if (quote_type == QUOTE_SINGLE)
 		{
 			j++;
-			continue ;
+			continue;
 		}
-		expanded = expand_variables(argv[j], envp, state, QUOTE_NONE);
+		
+		expanded = expand_variables(argv[j], envp, state, quote_type);
 		if (!expanded)
 			return (-1);
-		free (argv[j]);
+		free(argv[j]);
 		argv[j] = expanded;
 		j++;
 	}
