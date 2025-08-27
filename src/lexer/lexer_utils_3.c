@@ -45,8 +45,8 @@ char	*remove_quotes(char *str)
 	char	*result;
 
 	len = ft_strlen(str);
-	if (len > 1 && ((str[0] == '"' && str[len - 1] == '"')
-			|| (str[0] == '\'' && str[len - 1] == '\'')))
+	// Only remove double quotes, preserve single quotes
+	if (len > 1 && str[0] == '"' && str[len - 1] == '"')
 		result = ft_substr(str, 1, len - 2);
 	else
 		result = ft_strdup(str);

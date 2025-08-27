@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables_utils2.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/24 17:03:40 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/27 20:16:49 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,9 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 	if (!input || !i)
 		return (NULL);
 	start = *i;
-	while (input[*i] && input [*i] != '$')
+	while (input[*i] && 
+		input[*i] != '$' && 
+		!(input[*i] == '\\' && input[*i+1] == '$'))
 		(*i)++;
 	if (start == *i)
 		return (tmp);
@@ -103,15 +105,19 @@ int	expand_argv(char **argv, t_quote_type *argv_quote,
 	j = 0;
 	while (argv && argv[j])
 	{
+		// If the string was originally in single quotes, preserve it exactly as-is
 		if (argv_quote && argv_quote[j] == QUOTE_SINGLE)
 		{
+			// We don't need to do anything - keep the string as is with single quotes
 			j++;
-			continue ;
+			continue;
 		}
+		
+		// For other strings, including those in double quotes, expand variables
 		expanded = expand_variables(argv[j], envp, state);
 		if (!expanded)
 			return (-1);
-		free (argv[j]);
+		free(argv[j]);
 		argv[j] = expanded;
 		j++;
 	}

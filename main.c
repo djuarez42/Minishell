@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/24 19:08:54 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/27 20:44:57 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "executor.h"
 #include "signals.h"
 
-/*static char	*read_stdin_line(void)
+static char	*read_stdin_line(void)
 {
 	char	buffer[1];
 	char	*line;
@@ -67,7 +67,13 @@ int main(int argc, char **argv, char **envp)
 	{
 		fail = 0;
 		if (isatty(STDIN_FILENO))
-			input = readline("minishell$ ");
+		{
+			/* Add flushing before showing prompt */
+			fflush(stdout);
+			fflush(stderr);
+			write(STDERR_FILENO, "minishell$ ", 11);
+			input = readline("");
+		}
 		else
 			input = read_stdin_line();
 
@@ -81,22 +87,20 @@ int main(int argc, char **argv, char **envp)
 		if (*input)
 			add_history(input);
 
-		tokens = tokenize_input(input);
-		if (!tokens)
-		{
-			free(input);
-			continue;
-		}
+	tokens = tokenize_input(input);
+	if (!tokens)
+	{
+		free(input);
+		continue;
+	}
 
-		cmds = parser_tokens(tokens);
-		if (!cmds)
-		{
-			free_token_list(tokens);
-			free(input);
-			continue;
-		}
-
-		cur = cmds;
+	cmds = parser_tokens(tokens);
+	if (!cmds)
+	{
+		free_token_list(tokens);
+		free(input);
+		continue;
+	}		cur = cmds;
 		while (cur)
 		{
 			if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
@@ -127,9 +131,9 @@ int main(int argc, char **argv, char **envp)
 
 	free_envp(envp_copy);
 	return (0);
-}*/
+}
 
-int	main(int argc, char **argv, char **envp)
+/* int	main(int argc, char **argv, char **envp)
 {
 	char			*input;
 	t_token			*tokens;
@@ -148,7 +152,8 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		fail = 0;
-		input = readline("minishell$ ");
+		write(STDERR_FILENO, "minishell$ ", 11);
+		input = readline("");
 		if (!input)
 			break ;
 		if (*input)
@@ -191,3 +196,4 @@ int	main(int argc, char **argv, char **envp)
 	return (0);
 }
 
+ */

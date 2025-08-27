@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/25 20:20:21 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/27 20:31:07 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,16 @@ int	process_token(t_cmd *cmd, t_token *cur, int *argc)
 
 	if (*argc >= MAX_ARGS - 1)
 		return (0);
-	clean = remove_quotes(cur->value);
+	
+	// For single-quoted tokens, we want to preserve the quotes
+	if (cur->quote_type == QUOTE_SINGLE) {
+		// Keep the original value with quotes
+		clean = ft_strdup(cur->value);
+	} else {
+		// For normal tokens or double-quoted tokens, remove quotes
+		clean = remove_quotes(cur->value);
+	}
+	
 	if (!clean)
 		return (0);
 	if (!add_argument(cmd, clean, cur->quote_type, argc))

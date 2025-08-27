@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/24 17:03:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/27 20:16:49 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,21 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 	piece = NULL;
 	while (input[i])
 	{
-		if (input[i] == '$')
+		// Handle backslash escaping a $
+		if (input[i] == '\\' && input[i+1] == '$')
+		{
+			// Add just the literal $ to output and skip both characters
+			piece = ft_strdup("$");
+			if (!piece)
+			{
+				free(tmp);
+				return (NULL);
+			}
+			tmp = str_append(tmp, piece);
+			free(piece);
+			i += 2; // Skip both backslash and dollar
+		}
+		else if (input[i] == '$')
 		{
 			piece = handle_dollar(input, &i, envp, state);
 			if (!piece)

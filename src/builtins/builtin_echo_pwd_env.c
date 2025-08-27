@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo_pwd_env.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/23 20:25:34 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/27 20:44:57 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@ int	bi_echo(char **argv)
 		n_flag = 1;
 		i++;
 	}
+	
+	/* Add flushing at the beginning to ensure clean output */
+	fflush(stdout);
+	
 	while (argv[i])
 	{
 		write(STDOUT_FILENO, argv[i], ft_strlen(argv[i]));
@@ -49,6 +53,9 @@ int	bi_echo(char **argv)
 	}
 	if (!n_flag)
 		write(STDOUT_FILENO, "\n", 1);
+	
+	/* Add flushing at the end to ensure output is fully written */
+	fflush(stdout);
 	return (0);
 }
 

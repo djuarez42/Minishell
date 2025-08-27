@@ -48,7 +48,7 @@ t_token	*parse_cmd_block(t_token *cur, t_cmd *cmd)
 		cur = parse_redirections(cur, cmd);
 		if (!cur)
 		{
-			/* redir parse failed: free argv/argv_quote and any redirs created */
+/* redir parse failed: free argv/argv_quote and any redirs created */
 			free_partial_cmd(cmd, -1);
 			free_redirs(cmd->redirs);
 			cmd->redirs = NULL;
