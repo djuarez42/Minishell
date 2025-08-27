@@ -38,12 +38,10 @@ int	token_len(const char *s)
 }
 
 /* No longer used for quoted-empty handling; kept for compatibility if needed */
-int	should_add_token(const char *input, int i, char *tmp)
+int	should_add_token(const char *input, int i)
 {
-	if (!tmp)
-		return (0);
 	if (input[i] == '\0' || ft_isspace((unsigned char)input[i]))
-		return (tmp[0] != '\0');
+		return (1);
 	return (0);
 }
 

@@ -73,9 +73,7 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 	if (!input || !i)
 		return (NULL);
 	start = *i;
-	while (input[*i] && 
-		input[*i] != '$' && 
-		!(input[*i] == '\\' && input[*i+1] == '$'))
+	while (input[*i] && input[*i] != '$' && !(input[*i] == '\\' && input[*i+1] == '$'))
 		(*i)++;
 	if (start == *i)
 		return (tmp);
@@ -105,19 +103,15 @@ int	expand_argv(char **argv, t_quote_type *argv_quote,
 	j = 0;
 	while (argv && argv[j])
 	{
-		// If the string was originally in single quotes, preserve it exactly as-is
 		if (argv_quote && argv_quote[j] == QUOTE_SINGLE)
 		{
-			// We don't need to do anything - keep the string as is with single quotes
 			j++;
-			continue;
+			continue ;
 		}
-		
-		// For other strings, including those in double quotes, expand variables
-		expanded = expand_variables(argv[j], envp, state);
+		expanded = expand_variables(argv[j], envp, state, QUOTE_NONE);
 		if (!expanded)
 			return (-1);
-		free(argv[j]);
+		free (argv[j]);
 		argv[j] = expanded;
 		j++;
 	}
@@ -132,7 +126,7 @@ int	expand_redirs(t_redir *redir, char **envp, t_exec_state *state)
 	{
 		if (redir->file)
 		{
-			expanded = expand_variables(redir->file, envp, state);
+			expanded = expand_variables(redir->file, envp, state, QUOTE_NONE);
 			if (!expanded)
 			{
 				free(redir->file);

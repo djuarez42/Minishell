@@ -46,11 +46,21 @@ int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 		fprintf(stderr, "minishell: syntax error near unexpected token `|'\n");
 		return (2);
 	}
+	
+	// Remove debug code for production
+	/*
+	fprintf(stderr, "DEBUG: Command: [%s]\n", cmd->argv[0]);
+	for (int i = 1; cmd->argv[i] != NULL; i++) {
+		fprintf(stderr, "DEBUG: Arg %d: [%s]\n", i, cmd->argv[i]);
+	}
+	*/
+	
 	exec_path = find_executable(cmd->argv[0], envp);
 	if (!exec_path)
 	{
 		fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
 		return (127);
 	}
+	// fprintf(stderr, "DEBUG: Executing with path: [%s]\n", exec_path);
 	return (execute_execve(exec_path, cmd->argv, envp));
 }

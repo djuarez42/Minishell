@@ -20,8 +20,11 @@ int	bi_unset(char **argv, char ***penvp)
 	i = 1;
 	while (argv[i])
 	{
+		// Check if variable is valid (already expanded by the parser)
 		if (env_identifier_valid(argv[i]))
 			(void)env_unset_var(penvp, argv[i]);
+		else
+			fprintf(stderr, "minishell: unset: `%s': not a valid identifier\n", argv[i]);
 		i++;
 	}
 	return (0);

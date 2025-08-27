@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-char	*expand_variables(const char *input, char **envp, t_exec_state *state)
+char	*expand_variables(const char *input, char **envp, t_exec_state *state,
+								t_quote_type quote)
 {
 	int		i;
 	char	*tmp;
@@ -25,35 +26,45 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state)
 	piece = NULL;
 	while (input[i])
 	{
-		// Handle backslash escaping a $
-		if (input[i] == '\\' && input[i+1] == '$')
+		// Only process $ if not in single quotes
+		if (quote != QUOTE_SINGLE)
 		{
-			// Add just the literal $ to output and skip both characters
-			piece = ft_strdup("$");
-			if (!piece)
+			// Check for backslash escaping a $
+			if (input[i] == '\\' && input[i+1] == '$')
 			{
-				free(tmp);
-				return (NULL);
-			}
-			tmp = str_append(tmp, piece);
-			free(piece);
-			i += 2; // Skip both backslash and dollar
-		}
-		else if (input[i] == '$')
-		{
-			piece = handle_dollar(input, &i, envp, state);
-			if (!piece)
-			{
-				free(tmp);
-				return (NULL);
-			}
-			tmp = str_append(tmp, piece);
-			if (!tmp)
-			{
+				// Add just the literal $ to output and skip both characters
+				piece = ft_strdup("$");
+				if (!piece)
+				{
+					free(tmp);
+					return (NULL);
+				}
+				tmp = str_append(tmp, piece);
 				free(piece);
-				return (NULL);
+				i += 2; // Skip both backslash and dollar
 			}
-			free(piece);
+			else if (input[i] == '$')
+			{
+				piece = handle_dollar(input, &i, envp, state);
+				if (!piece)
+				{
+					free(tmp);
+					return (NULL);
+				}
+				tmp = str_append(tmp, piece);
+				if (!tmp)
+				{
+					free(piece);
+					return (NULL);
+				}
+				free(piece);
+			}
+			else
+			{
+				tmp = extract_plain_text(input, &i, tmp);
+				if (!tmp)
+					return (NULL);
+			}
 		}
 		else
 		{
