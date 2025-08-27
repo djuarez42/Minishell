@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/23 16:14:27 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/27 19:51:25 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,15 @@ int		env_set_assignment(char ***penvp, const char *assignment);
 int		env_unset_var(char ***penvp, const char *name);
 
 // Redirections
-void	handle_redirections_out(const char *filename);
-void	handle_redirections_in(const char *filename);
-void	handle_redirections_append(const char *filename);
+void	handle_redirections_out(const char *filename, int *error);
+void	handle_redirections_in(const char *filename, int *error);
+void	handle_redirections_append(const char *filename, int *error);
 int		handle_redirections(t_redir *redir, char **envp);
 int		handle_redirections_and_quotes(t_redir *redirs, char **envp);
 
 // Exec helpers
-void	execute_command(char *exec_path, t_cmd *cmd, char **envp);
-void	execute_execve(char *exec_path, char **argv, char **envp);
+int		execute_command(char *exec_path, t_cmd *cmd, char **envp);
+int		execute_execve(char *exec_path, char **argv, char **envp);
 char	*find_executable(char *cmd, char **envp);
 
 // expand variables
@@ -77,8 +77,8 @@ int		expand_argv(char **argv, t_quote_type *argv_quote, char **envp,
 			t_exec_state *state);
 int		expand_redirs(t_redir *redir, char **envp, t_exec_state *state);
 int		expand_cmd_inplace(t_cmd *cur, char **envp, t_exec_state *state);
-char	*expand_variables(const char *input, char **envp, t_exec_state *state);
-
+char	*expand_variables(const char *input, char **envp, t_exec_state *state,
+			t_quote_type quote);
 
 // Heredoc utils
 int		open_heredoc_file(void);

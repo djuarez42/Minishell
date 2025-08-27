@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 16:45:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/21 19:18:50 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/27 19:25:20 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,20 @@
 char	*handle_quoted_part(const char *input, int *i, char *tmp,
 	t_quote_type *last_quote)
 {
-	int		len;
 	char	*segment;
-	char	quote;
+	int		len;
 
 	if (input[*i] == '\'')
 		*last_quote = QUOTE_SINGLE;
 	else if (input[*i] == '\"')
 		*last_quote = QUOTE_DOUBLE;
+
 	segment = extract_quoted_segment(&input[*i], &len);
 	if (!segment)
-	{
-		printf("❌ extract_quoted_segment falló en i = %d\n", *i);
-		*i += 1;
 		return (tmp);
-	}
-	quote = input[*i];
-	(void)quote;
+
 	tmp = str_append(tmp, segment);
-	free (segment);
+	free(segment);
 	*i += len;
 	return (tmp);
 }
