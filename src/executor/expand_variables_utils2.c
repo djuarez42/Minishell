@@ -48,7 +48,17 @@ char	*handle_dollar(const char *input, int *i, char **envp,
 	res = handle_special_dollar(input, i, state);
 	if (res)
 		return (res);
+	
+	// Special case for $"string" - in bash this is locale translation
+	// But we'll just treat it as literal $"string"
 	start = *i + 1;
+	if (input[start] == '\"')
+	{
+		*i = *i + 1;  // Skip just the $ character
+		return (ft_strdup("$"));  // Return $ literally
+	}
+
+	// Normal variable expansion
 	len = skip_variable_name(input + start);
 	if (len == 0)
 	{
