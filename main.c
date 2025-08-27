@@ -61,45 +61,51 @@ int main(int argc, char **argv, char **envp)
 	// If command line arguments were provided (argc > 1), execute them directly
 	if (argc > 1)
 	{
-		// Join arguments with spaces to create a command string
-		char *cmd_str = NULL;
+		// For command line arguments, quotes should be preserved as literal content
+		// Don't re-join and re-tokenize - build command structure directly
+		
+		t_cmd *cmd = malloc(sizeof(t_cmd));
+		if (!cmd)
+		{
+			free_envp(envp_copy);
+			return (1);
+		}
+		
+		// Initialize the command structure
+		cmd->argv = malloc(sizeof(char*) * argc);
+		if (!cmd->argv)
+		{
+			free(cmd);
+			free_envp(envp_copy);
+			return (1);
+		}
+		
+		cmd->argv_quote = malloc(sizeof(t_quote_type) * argc);
+		if (!cmd->argv_quote)
+		{
+			free(cmd->argv);
+			free(cmd);
+			free_envp(envp_copy);
+			return (1);
+		}
+		
+		// Copy arguments directly (preserving any quote characters as literals)
 		for (int i = 1; i < argc; i++)
 		{
-			if (i > 1)
-				cmd_str = ft_strjoin_free(cmd_str, " ");
-			cmd_str = ft_strjoin_free(cmd_str, argv[i]);
+			cmd->argv[i-1] = ft_strdup(argv[i]);
+			cmd->argv_quote[i-1] = QUOTE_NONE; // Command line args are already processed
 		}
+		cmd->argv[argc-1] = NULL;
+		cmd->argv_quote[argc-1] = QUOTE_NONE;
 		
-		if (cmd_str)
-		{
-			tokens = tokenize_input(cmd_str);
-			if (tokens)
-			{
-				cmds = parser_tokens(tokens);
-				if (cmds)
-				{
-					cur = cmds;
-					fail = 0;
-					while (cur)
-					{
-						if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
-						{
-							fail = 1;
-							break;
-						}
-						cur = cur->next;
-					}
-					
-					if (!fail)
-						executor(cmds, &envp_copy, &state);
-					
-					free_cmds(cmds);
-				}
-				free_token_list(tokens);
-			}
-			free(cmd_str);
-		}
+		cmd->pipe = 0;
+		cmd->redirs = NULL;
+		cmd->next = NULL;
 		
+		// Execute the command directly
+		executor(cmd, &envp_copy, &state);
+		
+		free_cmds(cmd);
 		free_envp(envp_copy);
 		return (state.last_status);
 	}
