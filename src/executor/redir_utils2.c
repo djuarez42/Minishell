@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/24 17:02:49 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/27 20:07:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ int	write_heredoc_lines(t_heredoc_args *args)
 			break ;
 		}
 		if (!args->quoted)
-			expanded_line = expand_variables(line, args->envp, args->state);
+			expanded_line = expand_variables(line, args->envp, args->state,
+					QUOTE_NONE);
 		else
 			expanded_line = ft_strdup(line);
 		write(args->fd, expanded_line, ft_strlen(expanded_line));

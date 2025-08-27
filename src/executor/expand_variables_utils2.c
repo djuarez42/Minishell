@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/24 17:03:40 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/27 20:15:59 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,9 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 int	expand_argv(char **argv, t_quote_type *argv_quote,
 		char **envp, t_exec_state *state)
 {
-	size_t	j;
-	char	*expanded;
+	size_t			j;
+	char			*expanded;
+	t_quote_type	quote_type;
 
 	j = 0;
 	while (argv && argv[j])
@@ -108,10 +109,17 @@ int	expand_argv(char **argv, t_quote_type *argv_quote,
 			j++;
 			continue ;
 		}
-		expanded = expand_variables(argv[j], envp, state);
+
+		if (argv_quote)
+			quote_type = argv_quote[j];
+		else
+			quote_type = QUOTE_NONE;
+
+		expanded = expand_variables(argv[j], envp, state, quote_type);
 		if (!expanded)
 			return (-1);
-		free (argv[j]);
+
+		free(argv[j]);
 		argv[j] = expanded;
 		j++;
 	}
@@ -120,13 +128,19 @@ int	expand_argv(char **argv, t_quote_type *argv_quote,
 
 int	expand_redirs(t_redir *redir, char **envp, t_exec_state *state)
 {
-	char	*expanded;
+	char			*expanded;
+	t_quote_type	quote_type;
 
 	while (redir)
 	{
 		if (redir->file)
 		{
-			expanded = expand_variables(redir->file, envp, state);
+			if (redir->quoted)
+				quote_type = QUOTE_SINGLE; // o QUOTE_DOUBLE según cómo detectes quotes en redir
+			else
+				quote_type = QUOTE_NONE;
+
+			expanded = expand_variables(redir->file, envp, state, quote_type);
 			if (!expanded)
 			{
 				free(redir->file);

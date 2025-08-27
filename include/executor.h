@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/25 19:00:41 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/27 19:51:25 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ int		expand_argv(char **argv, t_quote_type *argv_quote, char **envp,
 			t_exec_state *state);
 int		expand_redirs(t_redir *redir, char **envp, t_exec_state *state);
 int		expand_cmd_inplace(t_cmd *cur, char **envp, t_exec_state *state);
-char	*expand_variables(const char *input, char **envp, t_exec_state *state);
-
+char	*expand_variables(const char *input, char **envp, t_exec_state *state,
+			t_quote_type quote);
 
 // Heredoc utils
 int		open_heredoc_file(void);

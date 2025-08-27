@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 19:20:01 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/25 20:31:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/27 20:32:42 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,38 @@ char	**reconstruct_words(const char *input, t_quote_type *last_quote,
 
 	if (!init_tokens_and_quotes(&r.tokens, quotes_out))
 		return (NULL);
+
 	r.i = 0;
 	r.tok_i = 0;
 	r.tmp = NULL;
+
 	while (input[r.i])
 	{
-		r.last_i = r.i;
-		r.i = process_spaces_and_quotes(input, r.i, &r.tmp, last_quote);
-		if (r.i == -1)
-			break ;
-		if (should_add_token(input, r.i))
-		{
-			r.token_quote = *last_quote;
-			check_and_add_token(r.tokens, &r.tok_i, &r.tmp);
-			(*quotes_out)[r.tok_i - 1] = r.token_quote;
-		}
-		if (r.last_i == r.i)
+		while (ft_isspace(input[r.i]))
 			r.i++;
+		if (!input[r.i])
+			break ;
+
+		if (is_quote(input[r.i]))
+		{
+			r.tmp = handle_quoted_part(input, &r.i, r.tmp, last_quote);
+			// cada segmento con comillas se agrega como un token separado
+			r.tokens[r.tok_i] = r.tmp;
+			(*quotes_out)[r.tok_i] = *last_quote;
+			r.tok_i++;
+			r.tmp = NULL;
+			*last_quote = QUOTE_NONE;
+		}
+		else
+		{
+			r.tmp = handle_plain_text(input, &r.i, r.tmp);
+			r.tokens[r.tok_i] = r.tmp;
+			(*quotes_out)[r.tok_i] = QUOTE_NONE;
+			r.tok_i++;
+			r.tmp = NULL;
+		}
 	}
+
 	r.tokens[r.tok_i] = NULL;
 	(*quotes_out)[r.tok_i] = QUOTE_NONE;
 	return (r.tokens);
