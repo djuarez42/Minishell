@@ -56,6 +56,7 @@ SRC = main.c \
 		src/executor/expand_variables_utils.c \
 		src/executor/expand_variables_utils2.c \
 		src/executor/expand_variables.c \
+		src/executor/expand_mixed_quotes.c \
 		src/builtins/builtins.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \

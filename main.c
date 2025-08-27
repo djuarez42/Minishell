@@ -52,14 +52,58 @@ int main(int argc, char **argv, char **envp)
 	t_cmd *cur;
 	int fail;
 
-	(void)argc;
-	(void)argv;
-
 	envp_copy = new_envp(envp);
 	if (!envp_copy)
 		return (1);
 
 	state = (t_exec_state){0};
+	
+	// If command line arguments were provided (argc > 1), execute them directly
+	if (argc > 1)
+	{
+		// Join arguments with spaces to create a command string
+		char *cmd_str = NULL;
+		for (int i = 1; i < argc; i++)
+		{
+			if (i > 1)
+				cmd_str = ft_strjoin_free(cmd_str, " ");
+			cmd_str = ft_strjoin_free(cmd_str, argv[i]);
+		}
+		
+		if (cmd_str)
+		{
+			tokens = tokenize_input(cmd_str);
+			if (tokens)
+			{
+				cmds = parser_tokens(tokens);
+				if (cmds)
+				{
+					cur = cmds;
+					fail = 0;
+					while (cur)
+					{
+						if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
+						{
+							fail = 1;
+							break;
+						}
+						cur = cur->next;
+					}
+					
+					if (!fail)
+						executor(cmds, &envp_copy, &state);
+					
+					free_cmds(cmds);
+				}
+				free_token_list(tokens);
+			}
+			free(cmd_str);
+		}
+		
+		free_envp(envp_copy);
+		return (state.last_status);
+	}
+	
 	if (isatty(STDIN_FILENO))
 		signals_setup_interactive(&state);
 
