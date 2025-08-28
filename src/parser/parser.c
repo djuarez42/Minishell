@@ -74,7 +74,13 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 	t_redir	*new_redir;
 	t_redir	*last;
 
-	if (!cur || !cur->next || cur->next->type != TOKEN_WORD)
+	if (!cur || !cur->next)
+		return (NULL);
+	if ((cur->type == TOKEN_REDIRECT_IN || cur->type == TOKEN_HEREDOC) 
+		&& cur->next->type != TOKEN_IN_FILE)
+		return (NULL);
+	if ((cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND) 
+		&& cur->next->type != TOKEN_OUT_FILE)
 		return (NULL);
 	new_redir = create_redir(cur);
 	if (!new_redir)

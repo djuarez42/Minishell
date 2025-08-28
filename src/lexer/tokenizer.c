@@ -26,6 +26,8 @@ t_token	*tokenize_input(const char *input)
 	token_list = build_token_list(tokens, quotes);
 	free_tokens(tokens, -1);
 	free(quotes);
+	if (token_list)
+		classify_redirection_files(token_list);
 	return (token_list);
 }
 

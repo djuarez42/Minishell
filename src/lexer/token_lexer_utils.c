@@ -79,5 +79,9 @@ const char	*token_type_str(t_token_type type)
 		return ("APPEND");
 	if (type == TOKEN_EOF)
 		return ("EOF");
+	if (type == TOKEN_IN_FILE)
+		return ("IN_FILE");
+	if (type == TOKEN_OUT_FILE)
+		return ("OUT_FILE");
 	return ("UNKNOWN");
 }

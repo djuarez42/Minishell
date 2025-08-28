@@ -28,6 +28,8 @@ typedef enum e_token_type
 	TOKEN_HEREDOC,// <<			#4
 	TOKEN_APPEND,// >>			#5
 	TOKEN_EOF,// end of file 	#6
+	TOKEN_IN_FILE,// input file  #7
+	TOKEN_OUT_FILE,// output file #8
 }	t_token_type;
 
 //Quotes
@@ -92,5 +94,6 @@ int				init_tokens_and_quotes(char ***tokens_out,
 					t_quote_type **quotes_out);
 const char		*quote_type_str(t_quote_type q);
 char			*strip_comments(const char *input);
+void			classify_redirection_files(t_token *tokens);
 
 #endif

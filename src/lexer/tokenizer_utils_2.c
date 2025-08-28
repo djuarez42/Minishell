@@ -98,3 +98,27 @@ t_token	*append_token_eof(t_token *head, t_token *cur)
 	cur->next = (new);
 	return (head);
 }
+
+void	classify_redirection_files(t_token *tokens)
+{
+	t_token	*cur;
+
+	cur = tokens;
+	while (cur)
+	{
+		if (cur->next)
+		{
+			if ((cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND) 
+				&& cur->next->type == TOKEN_WORD)
+			{
+				cur->next->type = TOKEN_OUT_FILE;
+			}
+			else if ((cur->type == TOKEN_REDIRECT_IN || cur->type == TOKEN_HEREDOC) 
+				&& cur->next->type == TOKEN_WORD)
+			{
+				cur->next->type = TOKEN_IN_FILE;
+			}
+		}
+		cur = cur->next;
+	}
+}
