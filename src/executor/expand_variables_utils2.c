@@ -12,6 +12,52 @@
 
 #include "minishell.h"
 
+static char	*expand_tilde_prefix(const char *s, char **envp)
+{
+	const char	*home;
+	char		*suffix;
+	char		*res;
+
+	if (!s || s[0] != '~')
+		return (ft_strdup(s));
+	if (s[1] && s[1] != '/')
+		return (ft_strdup(s));
+	home = env_get_value(envp, "HOME");
+	if (!home)
+		home = "";
+	suffix = ft_strdup(s + 1);
+	if (!suffix)
+		return (NULL);
+	res = ft_strjoin(home, suffix);
+	free(suffix);
+	return (res);
+}
+
+char	*remove_all_quotes(const char *s)
+{
+	size_t	len;
+	size_t	i;
+	size_t	j;
+	char	*out;
+
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	out = malloc(len + 1);
+	if (!out)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (i < len)
+	{
+		if (s[i] != '\'' && s[i] != '"')
+			out[j++] = s[i];
+		i++;
+	}
+	out[j] = '\0';
+	return (out);
+}
+
 char	*handle_special_dollar(const char *input, int *i, t_exec_state *state)
 {
 	int	start;
@@ -20,7 +66,7 @@ char	*handle_special_dollar(const char *input, int *i, t_exec_state *state)
 	if (!input[start])
 	{
 		*i = *i + 1;
-		return (ft_strdup("$"));
+		return (ft_strdup(""));
 	}
 	if (input[start] == '?')
 	{
@@ -49,13 +95,20 @@ char	*handle_dollar(const char *input, int *i, char **envp,
 	if (res)
 		return (res);
 	
-	// Special case for $"string" - in bash this is locale translation
-	// But we'll just treat it as literal $"string"
+	// $" and $' cases: $ disappears (empty)
 	start = *i + 1;
-	if (input[start] == '\"')
+	if (input[start] == '"' || input[start] == '\'')
 	{
 		*i = *i + 1;  // Skip just the $ character
-		return (ft_strdup("$"));  // Return $ literally
+		return (ft_strdup(""));  // $ disappears
+	}
+
+	// $<digit> case: expand single digit as env var name
+	if (ft_isdigit((unsigned char)input[start]))
+	{
+		char name[2] = { input[start], '\0' };
+		*i = start + 1;
+		return (expand_env_var(name, envp));
 	}
 
 	// Normal variable expansion
@@ -124,27 +177,14 @@ int	expand_argv(char **argv, t_quote_type *argv_quote,
 			continue;
 		}
 		
-		// For mixed quote handling, check if string looks like it had mixed quotes
-		// This is a pattern like: text'more_text'text or similar combinations
-		if (quote_type == QUOTE_DOUBLE && ft_strchr(argv[j], '$') && ft_strnstr(argv[j], "USER", ft_strlen(argv[j])))
-		{
-			// Special case handling for common test patterns
-			// If we see $USER in what should be a non-expanding context, preserve it
-			char *dollar_pos = ft_strchr(argv[j], '$');
-			if (dollar_pos && ft_strncmp(dollar_pos, "$USER", 5) == 0)
-			{
-				expanded = ft_strdup(argv[j]); // Keep as literal
-			}
-			else
-			{
-				expanded = expand_variables(argv[j], envp, state, quote_type);
-			}
-		}
-		else
-		{
-			// Use regular expansion for simple cases
-			expanded = expand_variables(argv[j], envp, state, quote_type);
-		}
+		// First apply tilde expansion (for non-single-quoted tokens)
+		char *tilde_expanded = expand_tilde_prefix(argv[j], envp);
+		if (!tilde_expanded)
+			return (-1);
+		
+		// Then apply variable expansion
+		expanded = expand_variables(tilde_expanded, envp, state, quote_type);
+		free(tilde_expanded);
 		
 		if (!expanded)
 			return (-1);
@@ -169,9 +209,16 @@ int	expand_redirs(t_redir *redir, char **envp, t_exec_state *state)
 				free(redir->file);
 				return (-1);
 			}
-			if (redir->file != expanded)
+			char *stripped = remove_all_quotes(expanded);
+			if (!stripped)
+			{
+				free(expanded);
 				free(redir->file);
-			redir->file = expanded;
+				return (-1);
+			}
+			free(redir->file);
+			free(expanded);
+			redir->file = stripped;
 		}
 		redir = redir->next;
 	}

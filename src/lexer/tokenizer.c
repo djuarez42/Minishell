@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 19:20:01 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/25 21:18:39 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:34:01 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,25 @@ char	**reconstruct_words(const char *input, t_quote_type *last_quote,
 		r.i = process_spaces_and_quotes(input, r.i, &r.tmp, last_quote);
 		if (r.i == -1)
 			break ;
+		/* If we are at an operator, flush tmp (as a token) and emit operator token */
+		if (input[r.i] != '\0' && is_operator(input[r.i]))
+		{
+			if (r.tmp)
+			{
+				r.token_quote = *last_quote;
+				check_and_add_token(r.tokens, &r.tok_i, &r.tmp);
+				(*quotes_out)[r.tok_i - 1] = r.token_quote;
+				*last_quote = QUOTE_NONE;
+			}
+			{
+				int		len = operator_len(&input[r.i]);
+				char	*op = ft_substr(input, r.i, len);
+				add_token(r.tokens, &r.tok_i, &op);
+				(*quotes_out)[r.tok_i - 1] = QUOTE_NONE;
+				r.i += len;
+			}
+			continue;
+		}
 		/* Add token when:
 		 * - we're at end or space boundary, AND
 		 * - tmp is non-empty OR it is empty but came from quotes ("" or '') */

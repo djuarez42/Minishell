@@ -78,8 +78,9 @@ int		expand_argv(char **argv, t_quote_type *argv_quote, char **envp,
 int		expand_redirs(t_redir *redir, char **envp, t_exec_state *state);
 int		expand_cmd_inplace(t_cmd *cur, char **envp, t_exec_state *state);
 char	*expand_variables(const char *input, char **envp, t_exec_state *state,
-			t_quote_type quote);
+		t_quote_type quote);
 char	*expand_mixed_quotes(const char *input, char **envp, t_exec_state *state);
+char	*remove_all_quotes(const char *s);
 
 // Heredoc utils
 int		open_heredoc_file(void);

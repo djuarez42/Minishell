@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils_4.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 16:09:54 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/23 12:07:26 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/28 19:30:39 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ char	*handle_plain_text(const char *input, int *i, char *tmp)
 	char	*segment;
 
 	start = *i;
-	while (input[*i] && !is_quote(input[*i]) && !ft_isspace(input[*i]))
+	while (input[*i]
+		&& !is_quote(input[*i])
+		&& !ft_isspace(input[*i])
+		&& !is_operator(input[*i]))
 		(*i)++;
 	segment = ft_substr(input, start, *i - start);
 	tmp = str_append(tmp, segment);

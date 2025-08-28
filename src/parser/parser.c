@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/24 20:59:45 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:34:01 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,21 @@ t_cmd	*parser_tokens(t_token *tokens)
 	cur = tokens;
 	while (cur && cur->type != TOKEN_EOF)
 	{
+		/* Syntax: leading pipe is invalid */
+		if (cur->type == TOKEN_PIPE)
+			return (free_cmds(head), NULL);
 		new_cmd = create_cmd_node(&cur);
 		if (!new_cmd)
 			return (free_cmds(head), NULL);
 		add_cmd_node(&head, &last, new_cmd);
+		/* After a command, a single pipe is allowed; reject double/trailing */
+		if (cur && cur->type == TOKEN_PIPE)
+		{
+			if (!cur->next || cur->next->type == TOKEN_PIPE
+				|| cur->next->type == TOKEN_EOF)
+				return (free_cmds(head), NULL);
+			cur = cur->next;
+		}
 	}
 	return (head);
 }
