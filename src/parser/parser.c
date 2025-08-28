@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/28 19:34:01 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/28 20:31:09 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,9 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 
 	if (!cur || !cur->next)
 		return (NULL);
-	if ((cur->type == TOKEN_REDIRECT_IN || cur->type == TOKEN_HEREDOC) 
-		&& cur->next->type != TOKEN_IN_FILE)
-		return (NULL);
-	if ((cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND) 
+	// Accept both WORD tokens and the new file types for compatibility
+	if (cur->next->type != TOKEN_WORD 
+		&& cur->next->type != TOKEN_IN_FILE 
 		&& cur->next->type != TOKEN_OUT_FILE)
 		return (NULL);
 	new_redir = create_redir(cur);

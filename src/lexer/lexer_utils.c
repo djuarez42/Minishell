@@ -87,7 +87,15 @@ char	**clean_input_quotes(const char *input, t_quote_type **quotes_out)
 
 void	add_token(char **tokens, int *tok_i, char **tmp)
 {
-	tokens[*tok_i] = *tmp;
-	(*tok_i)++;
+	// Skip empty tokens
+	if (*tmp && (*tmp)[0] != '\0')
+	{
+		tokens[*tok_i] = *tmp;
+		(*tok_i)++;
+	}
+	else if (*tmp)
+	{
+		free(*tmp);  // Free the empty string
+	}
 	*tmp = NULL;
 }

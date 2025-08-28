@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 18:46:30 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/19 19:48:28 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/28 20:31:09 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,12 @@ t_token	*build_token_list(char **tokens, t_quote_type *quotes)
 	i = 0;
 	while (tokens[i])
 	{
+		// Skip empty tokens
+		if (tokens[i][0] == '\0')
+		{
+			i++;
+			continue;
+		}
 		new = malloc(sizeof(t_token));
 		if (!new)
 			return (NULL);
