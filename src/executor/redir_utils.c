@@ -91,7 +91,7 @@ int	handle_redirections_heredoc(const char *delimiter, bool quoted,
 	return (0);
 }
 
-int	handle_redirections(t_redir *redir, char **envp)
+int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
 {
 	int				res;
 	int				err;
@@ -108,6 +108,7 @@ int	handle_redirections(t_redir *redir, char **envp)
 			handle_redirections_append(redir->file, &err);
 		else if (redir->type == TOKEN_HEREDOC)
 		{
+			args.state = state; // Initialize the state
 			res = handle_redirections_heredoc(redir->file, redir->quoted, envp,
 					&args);
 			if (res == 130)

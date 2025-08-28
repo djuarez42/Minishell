@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/27 20:16:49 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:41:57 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state,
 				}
 				free(piece);
 			}
-
 			else
 			{
 				tmp = extract_plain_text(input, &i, tmp);

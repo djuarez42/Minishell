@@ -24,18 +24,12 @@ void	free_split(char **split)
 	free(split);
 }
 
-int	handle_redirections_and_quotes(t_redir *redirs, char **envp)
+int	handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state)
 {
-	t_redir	*redir;
 	int		res;
 
-	redir = redirs;
-	while (redir)
-	{
-		redir->file = remove_quotes(redir->file);
-		redir = redir->next;
-	}
-	res = handle_redirections(redirs, envp);
+	// Quote stripping is now handled by expand_redirs in expand_cmd_inplace
+	res = handle_redirections(redirs, envp, state);
 	return (res);
 }
 

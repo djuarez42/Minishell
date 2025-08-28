@@ -54,8 +54,8 @@ int		env_unset_var(char ***penvp, const char *name);
 void	handle_redirections_out(const char *filename, int *error);
 void	handle_redirections_in(const char *filename, int *error);
 void	handle_redirections_append(const char *filename, int *error);
-int		handle_redirections(t_redir *redir, char **envp);
-int		handle_redirections_and_quotes(t_redir *redirs, char **envp);
+int		handle_redirections(t_redir *redir, char **envp, t_exec_state *state);
+int		handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state);
 
 // Exec helpers
 int		execute_command(char *exec_path, t_cmd *cmd, char **envp);
