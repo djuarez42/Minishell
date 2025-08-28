@@ -210,16 +210,8 @@ int	expand_redirs(t_redir *redir, char **envp, t_exec_state *state)
 				free(redir->file);
 				return (-1);
 			}
-			char *stripped = remove_all_quotes(expanded);
-			if (!stripped)
-			{
-				free(expanded);
-				free(redir->file);
-				return (-1);
-			}
 			free(redir->file);
-			free(expanded);
-			redir->file = stripped;
+			redir->file = expanded;
 		}
 		redir = redir->next;
 	}

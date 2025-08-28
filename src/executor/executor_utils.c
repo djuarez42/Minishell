@@ -28,7 +28,10 @@ int	handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *s
 {
 	int		res;
 
-	// Quote stripping is now handled by expand_redirs in expand_cmd_inplace
+	// Expand redirections here (following flowchart order)
+	if (expand_redirs(redirs, envp, state) == -1)
+		return (-1);
+	
 	res = handle_redirections(redirs, envp, state);
 	return (res);
 }

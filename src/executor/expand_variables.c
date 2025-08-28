@@ -80,7 +80,7 @@ int	expand_cmd_inplace(t_cmd *cur, char **envp, t_exec_state *state)
 {
 	if (expand_argv(cur->argv, cur->argv_quote, envp, state) == -1)
 		return (-1);
-	if (expand_redirs(cur->redirs, envp, state) == -1)
-		return (-1);
+	// Note: redirection expansion moved to handle_redirections_and_quotes
+	// to follow proper flowchart order
 	return (0);
 }
