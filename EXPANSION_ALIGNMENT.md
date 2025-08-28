@@ -12,6 +12,279 @@
 
 ---
 
+## ✅ IMPLEMENTED CORRECTIONS (Latest Update)
+
+### 🔧 Changes Made - August 28, 2025
+
+#### 1. Tokenizer Operator Splitting (`src/lexer/lexer_utils_4.c`, `src/lexer/tokenizer.c`)
+**Issue**: Operators like `|`, `<`, `>` weren't properly split when not separated by spaces
+**Fix**: 
+- Modified `handle_plain_text` to stop on operator characters
+- Added explicit operator handling in `reconstruct_words` to create separate tokens for operators
+- **Result**: `echo hello|cat` now correctly tokenizes as `["echo", "hello", "|", "cat"]`
+
+#### 2. Parser Syntax Validation (`src/parser/parser.c`)
+**Issue**: No syntax error detection for invalid pipe usage
+**Fix**: Added checks for:
+- Leading pipes: `| echo hello` → syntax error
+- Double pipes: `echo hello || cat` → syntax error  
+- Trailing pipes: `echo hello |` → syntax error
+- **Result**: Invalid pipe syntax now properly detected and rejected
+
+#### 3. Redirection Filename Quote Stripping (`src/executor/expand_variables_utils2.c`)
+**Issue**: Redirection filenames kept quotes after expansion
+**Fix**: 
+- Added `remove_all_quotes()` function to strip all quote characters
+- Modified `expand_redirs()` to call quote stripping after variable expansion
+- **Result**: `echo hello > "file.txt"` now creates `file.txt`, not `"file.txt"`
+
+#### 4. Variable Expansion Edge Cases (`src/executor/expand_variables_utils2.c`)
+**Issue**: Several `$` edge cases handled incorrectly
+**Fixes**:
+- **Trailing `$`**: `echo $` now outputs empty string instead of literal `$`
+- **`$"` and `$'` cases**: `$"HOME"` now outputs `HOME` ($ disappears, quotes processed literally)
+- **`$<digit>` support**: `$1`, `$2`, etc. now expand as single-digit environment variables
+- **Result**: Complex cases like `$"HOME"$USER` now output `HOMEekaterina` correctly
+
+#### 5. Removed `$USER` Heuristic (`src/executor/expand_variables_utils2.c`)
+**Issue**: Special case logic for `$USER` bypassed normal expansion
+**Fix**: Removed the heuristic, ensuring all variables go through standard expansion pipeline
+**Result**: More consistent and predictable variable expansion behavior
+
+#### 6. Tilde Expansion (`src/executor/expand_variables_utils2.c`)
+**Issue**: No support for `~` and `~/` expansion
+**Fix**:
+- Added `expand_tilde_prefix()` function
+- Integrated into `expand_argv()` before variable expansion
+- **Result**: `~/Documents` now expands to `/Users/username/Documents`
+
+### 🧪 Test Results
+- ✅ `$"HOME"$USER` → `HOMEekaterina` (was `/Users/ekaterinaekaterina`)
+- ✅ `echo hello|cat` → properly tokenized and executed
+- ✅ `echo > "file.txt"` → creates `file.txt` without quotes
+- ✅ `~/test` → expands to `/Users/username/test`
+- ✅ Basic pipe syntax errors now detected
+- 🔧 Still debugging: `$""$USER` continuation case
+
+### 🔄 Remaining Issues
+1. **Empty quote continuation**: `$""$USER` should output `ekaterina` but currently outputs `$USER`
+2. **Advanced heredoc functionality**: Basic `<<` support needs implementation
+3. **Additional syntax error cases**: More comprehensive operator validation
+4. **Backslash-dollar parity**: `\$` handling alignment
+
+---
+
+## 📝 Detailed Code Changes
+
+### 1. Tokenizer Operator Splitting
+
+**File**: `src/lexer/lexer_utils_4.c`
+```c
+// BEFORE: handle_plain_text only stopped on quotes and spaces
+char	*handle_plain_text(const char *input, int *i, char *tmp)
+{
+	// ... existing code ...
+	while (input[*i] && !is_quote(input[*i]) && !ft_isspace(input[*i]))
+		(*i)++;
+	// ...
+}
+
+// AFTER: Now also stops on operator characters
+char	*handle_plain_text(const char *input, int *i, char *tmp)
+{
+	// ... existing code ...
+	while (input[*i] && !is_quote(input[*i]) && !ft_isspace(input[*i]) 
+		&& !is_operator(input[*i])) // Added this condition
+		(*i)++;
+	// ...
+}
+```
+
+**File**: `src/lexer/tokenizer.c`
+```c
+// ADDED: Explicit operator handling in reconstruct_words
+else if (is_operator(input[r.i])) // New condition
+{
+	if (r.tmp) // If there's accumulated plain text, add it first
+	{
+		r.token_quote = *last_quote;
+		check_and_add_token(r.tokens, &r.tok_i, &r.tmp);
+		(*quotes_out)[r.tok_i - 1] = r.token_quote;
+		*last_quote = QUOTE_NONE;
+	}
+	// Now add the operator token
+	int op_len = operator_len(input + r.i);
+	r.tmp = ft_substr(input, r.i, op_len);
+	// ... add operator as separate token ...
+}
+```
+
+### 2. Parser Syntax Validation
+
+**File**: `src/parser/parser.c`
+```c
+// ADDED: Pipe syntax validation in parser_tokens
+cur = tokens;
+if (cur && cur->type == TOKEN_PIPE) // Check for leading pipe
+{
+	// Handle syntax error: pipe at start
+	return (NULL);
+}
+
+while (cur && cur->type != TOKEN_EOF)
+{
+	// ... existing parsing logic ...
+	
+	if (cur && cur->type == TOKEN_PIPE) // Check for double/trailing pipe
+	{
+		if (!cur->next || cur->next->type == TOKEN_PIPE || cur->next->type == TOKEN_EOF)
+		{
+			// Handle syntax error: double pipe or pipe at end
+			return (NULL);
+		}
+		cur = cur->next; // Consume the pipe
+	}
+}
+```
+
+### 3. Quote Stripping for Redirections
+
+**File**: `src/executor/expand_variables_utils2.c`
+```c
+// ADDED: New function to remove all quote characters
+char	*remove_all_quotes(const char *s)
+{
+	size_t	len = ft_strlen(s);
+	char	*out = malloc(len + 1);
+	size_t	i = 0, j = 0;
+	
+	while (i < len)
+	{
+		if (s[i] != '\'' && s[i] != '"')
+			out[j++] = s[i];
+		i++;
+	}
+	out[j] = '\0';
+	return (out);
+}
+
+// MODIFIED: expand_redirs now strips quotes after expansion
+int	expand_redirs(t_redir *redir, char **envp, t_exec_state *state)
+{
+	while (redir)
+	{
+		if (redir->file)
+		{
+			expanded = expand_variables(redir->file, envp, state, QUOTE_NONE);
+			char *stripped = remove_all_quotes(expanded); // Added
+			free(redir->file);
+			free(expanded);
+			redir->file = stripped; // Assign stripped string
+		}
+		redir = redir->next;
+	}
+	return (0);
+}
+```
+
+### 4. Dollar Edge Cases and Quote Handling
+
+**File**: `src/executor/expand_variables_utils2.c`
+```c
+// MODIFIED: handle_special_dollar for trailing $ case
+char	*handle_special_dollar(const char *input, int *i, t_exec_state *state)
+{
+	int	start = *i + 1;
+	if (!input[start]) // Trailing $
+	{
+		*i = *i + 1;
+		return (ft_strdup("")); // Should expand to empty, not "$"
+	}
+	// ... existing cases ...
+}
+
+// COMPLETELY REWRITTEN: handle_dollar for $" and $' cases
+char	*handle_dollar(const char *input, int *i, char **envp, t_exec_state *state)
+{
+	// ... existing special cases ...
+	
+	// $" case: $ disappears, then process the quoted content literally
+	start = *i + 1;
+	if (input[start] == '"')
+	{
+		*i = start + 1; // Skip $ and opening quote
+		int quote_start = *i;
+		while (input[*i] && input[*i] != '"') // Find closing quote
+			(*i)++;
+		if (input[*i] == '"')
+		{
+			if (*i > quote_start)
+			{
+				char *literal = ft_substr(input, quote_start, *i - quote_start);
+				(*i)++; // Skip closing quote
+				return (literal); // Return literal content, not expanded
+			}
+			// ... handle empty quotes case ...
+		}
+	}
+	// Similar logic for $' case...
+}
+```
+
+### 5. Tilde Expansion
+
+**File**: `src/executor/expand_variables_utils2.c`
+```c
+// ADDED: New tilde expansion function
+static char	*expand_tilde_prefix(const char *s, char **envp)
+{
+	if (!s || s[0] != '~')
+		return (ft_strdup(s));
+	if (s[1] && s[1] != '/') // Only expand ~ or ~/
+		return (ft_strdup(s));
+		
+	const char *home = env_get_value(envp, "HOME");
+	if (!home) home = "";
+	
+	char *suffix = ft_strdup(s + 1);
+	char *res = ft_strjoin(home, suffix);
+	free(suffix);
+	return (res);
+}
+
+// MODIFIED: expand_argv now calls tilde expansion first
+int	expand_argv(char **argv, t_quote_type *argv_quote, char **envp, t_exec_state *state)
+{
+	while (argv && argv[j])
+	{
+		// ... skip single-quoted tokens ...
+		
+		// First apply tilde expansion
+		char *tilde_expanded = expand_tilde_prefix(argv[j], envp);
+		
+		// Then apply variable expansion
+		expanded = expand_variables(tilde_expanded, envp, state, quote_type);
+		free(tilde_expanded);
+		
+		// ... update argv[j] ...
+	}
+}
+```
+
+### 🎯 Impact Summary
+
+These changes bring the minishell implementation significantly closer to the EXPANSION.md specification:
+
+- **Tokenization**: Now properly handles operator separation and mixed content
+- **Parsing**: Basic syntax validation prevents invalid command structures
+- **Expansion**: Correct handling of complex variable and quote combinations
+- **File Operations**: Redirection filenames properly processed without quotes
+- **User Experience**: More predictable and bash-like behavior
+
+The implementation now passes most of the failing test cases identified in the original analysis, with only minor edge cases remaining to be resolved.
+
+---
+
 ## Findings vs Spec
 
 ### 1) Tokenization and quote handling
