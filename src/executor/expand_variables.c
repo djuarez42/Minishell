@@ -59,6 +59,7 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state,
 				}
 				free(piece);
 			}
+
 			else
 			{
 				tmp = extract_plain_text(input, &i, tmp);
