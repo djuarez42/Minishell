@@ -95,65 +95,13 @@ char	*handle_dollar(const char *input, int *i, char **envp,
 	if (res)
 		return (res);
 	
-	// $" and $' cases: $ disappears, then process the quoted content
+	// $" and $' cases: based on bash behavior, $ does NOT disappear
+	// These should be treated as invalid variable names, so return literal $
 	start = *i + 1;
-	if (input[start] == '"')
+	if (input[start] == '"' || input[start] == '\'')
 	{
-		// Skip $ and opening quote
-		*i = start + 1;
-		int quote_start = *i;
-		// Find closing quote
-		while (input[*i] && input[*i] != '"')
-			(*i)++;
-		if (input[*i] == '"')
-		{
-			// Extract content between quotes (literal, no expansion)
-			if (*i > quote_start)
-			{
-				char *literal = ft_substr(input, quote_start, *i - quote_start);
-				(*i)++; // Skip closing quote
-				return (literal);
-			}
-			else
-			{
-				(*i)++; // Skip closing quote
-				return (ft_strdup(""));
-			}
-		}
-		else
-		{
-			// Unclosed quote, treat as empty
-			return (ft_strdup(""));
-		}
-	}
-	else if (input[start] == '\'')
-	{
-		// Skip $ and opening quote
-		*i = start + 1;
-		int quote_start = *i;
-		// Find closing quote
-		while (input[*i] && input[*i] != '\'')
-			(*i)++;
-		if (input[*i] == '\'')
-		{
-			// Extract content between quotes (literal, no expansion)
-			if (*i > quote_start)
-			{
-				char *literal = ft_substr(input, quote_start, *i - quote_start);
-				(*i)++; // Skip closing quote
-				return (literal);
-			}
-			else
-			{
-				(*i)++; // Skip closing quote
-				return (ft_strdup(""));
-			}
-		}
-		else
-		{
-			// Unclosed quote, treat as empty
-			return (ft_strdup(""));
-		}
+		*i = *i + 1; // Skip just the $
+		return (ft_strdup("$"));
 	}
 
 	// $<digit> case: expand single digit as env var name
