@@ -21,7 +21,7 @@ t_redir	*create_redir(t_token *cur)
 		return (NULL);
 	redir->type = cur->type;
 	redir->quoted = (cur->next->quote_type != QUOTE_NONE);
-	redir->file = remove_quotes(cur->next->value);
+	redir->file = ft_strdup(cur->next->value);
 	if (!redir->file)
 		return (free(redir), NULL);
 	redir->next = NULL;
