@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/27 20:44:57 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/30 22:08:31 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,18 @@ int main(int argc, char **argv, char **envp)
 
 	while (1)
 	{
+
 		fail = 0;
 		if (isatty(STDIN_FILENO))
 		{
 			/* Add flushing before showing prompt */
 			fflush(stdout);
 			fflush(stderr);
+			
+			/* Reset terminal attributes and ensure a new line */
+			write(STDERR_FILENO, "\033[0m\n", 5); // Reset attributes and force new line
 			write(STDERR_FILENO, "minishell$ ", 11);
+			
 			input = readline("");
 		}
 		else
@@ -135,7 +140,16 @@ int main(int argc, char **argv, char **envp)
 		}
 
 		if (*input)
+		{
 			add_history(input);
+			/* Echo the command properly in interactive mode */
+			if (isatty(STDIN_FILENO))
+			{
+				/* Write back to user what they typed as confirmation */
+				printf("%s\n", input);
+				fflush(stdout);
+			}
+		}
 
 	tokens = tokenize_input(input);
 	if (!tokens)
