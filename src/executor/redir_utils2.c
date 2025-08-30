@@ -12,15 +12,53 @@
 
 #include "minishell.h"
 
-int	open_heredoc_file(void)
+static void	itoa_buffer_int(int n, char *buffer)
 {
-	int	fd;
+	int		len;
+	int		i;
+	unsigned int	nb;
 
-	fd = open("/tmp/.heredoc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	len = (n <= 0) ? 1 : 0;
+	nb = (n < 0) ? -n : n;
+	i = nb;
+	while (i > 0)
+	{
+		len++;
+		i /= 10;
+	}
+	buffer[len] = '\0';
+	if (n < 0)
+		buffer[0] = '-';
+	else if (n == 0)
+		buffer[0] = '0';
+	i = len - 1;
+	while (nb > 0)
+	{
+		buffer[i--] = (nb % 10) + '0';
+		nb /= 10;
+	}
+}
+
+int	open_heredoc_file(t_heredoc_args *args)
+{
+	int		fd;
+	char		*path;
+	static int	counter = 0;
+	char		count_str[16];
+
+	// Generate unique path: /tmp/.heredoc_<pid>_<counter>
+	itoa_buffer_int(getpid(), count_str);
+	path = ft_strjoin("/tmp/.heredoc_", count_str);
+	itoa_buffer_int(counter++, count_str);
+	path = ft_strjoin_free(path, "_");
+	path = ft_strjoin_free(path, count_str);
+	args->heredoc_path = path;
+	fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		perror("open heredoc");
-		exit(1);
+		args->heredoc_path = NULL;
+		return (-1);
 	}
 	return (fd);
 }
@@ -57,17 +95,17 @@ int	write_heredoc_lines(t_heredoc_args *args)
 	return (0);
 }
 
-void	redirect_stdin_heredoc(void)
+void	redirect_stdin_heredoc(const char *filepath)
 {
 	int	fd;
 
-	fd = open("/tmp/.heredoc_tmp", O_RDONLY);
+	fd = open(filepath, O_RDONLY);
 	if (fd == -1 || dup2(fd, STDIN_FILENO) == -1)
 	{
 		perror("heredoc redirect");
 		if (fd != -1)
 			close(fd);
-		exit(1);
+		return;
 	}
 	close(fd);
 }

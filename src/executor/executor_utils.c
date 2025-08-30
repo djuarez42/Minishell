@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/28 20:07:37 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:13:41 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,15 @@ void	free_split(char **split)
 
 int	handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state)
 {
+	t_redir	*redir;
 	int		res;
 
-	// Expand redirections here (following flowchart order)
-	if (expand_redirs(redirs, envp, state) == -1)
-		return (-1);
-	
+	redir = redirs;
+	while (redir)
+	{
+		redir->file = remove_quotes(redir->file);
+		redir = redir->next;
+	}
 	res = handle_redirections(redirs, envp, state);
 	return (res);
 }
@@ -43,21 +46,11 @@ int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 		fprintf(stderr, "minishell: syntax error near unexpected token `|'\n");
 		return (2);
 	}
-	
-	// Remove debug code for production
-	/*
-	fprintf(stderr, "DEBUG: Command: [%s]\n", cmd->argv[0]);
-	for (int i = 1; cmd->argv[i] != NULL; i++) {
-		fprintf(stderr, "DEBUG: Arg %d: [%s]\n", i, cmd->argv[i]);
-	}
-	*/
-	
 	exec_path = find_executable(cmd->argv[0], envp);
 	if (!exec_path)
 	{
 		fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
 		return (127);
 	}
-	// fprintf(stderr, "DEBUG: Executing with path: [%s]\n", exec_path);
 	return (execute_execve(exec_path, cmd->argv, envp));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/28 19:55:44 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:47:36 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,38 @@ char	*find_executable(char *cmd, char **envp)
 
 int	execute_execve(char *exec_path, char **argv, char **envp)
 {
+	int		idx;
+	char	*new_var;
+	int		code;
+
+	/* Update the _ environment variable for execve */
+	idx = env_find_index(envp, "_");
+	if (idx >= 0)
+	{
+		free(envp[idx]);
+		new_var = ft_strjoin("_=", exec_path);
+		envp[idx] = (new_var) ? new_var : ft_strdup("_=");
+	}
+
 	if (execve(exec_path, argv, envp) == -1)
 	{
-		perror("execve");
-		return (1);
+		/* Map errno to bash-compatible exit codes and messages */
+		if (errno == ENOENT)
+		{
+			fprintf(stderr, "minishell: %s: command not found\n", argv[0]);
+			code = 127;
+		}
+		else if (errno == EACCES || errno == EPERM || errno == EISDIR || errno == ENOEXEC)
+		{
+			fprintf(stderr, "minishell: %s: %s\n", exec_path, (errno == EISDIR) ? "Is a directory" : "Permission denied");
+			code = 126;
+		}
+		else
+		{
+			fprintf(stderr, "minishell: %s: %s\n", exec_path, strerror(errno));
+			code = 1;
+		}
+		_exit(code);
 	}
 	return (0);
 }
@@ -133,26 +161,35 @@ static void	wire_child_pipes(size_t idx, size_t n_cmds, int (*pipes)[2])
 
 static int	wait_pipeline(pid_t *pids, size_t n)
 {
-	size_t	i;
 	int		status;
-	int		last_status;
+	pid_t	w;
+	pid_t	last_pid;
+	int		final_status;
+	size_t	left;
 
-	last_status = 0;
-	i = 0;
-	while (i < n)
+	last_pid = pids[n - 1];
+	final_status = 0;
+	left = n;
+	while (left > 0)
 	{
-		if (waitpid(pids[i], &status, 0) == -1)
+		w = waitpid(-1, &status, 0);
+		if (w == -1)
+		{
+			if (errno == EINTR)
+				continue;
 			perror("waitpid");
-		if (i == n - 1)
+			break;
+		}
+		if (w == last_pid)
 		{
 			if (WIFEXITED(status))
-				last_status = WEXITSTATUS(status);
+				final_status = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
-				last_status = 128 + WTERMSIG(status);
+				final_status = 128 + WTERMSIG(status);
 		}
-		i++;
+		left--;
 	}
-	return (last_status);
+	return (final_status);
 }
 
 static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *state)
@@ -224,6 +261,8 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 				exit (130);
 			else if (res == 1)
 				exit (1);
+			if (!cur->argv || !cur->argv[0])
+				exit(2);
 			if (is_builtin(cur->argv[0]))
 				exit(run_builtin_in_child(cur, &envp));
 			code = execute_command(NULL, cur, envp);
