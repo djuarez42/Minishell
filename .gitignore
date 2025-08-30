@@ -1,0 +1,31 @@
+# Compiled object files
+*.o
+*.a
+*.so
+
+# Executables
+minishell
+debug_*
+
+# macOS
+.DS_Store
+
+# Temporary files
+temp.txt
+*.tmp
+
+# Build directories
+build/
+dist/
+
+# IDE files
+.vscode/
+.idea/
+
+# Test output files
+output.txt
+*.log
+
+# Backup files
+*~
+*.bak
