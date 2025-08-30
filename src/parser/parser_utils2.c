@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/28 20:24:50 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/30 18:43:18 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,71 @@
 t_redir	*create_redir(t_token *cur)
 {
 	t_redir	*redir;
+	int		has_quotes;
 
 	redir = malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL);
 	redir->type = cur->type;
-	redir->quoted = (cur->next->quote_type != QUOTE_NONE);
-	redir->file = ft_strdup(cur->next->value);
-	if (!redir->file)
-		return (free(redir), NULL);
+	
+	/* For heredoc, we need special handling of quoted delimiters */
+	if (cur->type == TOKEN_HEREDOC)
+	{
+		/* First check the token's quote_type */
+		redir->quoted = (cur->next->quote_type != QUOTE_NONE);
+		
+		/* Check for any quotes in the value (this catches mixed quoted cases) */
+		has_quotes = 0;
+		char *str = cur->next->value;
+		int i = 0;
+		while (str && str[i])
+		{
+			if (str[i] == '\'' || str[i] == '\"')
+			{
+				has_quotes = 1;
+				redir->quoted = true;
+				break;
+			}
+			i++;
+		}
+		
+		/* If the delimiter has quotes, we need to create a clean version without quotes.
+		   This is essential for correctly matching the delimiter when processing the heredoc. */
+		if (has_quotes)
+		{
+			char *clean = malloc(ft_strlen(str) + 1);
+			if (!clean)
+				return (free(redir), NULL);
+			
+			/* Copy the string without any quotes */
+			int j = 0;
+			i = 0;
+			while (str[i])
+			{
+				if (str[i] != '\'' && str[i] != '\"')
+					clean[j++] = str[i];
+				i++;
+			}
+			clean[j] = '\0';
+			
+			redir->file = clean;
+		}
+		else
+		{
+			redir->file = ft_strdup(cur->next->value);
+			if (!redir->file)
+				return (free(redir), NULL);
+		}
+	}
+	else
+	{
+		/* For other redirection types, use the standard quote type check */
+		redir->quoted = (cur->next->quote_type != QUOTE_NONE);
+		redir->file = ft_strdup(cur->next->value);
+		if (!redir->file)
+			return (free(redir), NULL);
+	}
+	
 	redir->next = NULL;
 	return (redir);
 }

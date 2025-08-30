@@ -3,16 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils_3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 16:45:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/27 19:25:20 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/30 20:00:00 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "minishell.h"
 
+/*
+ * Handle quoted parts with improved dollar-sign handling
+ */
 char	*handle_quoted_part(const char *input, int *i, char *tmp,
 	t_quote_type *last_quote)
 {
@@ -110,10 +113,12 @@ char	*extract_quoted_segment(const char *input, int *len)
 	if (!input[i])
 		return (NULL);
 	*len = i + 1;
+	// Allocate exact space needed (i-1 for content + 1 for null)
 	result = malloc(i);
 	if (!result)
 		return (NULL);
 	j = 0;
+	// Copy content inside quotes exactly as is, preserving all spaces
 	while (j < i - 1)
 	{
 		result[j] = input[j + 1];

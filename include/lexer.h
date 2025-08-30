@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/28 20:31:09 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:32:07 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ typedef enum e_token_type
 	TOKEN_HEREDOC,// <<			#4
 	TOKEN_APPEND,// >>			#5
 	TOKEN_EOF,// end of file 	#6
-	TOKEN_IN_FILE,// input file  #7
-	TOKEN_OUT_FILE,// output file #8
+	TOKEN_IN_FILE,// Input file #7
+	TOKEN_OUT_FILE// Output file#8
 }	t_token_type;
 
 //Quotes
@@ -37,7 +37,8 @@ typedef enum e_quote_type
 {
 	QUOTE_NONE,
 	QUOTE_SINGLE,
-	QUOTE_DOUBLE
+	QUOTE_DOUBLE,
+	QUOTE_MIXED
 }	t_quote_type;
 
 //Token structure
@@ -94,6 +95,6 @@ int				init_tokens_and_quotes(char ***tokens_out,
 					t_quote_type **quotes_out);
 const char		*quote_type_str(t_quote_type q);
 char			*strip_comments(const char *input);
-void			classify_redirection_files(t_token *tokens);
+void            classify_redirection_files(t_token *token_list);
 
 #endif

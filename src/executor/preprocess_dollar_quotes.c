@@ -13,8 +13,8 @@
 #include "executor.h"
 
 /*
-** Handle $"content" and $'content' cases where $ should disappear
-** This processes the token value BEFORE normal expansion
+** Special handling for $"content" cases.
+** Unlike in normal expansion, we need to preserve the content literally.
 */
 char	*preprocess_dollar_quotes(const char *input)
 {
@@ -35,16 +35,29 @@ char	*preprocess_dollar_quotes(const char *input)
 	j = 0;
 	while (input[i])
 	{
-		if (input[i] == '$' && (input[i + 1] == '"' || input[i + 1] == '\''))
+		// Detect $"string" pattern
+		if (input[i] == '$' && input[i + 1] == '"')
 		{
-			// Skip the $, keep everything else
+			// Mark this with a special flag
+			// Skip the $ but keep the quotes
 			i++;
+			
+			// Copy the open quote
+			result[j++] = input[i++];
+			
+			// Copy everything until closing quote
+			while (input[i] && input[i] != '"')
+			{
+				result[j++] = input[i++];
+			}
+			
+			// Copy the closing quote if found
+			if (input[i] == '"')
+				result[j++] = input[i++];
 		}
 		else
 		{
-			result[j] = input[i];
-			j++;
-			i++;
+			result[j++] = input[i++];
 		}
 	}
 	result[j] = '\0';

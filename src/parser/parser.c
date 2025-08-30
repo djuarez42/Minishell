@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/28 21:14:40 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:47:36 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,10 @@ t_cmd	*parser_tokens(t_token *tokens)
 	cur = tokens;
 	while (cur && cur->type != TOKEN_EOF)
 	{
-		/* Syntax: leading pipe is invalid */
-		if (cur->type == TOKEN_PIPE)
-			return (free_cmds(head), NULL);
 		new_cmd = create_cmd_node(&cur);
 		if (!new_cmd)
 			return (free_cmds(head), NULL);
 		add_cmd_node(&head, &last, new_cmd);
-		/* After a command, a single pipe is allowed; reject double/trailing */
-		if (cur && cur->type == TOKEN_PIPE)
-		{
-			if (!cur->next || cur->next->type == TOKEN_PIPE
-				|| cur->next->type == TOKEN_EOF)
-				return (free_cmds(head), NULL);
-			cur = cur->next;
-		}
 	}
 	return (head);
 }
@@ -65,6 +54,11 @@ t_token	*parse_cmd_block(t_token *cur, t_cmd *cmd)
 			cmd->redirs = NULL;
 			return (NULL);
 		}
+		
+		/* If there are more arguments after redirection, stop here 
+		   These will be processed as a new command */
+		if (cur && cur->type == TOKEN_WORD)
+			break;
 	}
 	return (cur);
 }
@@ -74,12 +68,7 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 	t_redir	*new_redir;
 	t_redir	*last;
 
-	if (!cur || !cur->next)
-		return (NULL);
-	// Accept both WORD tokens and the new file types for compatibility
-	if (cur->next->type != TOKEN_WORD 
-		&& cur->next->type != TOKEN_IN_FILE 
-		&& cur->next->type != TOKEN_OUT_FILE)
+	if (!cur || !cur->next || cur->next->type != TOKEN_WORD)
 		return (NULL);
 	new_redir = create_redir(cur);
 	if (!new_redir)

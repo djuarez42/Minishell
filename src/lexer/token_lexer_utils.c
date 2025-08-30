@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 20:06:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/28 20:31:09 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:11:05 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,14 @@ int	process_spaces_and_quotes(const char *input, int i, char **tmp,
 	i = skip_spaces(input, i);
 	if (!input[i])
 		return (-1);
+	
+	// Handle quoted parts (preserving spaces within quotes)
 	if (is_quote(input[i]))
 		*tmp = handle_quoted_part(input, &i, *tmp, last_quote);
+	// Handle non-whitespace, non-null characters as plain text
 	else if (!ft_isspace(input[i]) && input[i] != '\0')
 		*tmp = handle_plain_text(input, &i, *tmp);
+		
 	return (i);
 }
 
@@ -79,9 +83,5 @@ const char	*token_type_str(t_token_type type)
 		return ("APPEND");
 	if (type == TOKEN_EOF)
 		return ("EOF");
-	if (type == TOKEN_IN_FILE)
-		return ("IN_FILE");
-	if (type == TOKEN_OUT_FILE)
-		return ("OUT_FILE");
 	return ("UNKNOWN");
 }

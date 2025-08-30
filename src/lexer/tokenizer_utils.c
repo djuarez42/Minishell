@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:40:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/24 17:02:16 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/30 21:47:36 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,10 @@ char	*str_append(char *base, const char *add)
 	new = malloc(len + 1);
 	if (!new)
 		return (NULL);
-	new[0] = '\0';
+	
+	// Always explicitly initialize the entire buffer
+	ft_memset(new, 0, len + 1);
+	
 	if (base)
 		ft_strlcat(new, base, len + 1);
 	if (add)
