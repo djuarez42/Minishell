@@ -1,2 +1,0 @@
-cat: <<EOF: No such file or directory
-minishell: line1: command not found

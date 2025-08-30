@@ -1,1 +1,0 @@
-echo -nnn a b

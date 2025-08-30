@@ -1,1 +1,0 @@
-echo "hello   world" 'x y' "z w"

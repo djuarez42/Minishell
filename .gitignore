@@ -32,3 +32,16 @@ output.txt
 
 # External testers and tools
 42_minishell_tester/
+
+# Test files and outputs
+test_*.txt
+output.txt
+*.log
+
+# Temporary test directories
+.test_tmp/
+.test_tmp_subject/
+
+# Test scripts (optional - keep if you want to track them)
+# test_*.sh
+# var_expansion_test.sh
