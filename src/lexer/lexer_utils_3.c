@@ -21,6 +21,26 @@ char	*handle_quoted_part(const char *input, int *i, char *tmp,
 	char	current_quote;
 
 	current_quote = input[*i];
+	
+	// For quotes containing a single opposite quote character, treat as literal
+	if (current_quote == '\"' && input[*i + 1] == '\'' && input[*i + 2] == '\"')
+	{
+		// This is a pattern like "'" - should output literal '
+		tmp = str_append(tmp, "'");
+		*i += 3; // Skip past "'"
+		*last_quote = QUOTE_DOUBLE;
+		return (tmp);
+	}
+	else if (current_quote == '\'' && input[*i + 1] == '\"' && input[*i + 2] == '\'')
+	{
+		// This is a pattern like '"' - should output literal "
+		tmp = str_append(tmp, "\"");
+		*i += 3; // Skip past '"'
+		*last_quote = QUOTE_SINGLE;
+		return (tmp);
+	}
+	
+	// Regular quote handling
 	// Set the quote type based on the quote character
 	if (current_quote == '\'')
 		*last_quote = QUOTE_SINGLE;
