@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/27 19:34:05 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/30 19:41:19 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ int main(int argc, char **argv, char **envp)
 	return (0);
 }*/
 
-int	main(int argc, char **argv, char **envp)
+/*int	main(int argc, char **argv, char **envp)
 {
 	char			*input;
 	t_token			*tokens;
@@ -190,4 +190,55 @@ int	main(int argc, char **argv, char **envp)
 	}
 	free_envp(envp_copy);
 	return (0);
+}*/
+
+void print_fragments(t_fragment *frag)
+{
+    int i = 0;
+    while (frag)
+    {
+        printf("    Fragment %d: \"%s\" (quote_type: %d)\n", i, frag->text, frag->quote_type);
+        frag = frag->next;
+        i++;
+    }
+}
+
+int main(void)
+{
+    const char *tests[] = {
+        "echo hello",
+        "ls -l | grep 'test file'",
+        "echo \"double quoted text\" end",
+        "mix\"double\\\"escaped\"and'singles'",
+        "echo \"hello world\" 'and good bye'",
+        "echo \"hello 'world'\"",
+        "echo \"double\\\"escaped\\\"quotes\"",
+        "echo 'single\\'s quotes'",
+        "echo \"\"",
+        "cat < input.txt > output.txt | grep \"pattern\" >> log.txt",
+        "echo \"unmatched string",
+        "echo \"'single inside double'\""
+    };
+    
+    int n = sizeof(tests) / sizeof(tests[0]);
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("\n=== Test %d: %s ===\n", i + 1, tests[i]);
+        t_token *tokens = tokenize_input(tests[i]);
+
+        int t_idx = 0;
+        t_token *cur = tokens;
+        while (cur)
+        {
+            printf("Token %d: type = %d\n", t_idx, cur->type);
+            print_fragments(cur->fragments);
+            cur = cur->next;
+            t_idx++;
+        }
+
+        free_tokens(tokens);
+    }
+
+    return 0;
 }

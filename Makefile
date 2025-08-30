@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+         #
+#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/08/24 17:40:12 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/08/30 18:36:40 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,13 +37,9 @@ LIBS = $(READLINE_LIBS)
 INCLUDES += $(READLINE_INC)
 
 SRC = main.c \
-		src/lexer/tokenizer.c \
-		src/lexer/lexer_utils.c \
-		src/lexer/tokenizer_utils.c \
-		src/lexer/token_lexer_utils.c \
-		src/lexer/tokenizer_utils_2.c \
-		src/lexer/lexer_utils_3.c \
-		src/lexer/lexer_utils_4.c \
+		src/lexer/lexer_utils1.c \
+		src/lexer/lexer_utils2.c \
+		src/lexer/lexer_utils3.c \
 		src/parser/parser.c \
 		src/parser/parser_utils.c \
 		src/parser/parser_utils2.c \

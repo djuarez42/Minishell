@@ -6,13 +6,13 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/23 20:57:46 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/30 14:28:14 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-t_redir	*create_redir(t_token *cur)
+/*t_redir	*create_redir(t_token *cur)
 {
 	t_redir	*redir;
 
@@ -26,7 +26,7 @@ t_redir	*create_redir(t_token *cur)
 		return (free(redir), NULL);
 	redir->next = NULL;
 	return (redir);
-}
+}*/
 
 bool	is_quoted(const char *str)
 {
