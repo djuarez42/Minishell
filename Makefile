@@ -5,7 +5,7 @@
 #                                                     +:+ +:+         +:+      #
 #    By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
+#    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #c
 #    Updated: 2025/08/25 20:20:28 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
@@ -57,6 +57,7 @@ SRC = main.c \
 		src/executor/expand_variables_utils2.c \
 		src/executor/expand_variables.c \
 		src/executor/expand_mixed_quotes.c \
+		src/executor/preprocess_dollar_quotes.c \
 		src/builtins/builtins.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \
