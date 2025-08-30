@@ -29,3 +29,6 @@ output.txt
 # Backup files
 *~
 *.bak
+
+# External testers and tools
+42_minishell_tester/
