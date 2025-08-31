@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 19:44:50 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/31 23:40:33 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,26 +102,23 @@ t_token *create_token_group(t_fragment *frag_head, t_token_type type)
     return tok;
 }
 
-t_token_type detect_operator_token(t_fragment *frag)
+void assign_token_types(t_token *tokens)
 {
-    if (frag->quote_type != QUOTE_NONE)
-        return TOKEN_WORD;
+    while (tokens)
+    {
+        if (strcmp(tokens->fragments->text, "|") == 0)
+            tokens->type = TOKEN_PIPE;
+        else if (strcmp(tokens->fragments->text, "<") == 0)
+            tokens->type = TOKEN_REDIRECT_IN;
+        else if (strcmp(tokens->fragments->text, ">") == 0)
+            tokens->type = TOKEN_REDIRECT_OUT;
+        else if (strcmp(tokens->fragments->text, "<<") == 0)
+            tokens->type = TOKEN_HEREDOC;
+        else if (strcmp(tokens->fragments->text, ">>") == 0)
+            tokens->type = TOKEN_APPEND;
+        else
+            tokens->type = TOKEN_WORD;
 
-    if (ft_strlen(frag->text) == 1)
-    {
-        if (frag->text[0] == '|')
-            return TOKEN_PIPE;
-        if (frag->text[0] == '<')
-            return TOKEN_REDIRECT_IN;
-        if (frag->text[0] == '>')
-            return TOKEN_REDIRECT_OUT;
+        tokens = tokens->next;
     }
-    else if (ft_strlen(frag->text) == 2)
-    {
-        if (ft_strncmp(frag->text, ">>", 2) == 0)
-            return TOKEN_APPEND;
-        if (ft_strncmp(frag->text, "<<", 2) == 0)
-            return TOKEN_HEREDOC;
-    }
-    return TOKEN_WORD;
 }

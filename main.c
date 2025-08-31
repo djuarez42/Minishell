@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 23:00:45 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/31 23:20:38 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -385,7 +385,7 @@ int main(void)
     return 0;
 }*/
 
-int main(void)
+/*int main(void)
 {
     const char *tests[] = {
         "echo hello",
@@ -416,6 +416,64 @@ int main(void)
         // 4️⃣ Liberar memoria (tus funciones)
         free_tokens(raw_tokens);
         free_tokens(final_tokens);
+    }
+
+    return 0;
+}*/
+int main(void)
+{
+    const char *tests[] = {
+        "echo hello",
+        "ls -l | grep 'test file'",
+        "echo \"double quoted text\" end",
+        "mix\"double\\\"escaped\"and'singles'",
+        "echo \"hello world\" 'and good bye'",
+        "\"\"ec\"\"ho\"\" hola\"\"mundo\"\"",
+        "\"\"echo\"\""
+    };
+    size_t n_tests = sizeof(tests)/sizeof(tests[0]);
+
+    for (size_t i = 0; i < n_tests; i++)
+    {
+        printf("\n=== TEST %zu: %s ===\n", i + 1, tests[i]);
+
+        // 1️⃣ Tokenizamos la entrada
+        t_token *raw_tokens = tokenize_input(tests[i]);
+        if (!raw_tokens)
+        {
+            printf("Error tokenizing input\n");
+            continue;
+        }
+
+        // 2️⃣ Construimos lista final de tokens concatenando fragments
+        t_token *final_tokens = build_token_list_from_fragments(raw_tokens);
+        if (!final_tokens)
+        {
+            printf("Error building token list\n");
+            free_tokens(raw_tokens);
+            continue;
+        }
+
+        // 3️⃣ Imprimimos la lista de tokens final
+        print_final_token_list(final_tokens);
+
+        // 4️⃣ Parseamos tokens a lista de comandos
+        t_cmd *cmd_list = parser_tokens(final_tokens);
+        if (!cmd_list)
+        {
+            printf("Error parsing tokens to commands\n");
+            free_tokens(raw_tokens);
+            free_tokens(final_tokens);
+            continue;
+        }
+
+        // 5️⃣ Imprimimos lista de comandos
+        print_cmd_list(cmd_list);
+
+        // 6️⃣ Liberamos memoria
+        free_tokens(raw_tokens);
+        free_tokens(final_tokens);
+        free_cmds(cmd_list);
     }
 
     return 0;

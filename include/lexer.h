@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 20:45:25 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 00:08:30 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int			detect_token_type(const char *input, int i);
 t_token		*new_token(t_token_type type);
 t_token 	*create_token(t_token_type type, bool space_before);
 t_token 	*create_token_from_fragments(t_fragment *first_frag, bool space_before);
+t_token		*append_token_eof(t_token *head);
 void        append_token(t_token **tokens, t_token *new);
 char 		*concat_fragments_for_token(t_fragment *frag);
 void 		print_final_token_list(t_token *tokens);
@@ -94,6 +95,7 @@ bool 			lx_is_space_between(t_fragment *a, t_fragment *b);
 bool			lx_is_meta(char c);
 t_token_type	lx_meta_type(const char *s, int *consumed);
 int				check_unmatched_quotes(const char *input);
+void			assign_token_types(t_token *tokens);
 
 // Construcción incremental
 t_token     *lx_token_open(t_token_type type);

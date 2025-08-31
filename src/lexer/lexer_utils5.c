@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 22:50:32 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 00:09:30 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ t_token *build_token_list_from_fragments(t_token *raw)
             frag = frag->next;
         }
     }
-
+    assign_token_types(head);
+    head = append_token_eof(head);
     return head;
 }
 
@@ -155,4 +156,30 @@ t_fragment *duplicate_fragment(t_fragment *frag)
     copy->next = NULL;
 
     return copy;
+}
+
+t_token *append_token_eof(t_token *head)
+{
+    t_token *new;
+
+    new = malloc(sizeof(t_token));
+    if (!new)
+        return NULL;
+
+    new->fragments = NULL;
+    new->final_text = NULL;
+    new->type = TOKEN_EOF;
+    new->has_space_before = false;
+    new->next = NULL;
+
+    if (!head)
+        return new;
+
+    // Encuentra el último token de la lista
+    t_token *cur = head;
+    while (cur->next)
+        cur = cur->next;
+
+    cur->next = new;
+    return head;
 }
