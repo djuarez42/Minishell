@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/27 20:31:07 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/31 03:42:22 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,29 +90,55 @@ int	init_cmd_args(t_cmd *cmd)
 	return (1);
 }
 
-int	process_token(t_cmd *cmd, t_token *cur, int *argc)
+int process_token(t_cmd *cmd, t_token *cur, int *argc)
 {
-	char	*clean;
+	t_fragment *frag;
+	char *arg;
+	int len = 0, pos = 0;
 
 	if (*argc >= MAX_ARGS - 1)
 		return (0);
-	
-	// For single-quoted tokens, we want to preserve the quotes
-	if (cur->quote_type == QUOTE_SINGLE) {
-		// Keep the original value with quotes
-		clean = ft_strdup(cur->value);
-	} else {
-		// For normal tokens or double-quoted tokens, remove quotes
-		clean = remove_quotes(cur->value);
-	}
-	
-	if (!clean)
-		return (0);
-	if (!add_argument(cmd, clean, cur->quote_type, argc))
+		
+	// Calculate total size needed for all fragments
+	frag = cur->fragments;
+	while (frag)
 	{
-		free(clean);
-		return (0);
+		len += strlen(frag->text);
+		frag = frag->next;
 	}
-	free(clean);
+	
+	// Allocate and combine fragments
+	arg = (char*)malloc(len + 1);
+	if (!arg)
+		return (0);
+	
+	arg[0] = '\0';
+	
+	frag = cur->fragments;
+	while (frag)
+	{
+		len += ft_strlen(frag->text);
+		frag = frag->next;
+	}
+
+	arg = malloc(len + 1);
+	if (!arg)
+		return (0);
+
+	frag = cur->fragments;
+	while (frag)
+	{
+		ft_memcpy(arg + pos, frag->text, ft_strlen(frag->text));
+		pos += ft_strlen(frag->text);
+		frag = frag->next;
+	}
+	arg[pos] = '\0';
+
+	cmd->argv[*argc] = arg;
+	cmd->argv_quote[*argc] = cur->fragments ? cur->fragments->quote_type : QUOTE_NONE;
+	(*argc)++;
 	return (1);
 }
+
+
+

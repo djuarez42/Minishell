@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 22:54:21 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/31 03:28:21 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,6 +262,56 @@ int main(int argc, char **argv, char **envp)
 	}
 	free_envp(envp_copy);
 	return (0);
+}*/
+
+int main(void)
+{
+    const char *tests[] = {
+        "echo hello",
+        "ls -l | grep 'test file'",
+        "echo \"double quoted text\" end",
+        "mix\"double\\\"escaped\"and'singles'",
+        "echo \"hello world\" 'and good bye'",
+        "\"\"ec\"\"ho\"\" hola\"\"mundo",
+        "\"\"echo\"\""
+    };
+
+    int n = sizeof(tests) / sizeof(tests[0]);
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("\n=== Test %d: %s ===\n", i + 1, tests[i]);
+
+        // 1️⃣ Lexer: obtener tokens con fragments
+        t_token *raw_tokens = tokenize_input(tests[i]);
+        if (!raw_tokens)
+        {
+            printf("Error: Invalid input (unmatched quotes)\n");
+            continue;
+        }
+
+        printf("--- Raw tokens from tokenize_input ---\n");
+        print_tokens(raw_tokens);
+
+        // 2️⃣ Construir lista de tokens estilo Bash
+        t_token *tokens = build_token_list_from_fragments(raw_tokens);
+        if (!tokens)
+        {
+            printf("Error: Failed to build token list\n");
+            free_tokens(raw_tokens);
+            continue;
+        }
+
+        printf("--- Tokens after build_token_list_from_fragments ---\n");
+		print_token_list_from_fragments(tokens);
+        print_tokens(tokens);
+
+        // 3️⃣ Liberar memoria
+        free_tokens(raw_tokens);
+        free_tokens(tokens);
+    }
+
+    return 0;
 }
 
  */

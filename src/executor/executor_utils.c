@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 20:13:41 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/31 03:31:25 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,26 @@ int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 		return (127);
 	}
 	return (execute_execve(exec_path, cmd->argv, envp));
+}
+
+char	*str_append(char *base, const char *add)
+{
+	char	*new;
+	size_t	len;
+
+	len = 0;
+	if (base)
+		len += ft_strlen(base);
+	if (add)
+		len += ft_strlen(add);
+	new = malloc(len + 1);
+	if (!new)
+		return (NULL);
+	new[0] = '\0';
+	if (base)
+		ft_strlcat(new, base, len + 1);
+	if (add)
+		ft_strlcat(new, add, len + 1);
+	free(base);
+	return (new);
 }

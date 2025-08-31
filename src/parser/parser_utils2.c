@@ -6,34 +6,25 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 18:43:18 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/31 03:43:47 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-t_redir	*create_redir(t_token *cur)
+t_redir *create_redir(t_token *cur)
 {
-	t_redir	*redir;
-	int		has_quotes;
+	t_redir *redir;
+	t_fragment *frag;
+
+	if (!cur || !cur->next || !cur->next->fragments)
+		return (NULL);
 
 	redir = malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL);
+
 	redir->type = cur->type;
-	
-	/* For heredoc, we need special handling of quoted delimiters */
-	if (cur->type == TOKEN_HEREDOC)
-	{
-		/* First check the token's quote_type */
-		redir->quoted = (cur->next->quote_type != QUOTE_NONE);
-		
-		/* Check for any quotes in the value (this catches mixed quoted cases) */
-		has_quotes = 0;
-		char *str = cur->next->value;
-		int i = 0;
-		while (str && str[i])
-		{
 			if (str[i] == '\'' || str[i] == '\"')
 			{
 				has_quotes = 1;
@@ -80,6 +71,12 @@ t_redir	*create_redir(t_token *cur)
 			return (free(redir), NULL);
 	}
 	
+	frag = cur->next->fragments;
+	redir->quoted = frag->quote_type != QUOTE_NONE;
+	redir->file = ft_strdup(frag->text);
+	if (!redir->file)
+		return (free(redir), NULL);
+
 	redir->next = NULL;
 	return (redir);
 }
