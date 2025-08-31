@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 19:41:19 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/31 14:21:51 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,17 +192,6 @@ int main(int argc, char **argv, char **envp)
 	return (0);
 }*/
 
-void print_fragments(t_fragment *frag)
-{
-    int i = 0;
-    while (frag)
-    {
-        printf("    Fragment %d: \"%s\" (quote_type: %d)\n", i, frag->text, frag->quote_type);
-        frag = frag->next;
-        i++;
-    }
-}
-
 int main(void)
 {
     const char *tests[] = {
@@ -211,34 +200,45 @@ int main(void)
         "echo \"double quoted text\" end",
         "mix\"double\\\"escaped\"and'singles'",
         "echo \"hello world\" 'and good bye'",
-        "echo \"hello 'world'\"",
-        "echo \"double\\\"escaped\\\"quotes\"",
-        "echo 'single\\'s quotes'",
-        "echo \"\"",
-        "cat < input.txt > output.txt | grep \"pattern\" >> log.txt",
-        "echo \"unmatched string",
-        "echo \"'single inside double'\""
+        "\"\"ec\"\"ho\"\" hola\"\"mundo",
+        "\"\"echo\"\""
     };
-    
+
     int n = sizeof(tests) / sizeof(tests[0]);
 
     for (int i = 0; i < n; i++)
     {
         printf("\n=== Test %d: %s ===\n", i + 1, tests[i]);
-        t_token *tokens = tokenize_input(tests[i]);
 
-        int t_idx = 0;
-        t_token *cur = tokens;
-        while (cur)
+        // 1️⃣ Lexer: obtener tokens con fragments
+        t_token *raw_tokens = tokenize_input(tests[i]);
+        if (!raw_tokens)
         {
-            printf("Token %d: type = %d\n", t_idx, cur->type);
-            print_fragments(cur->fragments);
-            cur = cur->next;
-            t_idx++;
+            printf("Error: Invalid input (unmatched quotes)\n");
+            continue;
         }
 
+        printf("--- Raw tokens from tokenize_input ---\n");
+        print_tokens(raw_tokens);
+
+        // 2️⃣ Construir lista de tokens estilo Bash
+        t_token *tokens = build_token_list_from_fragments(raw_tokens);
+        if (!tokens)
+        {
+            printf("Error: Failed to build token list\n");
+            free_tokens(raw_tokens);
+            continue;
+        }
+
+        printf("--- Tokens after build_token_list_from_fragments ---\n");
+		print_token_list_from_fragments(tokens);
+        print_tokens(tokens);
+
+        // 3️⃣ Liberar memoria
+        free_tokens(raw_tokens);
         free_tokens(tokens);
     }
 
     return 0;
 }
+

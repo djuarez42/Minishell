@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 18:44:49 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/31 03:16:51 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,17 @@ void        append_token(t_token **tokens, t_token *new);
 t_fragment *parse_fragments(const char *text);
 void 		append_fragment(t_fragment **head, t_fragment *frag);
 t_fragment	*new_fragment(const char *text, int len, t_quote_type qtype);
+t_token 	*create_token_group(t_fragment *frag_head, t_token_type type);
+t_token_type detect_operator_token(t_fragment *frag);
+t_token 	*build_token_list_from_fragments(t_token *raw_tokens);
+char 		*concat_fragments(t_fragment *frag);
 
 // Clasificación
-bool        lx_is_space(char c);
-bool        lx_is_meta(char c);
-t_token_type lx_meta_type(const char *s, int *consumed); // maneja << y >>
+bool       		lx_is_space(char c);
+bool 			lx_is_space_between(t_fragment *cur, t_fragment *next);
+bool			lx_is_meta(char c);
+t_token_type	lx_meta_type(const char *s, int *consumed);
+int				check_unmatched_quotes(const char *input);
 
 // Construcción incremental
 t_token     *lx_token_open(t_token_type type);
@@ -93,6 +99,9 @@ void        lx_list_push(t_token **head, t_token *tok);
 int			skip_spaces(const char *input, int i);
 int         lx_flush_token(t_token **out, t_token **cur_tok, t_fragment **cur_frag);
 int         lx_start_word_if_needed(t_token **cur_tok, t_fragment **cur_frag, t_quote_type qt);
+void		print_tokens(t_token *tokens);
+void 		print_token_list_from_fragments(t_token *tokens);
+
 
 // Limpieza
 void		free_tokens(t_token *tok);

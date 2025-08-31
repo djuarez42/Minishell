@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/08/30 18:36:40 by djuarez          ###   ########.fr        #
+#    Updated: 2025/08/31 00:59:39 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,9 +37,12 @@ LIBS = $(READLINE_LIBS)
 INCLUDES += $(READLINE_INC)
 
 SRC = main.c \
+		src/lexer/tokenizer.c \
 		src/lexer/lexer_utils1.c \
 		src/lexer/lexer_utils2.c \
 		src/lexer/lexer_utils3.c \
+		src/lexer/lexer_utils4.c \
+		src/lexer/lexer_utils5.c \
 		src/parser/parser.c \
 		src/parser/parser_utils.c \
 		src/parser/parser_utils2.c \

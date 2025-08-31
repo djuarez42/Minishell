@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 18:27:29 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 18:46:19 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/31 00:50:22 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,21 @@ void	free_tokens(t_token *tokens)
 		free(tokens);
 		tokens = tmp;
 	}
+}
+
+void print_token_list_from_fragments(t_token *tokens)
+{
+    int i = 0;
+    while (tokens)
+    {
+        printf("Token %d: type=%d\n", i, tokens->type);
+        t_fragment *frag = tokens->fragments;
+        while (frag)
+        {
+            printf("  Fragment text=\"%s\" quote=%d\n", frag->text, frag->quote_type);
+            frag = frag->next;
+        }
+        tokens = tokens->next;
+        i++;
+    }
 }

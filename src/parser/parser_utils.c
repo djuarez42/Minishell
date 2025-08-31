@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 14:29:37 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/30 22:59:54 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,20 +90,40 @@ int	init_cmd_args(t_cmd *cmd)
 	return (1);
 }
 
-int	process_token(t_cmd *cmd, t_token *cur, int *argc)
+int process_token(t_cmd *cmd, t_token *cur, int *argc)
 {
-	char	*clean;
+	t_fragment *frag;
+	char *arg;
+	int len = 0, pos = 0;
 
 	if (*argc >= MAX_ARGS - 1)
 		return (0);
-	clean = remove_quotes(cur->value);
-	if (!clean)
-		return (0);
-	if (!add_argument(cmd, clean, cur->quote_type, argc))
+
+	frag = cur->fragments;
+	while (frag)
 	{
-		free(clean);
-		return (0);
+		len += ft_strlen(frag->text);
+		frag = frag->next;
 	}
-	free(clean);
+
+	arg = malloc(len + 1);
+	if (!arg)
+		return (0);
+
+	frag = cur->fragments;
+	while (frag)
+	{
+		ft_memcpy(arg + pos, frag->text, ft_strlen(frag->text));
+		pos += ft_strlen(frag->text);
+		frag = frag->next;
+	}
+	arg[pos] = '\0';
+
+	cmd->argv[*argc] = arg;
+	cmd->argv_quote[*argc] = cur->fragments ? cur->fragments->quote_type : QUOTE_NONE;
+	(*argc)++;
 	return (1);
 }
+
+
+
