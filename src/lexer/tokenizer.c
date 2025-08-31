@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 21:10:57 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 20:22:24 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 00:51:32 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_token *tokenize_input(const char *input)
 {
     t_fragment *frags = parse_fragments(input);
     t_fragment *cur = frags;
-    t_token *tokens = NULL;
+    t_token *raw_tokens = NULL;
     bool space_before = false;
 
     while (cur) {
@@ -32,9 +32,9 @@ t_token *tokenize_input(const char *input)
 
         while (cur) {
             // Añadir fragment
-            t_fragment *frag_copy = new_fragment(cur->text, strlen(cur->text), cur->quote_type, cur->has_space_after);
+            t_fragment *frag_copy = new_fragment(cur->text, strlen(cur->text),
+                                                 cur->quote_type, cur->has_space_after);
             append_fragment(&tok->fragments, frag_copy);
-
 
             last_frag = cur;
             cur = cur->next;
@@ -45,8 +45,13 @@ t_token *tokenize_input(const char *input)
             }
         }
 
-        append_token(&tokens, tok);
+        append_token(&raw_tokens, tok);
     }
 
-    return tokens;
+    // 🔑 Nuevo paso: convertir raw_tokens a clean_tokens
+    t_token *clean_tokens = build_token_list_from_fragments(raw_tokens);
+
+    free_tokens(raw_tokens); // ya no los necesitas
+
+    return clean_tokens;
 }

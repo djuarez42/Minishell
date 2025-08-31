@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 00:09:30 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 00:57:06 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,6 @@ t_token *build_token_list_from_fragments(t_token *raw)
         {
             bool empty_quote = (strlen(frag->text) == 0 && frag->quote_type != QUOTE_NONE);
 
-            printf("Processing fragment: \"%s\" quote=%d has_space_after=%d\n",
-                   frag->text, frag->quote_type, frag->has_space_after);
-            printf("  Current token: %p, next_space_before=%d\n",
-                   (void*)current_token, next_space_before);
-
             if (!current_token)
             {
                 if (!empty_quote)
@@ -50,9 +45,6 @@ t_token *build_token_list_from_fragments(t_token *raw)
 
                     prev_token = current_token;
                     next_space_before = false;
-
-                    printf("  Created new token %p with fragment \"%s\" has_space_before=%d\n",
-                           (void*)current_token, frag->text, current_token->has_space_before);
                 }
                 else if (frag->has_space_after)
                 {
@@ -65,9 +57,6 @@ t_token *build_token_list_from_fragments(t_token *raw)
                 {
                     t_fragment *frag_copy = duplicate_fragment(frag);
                     append_fragment(&current_token->fragments, frag_copy);
-
-                    printf("  Appended fragment \"%s\" to current token %p\n",
-                           frag->text, (void*)current_token);
                 }
             }
 
@@ -75,7 +64,6 @@ t_token *build_token_list_from_fragments(t_token *raw)
             {
                 current_token = NULL;
                 next_space_before = true;
-                printf("  Fragment has space after → closing current token\n");
             }
 
             frag = frag->next;

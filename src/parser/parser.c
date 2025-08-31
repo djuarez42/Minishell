@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 23:35:29 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 00:27:32 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,44 +103,36 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 }
 
 
-t_token	*parse_arguments(t_token *cur, t_cmd *cmd)
+t_token *parse_arguments(t_token *cur, t_cmd *cmd)
 {
-	int	argc;
+    int argc;
 
-	argc = 0;
-	if (!init_cmd_args(cmd))
-	{
-		printf("[parse_arguments] ERROR: init_cmd_args failed\n");
-		return (NULL);
-	}
-	while (cur && cur->type != TOKEN_PIPE && cur->type != TOKEN_EOF)
-	{
-		printf("[parse_arguments] Checking token type=%d\n", cur->type);
-		if (cur->type == TOKEN_WORD)
-		{
-			printf("[parse_arguments] Processing WORD token\n");
-			if (!process_token(cmd, cur, &argc))
-			{
-				printf("[parse_arguments] ERROR: process_token failed at argc=%d\n", argc);
-				free_partial_cmd(cmd, argc);
-				return (NULL);
-			}
-			printf("[parse_arguments] Added argv[%d]=\"%s\"\n",
-				argc - 1, cmd->argv[argc - 1]);
-		}
-		else if (cur->type == TOKEN_REDIRECT_OUT
-			|| cur->type == TOKEN_REDIRECT_IN
-			|| cur->type == TOKEN_APPEND
-			|| cur->type == TOKEN_HEREDOC)
-		{
-			printf("[parse_arguments] Found redirection token (type=%d), breaking loop\n", cur->type);
-			break ;
-		}
-		cur = cur->next;
-	}
-	cmd->argv[argc] = NULL;
-	cmd->argv_quote[argc] = QUOTE_NONE;
-	printf("[parse_arguments] Finished with argc=%d\n", argc);
-	return (cur);
+    argc = 0;
+    if (!init_cmd_args(cmd))
+        return (NULL);
+
+    while (cur && cur->type != TOKEN_PIPE && cur->type != TOKEN_EOF)
+    {
+        if (cur->type == TOKEN_WORD)
+        {
+            if (!process_token(cmd, cur, &argc))
+            {
+                free_partial_cmd(cmd, argc);
+                return (NULL);
+            }
+        }
+        else if (cur->type == TOKEN_REDIRECT_OUT
+            || cur->type == TOKEN_REDIRECT_IN
+            || cur->type == TOKEN_APPEND
+            || cur->type == TOKEN_HEREDOC)
+        {
+            break;
+        }
+        cur = cur->next;
+    }
+
+    cmd->argv[argc] = NULL;
+    cmd->argv_quote[argc] = QUOTE_NONE;
+    return (cur);
 }
 
