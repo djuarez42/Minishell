@@ -6,137 +6,153 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 04:09:53 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/31 22:50:32 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token *build_token_list_from_fragments(t_token *raw_tokens)
+t_token *build_token_list_from_fragments(t_token *raw)
 {
+    if (!raw)
+        return NULL;
+
     t_token *head = NULL;
-    t_token *last_tok = NULL;
+    t_token *current_token = NULL;
+    t_token *prev_token = NULL; // para enlazar tokens
+    bool next_space_before = false;
 
-    while (raw_tokens)
+    for (t_token *raw_tok = raw; raw_tok; raw_tok = raw_tok->next)
     {
-        t_fragment *cur_frag = raw_tokens->fragments;
+        t_fragment *frag = raw_tok->fragments;
 
-        while (cur_frag)
+        while (frag)
         {
-            if (ft_strlen(cur_frag->text) == 0)
+            bool empty_quote = (strlen(frag->text) == 0 && frag->quote_type != QUOTE_NONE);
+
+            printf("Processing fragment: \"%s\" quote=%d has_space_after=%d\n",
+                   frag->text, frag->quote_type, frag->has_space_after);
+            printf("  Current token: %p, next_space_before=%d\n",
+                   (void*)current_token, next_space_before);
+
+            if (!current_token)
             {
-                cur_frag = cur_frag->next;
-                continue;
+                if (!empty_quote)
+                {
+                    t_fragment *frag_copy = duplicate_fragment(frag);
+                    current_token = create_token_from_fragments(frag_copy, next_space_before);
+
+                    if (!head)
+                        head = current_token;
+
+                    if (prev_token)
+                        prev_token->next = current_token;
+
+                    prev_token = current_token;
+                    next_space_before = false;
+
+                    printf("  Created new token %p with fragment \"%s\" has_space_before=%d\n",
+                           (void*)current_token, frag->text, current_token->has_space_before);
+                }
+                else if (frag->has_space_after)
+                {
+                    next_space_before = true; // token siguiente tendrá espacio antes
+                }
             }
-
-            t_token *new_tok = malloc(sizeof(t_token));
-            new_tok->type = TOKEN_WORD;
-            new_tok->fragments = NULL;
-            new_tok->next = NULL;
-
-            t_fragment *frag_head = NULL;
-            t_fragment *frag_last = NULL;
-
-            while (cur_frag)
-            {
-                t_fragment *next_frag = cur_frag->next;
-
-                if (frag_last && lx_is_space_between(frag_last, cur_frag))
-                    break;
-
-                t_fragment *copy = malloc(sizeof(t_fragment));
-                copy->text = ft_strdup(cur_frag->text);
-                copy->quote_type = cur_frag->quote_type;
-                copy->next = NULL;
-
-                if (!frag_head)
-                    frag_head = copy;
-                else
-                    frag_last->next = copy;
-                frag_last = copy;
-
-                cur_frag = next_frag;
-            }
-
-            char *word = concat_fragments(frag_head);
-
-            t_fragment *final_frag = malloc(sizeof(t_fragment));
-            final_frag->text = word;
-            final_frag->quote_type = (frag_head && frag_head->quote_type != QUOTE_NONE)
-                                      ? frag_head->quote_type
-                                      : QUOTE_NONE;
-            final_frag->next = NULL;
-
-            new_tok->fragments = final_frag;
-
-            if (!head)
-                head = new_tok;
             else
-                last_tok->next = new_tok;
-            last_tok = new_tok;
+            {
+                if (!empty_quote)
+                {
+                    t_fragment *frag_copy = duplicate_fragment(frag);
+                    append_fragment(&current_token->fragments, frag_copy);
 
-            // Si rompimos por espacio, cur_frag sigue apuntando al fragment para el siguiente token
+                    printf("  Appended fragment \"%s\" to current token %p\n",
+                           frag->text, (void*)current_token);
+                }
+            }
+
+            if (frag->has_space_after)
+            {
+                current_token = NULL;
+                next_space_before = true;
+                printf("  Fragment has space after → closing current token\n");
+            }
+
+            frag = frag->next;
         }
-
-        raw_tokens = raw_tokens->next;
     }
-
-    t_token *eof = malloc(sizeof(t_token));
-    eof->type = TOKEN_EOF;
-    eof->fragments = NULL;
-    eof->next = NULL;
-
-    if (!head)
-        head = eof;
-    else
-        last_tok->next = eof;
 
     return head;
 }
+
 
 bool lx_is_space_between(t_fragment *cur, t_fragment *next)
 {
     if (!cur || !next)
         return false;
 
-    // Solo hay espacio entre fragments sin comillas
-    if (cur->quote_type == QUOTE_NONE && next->quote_type == QUOTE_NONE)
+    // Si hay espacio real después del fragmento anterior, siempre romper
+    if (cur->has_space_after)
         return true;
 
-    return false;
+    // Ambos sin comillas: romper solo si hay espacio
+    if (cur->quote_type == QUOTE_NONE && next->quote_type == QUOTE_NONE)
+        return false; // el espacio real ya se capturó en cur->has_space_after
+
+    // Uno con quote y otro sin → romper
+    if ((cur->quote_type == QUOTE_NONE && next->quote_type != QUOTE_NONE) ||
+        (cur->quote_type != QUOTE_NONE && next->quote_type == QUOTE_NONE))
+        return true;
+
+    // Misma quote → no romper
+    if (cur->quote_type == next->quote_type)
+        return false;
+
+    // Quotes diferentes → romper
+    return true;
 }
 
 char *concat_fragments(t_fragment *frag)
 {
-    if (!frag)
-        return NULL;
+    if (!frag) return NULL;
 
     size_t len = 0;
     t_fragment *cur = frag;
-
     while (cur)
     {
-        len += ft_strlen(cur->text);
-        if (cur->next && cur->quote_type == QUOTE_NONE && cur->next->quote_type == QUOTE_NONE)
-            len += 1; // añadir espacio
+        len += strlen(cur->text);
         cur = cur->next;
     }
 
     char *res = malloc(len + 1);
+    if (!res) return NULL;
+
     size_t pos = 0;
     cur = frag;
-
     while (cur)
     {
         size_t i = 0;
         while (cur->text[i])
             res[pos++] = cur->text[i++];
-
-        if (cur->next && cur->quote_type == QUOTE_NONE && cur->next->quote_type == QUOTE_NONE)
-            res[pos++] = ' ';
         cur = cur->next;
     }
     res[pos] = '\0';
-
     return res;
+}
+
+t_fragment *duplicate_fragment(t_fragment *frag)
+{
+    if (!frag) return NULL;
+
+    t_fragment *copy = malloc(sizeof(t_fragment));
+    if (!copy) return NULL;
+
+    copy->text = strdup(frag->text);
+    if (!copy->text) { free(copy); return NULL; }
+
+    copy->quote_type = frag->quote_type;
+    copy->has_space_after = frag->has_space_after;
+    copy->next = NULL;
+
+    return copy;
 }

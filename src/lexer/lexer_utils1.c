@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 18:42:27 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/31 19:14:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,35 +69,38 @@ char	*extract_token_text(const char *input, int *i, int type)
 /* 
 ** Construye un nuevo token con texto + tipo + lista de fragmentos.
 */
-t_token	*create_token(t_fragment *frags, int type)
+t_token *create_token(t_token_type type, bool space_before) 
 {
-	t_token	*new;
+    t_token *tok = malloc(sizeof(t_token));
+    tok->type = type;
+    tok->fragments = NULL;
+    tok->has_space_before = space_before;
+    tok->next = NULL;
+    return tok;
+}
 
-	new = malloc(sizeof(t_token));
-	if (!new)
-		return (NULL);
-	new->type = type;
-	new->fragments = frags;   // 👈 Ya no llamamos a parse_fragments aquí
-	new->next = NULL;
-	return (new);
+t_token *create_token_from_fragments(t_fragment *first_frag, bool space_before)
+{
+    t_token *tok = malloc(sizeof(t_token));
+    if (!tok) return NULL;
+
+    tok->type = TOKEN_WORD;
+    tok->fragments = first_frag;
+    tok->has_space_before = space_before;
+    tok->next = NULL;
+
+    return tok;
 }
 
 /* 
 ** Añade un token al final de la lista.
 */
-void	append_token(t_token **tokens, t_token *new)
+void append_token(t_token **head, t_token *tok) 
 {
-	t_token	*tmp;
-
-	if (!new)
-		return ;
-	if (!*tokens)
-	{
-		*tokens = new;
-		return ;
-	}
-	tmp = *tokens;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
+    if (!tok) return;
+    if (!*head) { *head = tok; return; }
+    t_token *tmp = *head;
+    while (tmp->next) tmp = tmp->next;
+    tmp->next = tok;
 }
+

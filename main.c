@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 14:21:51 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/31 23:00:45 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ int main(int argc, char **argv, char **envp)
 	return (0);
 }*/
 
-int main(void)
+/*int main(void)
 {
     const char *tests[] = {
         "echo hello",
@@ -200,7 +200,7 @@ int main(void)
         "echo \"double quoted text\" end",
         "mix\"double\\\"escaped\"and'singles'",
         "echo \"hello world\" 'and good bye'",
-        "\"\"ec\"\"ho\"\" hola\"\"mundo",
+        "\"\"ec\"\"ho\"\" hola\"\"mundo\"\"",
         "\"\"echo\"\""
     };
 
@@ -210,7 +210,6 @@ int main(void)
     {
         printf("\n=== Test %d: %s ===\n", i + 1, tests[i]);
 
-        // 1️⃣ Lexer: obtener tokens con fragments
         t_token *raw_tokens = tokenize_input(tests[i]);
         if (!raw_tokens)
         {
@@ -221,7 +220,6 @@ int main(void)
         printf("--- Raw tokens from tokenize_input ---\n");
         print_tokens(raw_tokens);
 
-        // 2️⃣ Construir lista de tokens estilo Bash
         t_token *tokens = build_token_list_from_fragments(raw_tokens);
         if (!tokens)
         {
@@ -231,14 +229,194 @@ int main(void)
         }
 
         printf("--- Tokens after build_token_list_from_fragments ---\n");
-		print_token_list_from_fragments(tokens);
+        print_token_list_from_fragments(tokens);
         print_tokens(tokens);
 
-        // 3️⃣ Liberar memoria
         free_tokens(raw_tokens);
         free_tokens(tokens);
     }
 
     return 0;
+}*/
+
+
+/*t_fragment *make_test_fragments(void)
+{
+    t_fragment *f1 = malloc(sizeof(t_fragment));
+    f1->text = strdup("ec");
+    f1->quote_type = 0;
+    f1->has_space_after = 0;
+
+    t_fragment *f2 = malloc(sizeof(t_fragment));
+    f2->text = strdup("ho");
+    f2->quote_type = 0;
+    f2->has_space_after = 1; // <- simula espacio después de "ho"
+
+    t_fragment *f3 = malloc(sizeof(t_fragment));
+    f3->text = strdup("hola");
+    f3->quote_type = 0;
+    f3->has_space_after = 0;
+
+    t_fragment *f4 = malloc(sizeof(t_fragment));
+    f4->text = strdup("mundo");
+    f4->quote_type = 0;
+    f4->has_space_after = 0;
+
+    f1->next = f2;
+    f2->next = f3;
+    f3->next = f4;
+    f4->next = NULL;
+
+    return f1;
 }
 
+int main(void)
+{
+    printf("=== Test: \"\"ec\"\"ho\"\" hola\"\"mundo\"\" ===\n");
+
+    // 1. Crear lista de fragmentos simulada
+    t_token raw;
+    raw.type = 0;
+    raw.has_space_before = 0;
+    raw.fragments = make_test_fragments();
+    raw.final_text = NULL;
+    raw.next = NULL;
+
+    // 2. Construir tokens finales
+    t_token *tokens = build_token_list_from_fragments(&raw);
+
+    // 3. Imprimir tokens para depuración
+    print_token_list_from_fragments(tokens);
+    print_tokens(tokens);
+
+    return 0;
+}*/
+
+
+/*int main(void)
+{
+    const char *tests[] = {
+        "echo hello",
+        "ls -l | grep 'test file'",
+        "echo \"double quoted text\" end",
+        "mix\"double\\\"escaped\"and'singles'",
+        "echo \"hello world\" 'and good bye'",
+        "\"\"ec\"\"ho\"\" hola\"\"mundo\"\"",
+        "\"\"echo\"\""
+    };
+
+    int n = sizeof(tests) / sizeof(tests[0]);
+    int i = 0;
+
+    while (i < n)
+    {
+        printf("\n=== Test %d: %s ===\n", i + 1, tests[i]);
+
+        t_token *raw_tokens = tokenize_input(tests[i]);
+        if (!raw_tokens)
+        {
+            printf("Error: Invalid input (unmatched quotes)\n");
+            i++;
+            continue;
+        }
+
+        t_token *final_tokens = build_token_list_from_fragments(raw_tokens);
+        if (!final_tokens)
+        {
+            printf("Error: Failed to build token list\n");
+            free_tokens(raw_tokens);
+            i++;
+            continue;
+        }
+
+        print_final_token_list(final_tokens);
+
+        free_tokens(raw_tokens);
+        free_tokens(final_tokens);
+        i++;
+    }
+
+    return 0;
+}*/
+
+/*int main(void)
+{
+    const char *tests[] = {
+        "echo hello",
+        "ls -l | grep 'test file'",
+        "echo \"double quoted text\" end",
+        "mix\"double\\\"escaped\"and'singles'",
+        "echo \"hello world\" 'and good bye'",
+        "\"\"ec\"\"ho\"\" hola\"\"mundo\"\"",
+        "\"\"echo\"\""
+    };
+
+    int n = sizeof(tests) / sizeof(tests[0]);
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("\n=== Test %d: %s ===\n", i + 1, tests[i]);
+
+        // Tokenización inicial
+        t_token *raw_tokens = tokenize_input(tests[i]);
+        if (!raw_tokens)
+        {
+            printf("Error: Invalid input (unmatched quotes)\n");
+            continue;
+        }
+
+        // Construcción de la lista final de tokens
+        t_token *final_tokens = build_token_list_from_fragments(raw_tokens);
+        if (!final_tokens)
+        {
+            printf("Error: Failed to build final token list\n");
+            free_tokens(raw_tokens);
+            continue;
+        }
+
+        // Imprimir lista final de tokens
+        print_final_token_list(final_tokens);
+
+        // Liberar memoria
+        free_tokens(raw_tokens);
+        free_tokens(final_tokens);
+    }
+
+    return 0;
+}*/
+
+int main(void)
+{
+    const char *tests[] = {
+        "echo hello",
+        "ls -l | grep 'test file'",
+        "echo \"double quoted text\" end",
+        "mix\"double\\\"escaped\"and'singles'",
+        "echo \"hello world\" 'and good bye'",
+        "\"\"ec\"\"ho\"\" hola\"\"mundo\"\"",
+        "\"\"echo\"\""
+    };
+
+    int n_tests = sizeof(tests) / sizeof(tests[0]);
+
+    for (int i = 0; i < n_tests; i++)
+    {
+        printf("=== Test %d: %s ===\n", i + 1, tests[i]);
+
+        // 1️⃣ Tokenizar input
+        t_token *raw_tokens = tokenize_input((char *)tests[i]); 
+        // tokenize_input debe devolver la lista de t_token con fragments
+
+        // 2️⃣ Construir lista final de tokens
+        t_token *final_tokens = build_token_list_from_fragments(raw_tokens);
+
+        // 3️⃣ Imprimir lista final
+        print_final_token_list(final_tokens);
+
+        // 4️⃣ Liberar memoria (tus funciones)
+        free_tokens(raw_tokens);
+        free_tokens(final_tokens);
+    }
+
+    return 0;
+}
