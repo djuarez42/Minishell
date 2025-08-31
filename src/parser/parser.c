@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 00:27:32 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 01:09:34 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,41 +64,23 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 	t_redir	*last;
 
 	if (!cur)
-	{
-		printf("[parse_redirections] ERROR: cur is NULL\n");
 		return (NULL);
-	}
 	if (!cur->next || cur->next->type != TOKEN_WORD)
-	{
-		printf("[parse_redirections] ERROR: missing file after redirection (type=%d)\n", cur->type);
 		return (NULL);
-	}
-
-	printf("[parse_redirections] Creating redir: type=%d, target=\"%s\"\n",
-		cur->type, cur->next->fragments ? cur->next->fragments->text : "(null)");
 
 	new_redir = create_redir(cur);
 	if (!new_redir)
-	{
-		printf("[parse_redirections] ERROR: create_redir failed\n");
 		return (NULL);
-	}
 
 	if (!cmd->redirs)
-	{
 		cmd->redirs = new_redir;
-		printf("[parse_redirections] Added first redirection\n");
-	}
 	else
 	{
 		last = cmd->redirs;
 		while (last->next)
 			last = last->next;
 		last->next = new_redir;
-		printf("[parse_redirections] Appended redirection to list\n");
 	}
-
-	// Avanzar 2 tokens: operador + WORD
 	return (cur->next->next);
 }
 
