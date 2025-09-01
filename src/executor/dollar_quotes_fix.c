@@ -35,8 +35,14 @@ char *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_st
     
     start = *i + 1;
     
+    // Handle $"string" syntax - should be treated as literal string
+    if (input[start] == '"')
+    {
+        *i = start;  // Skip just the $ but keep the quote
+        return (ft_strdup(""));  // Return empty string, the quote will be processed normally
+    }
     // Special character handling - important for $? inside quotes
-    if (input[start] == '?')
+    else if (input[start] == '?')
     {
         *i = start + 1;  // Skip past ?
         return (expand_exit_status(state));

@@ -6,15 +6,17 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 20:45:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/28 20:59:46 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/01 12:30:45 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
 /*
-** Special handling for $"content" cases.
-** Unlike in normal expansion, we need to preserve the content literally.
+** Handles $"string" syntax according to bash behavior.
+** In bash, $"string" is locale translation, but we implement it simply:
+** - Keep the literal string (without variable expansion)
+** - This matches bash behavior when no translations are available
 */
 char	*preprocess_dollar_quotes(const char *input)
 {
@@ -26,40 +28,47 @@ char	*preprocess_dollar_quotes(const char *input)
 	if (!input)
 		return (NULL);
 	
-	len = ft_strlen(input);
+	len = ft_strlen(input) * 2; // Allocate extra space for escapes
 	result = malloc(len + 1);
 	if (!result)
 		return (NULL);
 	
 	i = 0;
 	j = 0;
+	
 	while (input[i])
 	{
-		// Detect $"string" pattern
+		// Special case: $"string" - treat contents literally as in bash
 		if (input[i] == '$' && input[i + 1] == '"')
 		{
-			// Mark this with a special flag
-			// Skip the $ but keep the quotes
-			i++;
+			// Replace the $ with a unique marker pattern
+			result[j++] = '"'; // Start with a quote
+			i += 2; // Skip both $ and "
 			
-			// Copy the open quote
-			result[j++] = input[i++];
-			
-			// Copy everything until closing quote
+			// Copy content literally
 			while (input[i] && input[i] != '"')
 			{
+				// Escape any variables to prevent expansion
+				if (input[i] == '$')
+				{
+					result[j++] = '\\'; // Add escape character
+				}
 				result[j++] = input[i++];
 			}
 			
-			// Copy the closing quote if found
+			// Copy closing quote
 			if (input[i] == '"')
+			{
 				result[j++] = input[i++];
+			}
 		}
 		else
 		{
+			// Regular character
 			result[j++] = input[i++];
 		}
 	}
+	
 	result[j] = '\0';
 	return (result);
 }

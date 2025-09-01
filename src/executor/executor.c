@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 21:47:36 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:58:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "libft.h"
 #include <signal.h>
 #include "builtins.h"
+#include <fcntl.h>
 
 /* ---------------- PATH search and exec helpers (existing) ---------------- */
 char	*find_executable(char *cmd, char **envp)
@@ -255,16 +256,19 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 			wire_child_pipes(i, n_cmds, pipes);
 			if (pipes)
 				close_all_pipes(pipes, n_pipes);
+			
 			t_exec_state child_state = *state; // Copy state for child
 			res = handle_redirections_and_quotes(cur->redirs, envp, &child_state);
 			if (res == 130)
 				exit (130);
 			else if (res == 1)
 				exit (1);
+			
 			if (!cur->argv || !cur->argv[0])
 				exit(2);
 			if (is_builtin(cur->argv[0]))
 				exit(run_builtin_in_child(cur, &envp));
+			
 			code = execute_command(NULL, cur, envp);
 			exit(code);
 		}
@@ -305,24 +309,48 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 			int save_in;
 			int save_out;
 			int save_err;
-
+			
+			// Ensure all output is flushed before saving FDs
+			fflush(stdout);
+			fflush(stderr);
+			
 			save_in = dup(STDIN_FILENO);
 			save_out = dup(STDOUT_FILENO);
 			save_err = dup(STDERR_FILENO);
 
 			res = handle_redirections_and_quotes(cur->redirs, envp, state);
+			
 			if (res == 130)
 				status = 130;
 			else if (res == 1)
 				status = 1;
-			else
+			else {
+				// Explicitly flush before running builtin
+				fflush(stdout);
+				fflush(stderr);
+				
 				status = run_builtin_in_parent(cur, &envp);
+				
+				// Explicitly flush after running builtin
+				fflush(stdout);
+				fflush(stderr);
+			}
+			
+			// Flush any pending output to redirected files before restoring FDs
+			fflush(stdout);
+			fflush(stderr);
+			
 			if (save_in != -1)
 				dup2(save_in, STDIN_FILENO);
 			if (save_out != -1)
 				dup2(save_out, STDOUT_FILENO);
 			if (save_err != -1)
 				dup2(save_err, STDERR_FILENO);
+				
+			// Flush again after restoring FDs
+			fflush(stdout);
+			fflush(stderr);
+			
 			if (save_in != -1)
 				close(save_in);
 			if (save_out != -1)
@@ -331,7 +359,9 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 				close(save_err);
 		}
 		else
+		{
 			status = run_pipeline(cur, n, envp, state);
+		}
 		state->last_status = status;
 		while (n-- > 0 && cur)
 			cur = cur->next;

@@ -14,37 +14,12 @@
 
 void	print_redirs(t_redir *redir)
 {
-	while (redir)
-	{
-		printf("  vaRedir type: %d, file: %s\n", redir->type, redir->file);
-		redir = redir->next;
-	}
+	(void)redir; // Unused in production
+	// Debug function disabled for production
 }
 
 void	print_cmd_list(t_cmd *cmd_list)
 {
-	int	i;
-
-	while (cmd_list)
-	{
-		printf("Command:\n");
-		if (cmd_list->argv)
-		{
-			i = 0;
-			while (cmd_list->argv[i])
-			{
-				printf("  argv[%d]: %s\n", i, cmd_list->argv[i]);
-				i++;
-			}
-		}
-		else
-			printf("  argv is NULL\n");
-		printf("  Pipe: %d\n", cmd_list->pipe);
-		if (cmd_list->redirs)
-			print_redirs(cmd_list->redirs);
-		else
-			printf("  No redirections\n");
-		printf("\n");
-		cmd_list = cmd_list->next;
-	}
+	(void)cmd_list; // Unused in production
+	// Debug function disabled for production
 }

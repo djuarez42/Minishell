@@ -1,2 +1,0 @@
-echo FINAL_TEST > final_output.txt
-exit

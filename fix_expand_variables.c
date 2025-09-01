@@ -12,34 +12,17 @@
 
 #include "minishell.h"
 
-// Helper function to create a string from a single character
-static char *ft_strdupc(char c)
-{
-    char *str;
-    
-    str = (char *)malloc(sizeof(char) * 2);
-    if (!str)
-        return (NULL);
-    str[0] = c;
-    str[1] = '\0';
-    return (str);
-}
-
 // Helper function to specifically handle $"string" pattern
 static char *handle_dollar_string(const char *input, int *i)
 {
     char *result;
     int start, end;
     
-    if (!input || !(*i))
-        return (ft_strdup(""));
-    
     // Skip the $ character
     (*i)++;
     
     // Skip the opening quote
-    if (input[*i] == '"')
-        (*i)++;
+    (*i)++;
     
     // Find the end of the quoted string
     start = *i;
@@ -64,14 +47,10 @@ static char *handle_dollar_string(const char *input, int *i)
 // Helper function to check for $"string" pattern
 static int is_dollar_string(const char *input, int pos)
 {
-    if (!input || !input[pos])
+    if (!input || !input[pos] || !input[pos + 1])
         return (0);
     
-    // Check for $ followed by a double quote
-    if (input[pos] == '$' && input[pos + 1] && input[pos + 1] == '"')
-        return (1);
-    
-    return (0);
+    return (input[pos] == '$' && input[pos + 1] == '"');
 }
 
 char	*expand_variables(const char *input, char **envp, t_exec_state *state,

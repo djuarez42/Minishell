@@ -111,15 +111,18 @@ void	handle_backslash_dollar_parity(const char *input, int *i,
 			// Odd number of backslashes: output half, then literal $
 			*backslashes_out = backslash_count / 2;
 			*should_expand = false;
+			// Move back to the $ so it gets processed as a literal
+			(*i)--; 
 		}
-		(*i)++; // Skip the dollar sign
+		// Skip the dollar sign only if we're expanding the variable
+		if (*should_expand)
+			(*i)++;
 	}
 	else
 	{
 		// No dollar sign after backslashes, treat as literal backslashes
 		*backslashes_out = backslash_count;
 		*should_expand = false;
-		// Don't reset position - let the caller handle the backslashes
 	}
 }
 
@@ -263,7 +266,8 @@ int	expand_argv(char **argv, t_quote_type *argv_quote,
 			continue;
 		}
 		
-		// First preprocess $" and $' cases (make $ disappear)
+		// Handle $"string" syntax (locale translation in Bash)
+		// In our implementation, we escape $ inside these quotes to prevent expansion
 		char *preprocessed = preprocess_dollar_quotes(argv[j]);
 		if (!preprocessed)
 			return (-1);

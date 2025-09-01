@@ -100,3 +100,7 @@ int		handle_redirections_heredoc(const char *delimiter, bool quoted,
 			char **envp, t_heredoc_args *args);
 void	cleanup_heredoc_file(t_heredoc_args *args);
 #endif
+
+/* Dollar string ($"string") handling */
+int     is_dollar_string_pattern(const char *input, int pos);
+char    *process_dollar_string(const char *input, int *pos);

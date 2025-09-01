@@ -65,14 +65,9 @@ t_token	*build_token_list(char **tokens, t_quote_type *quotes)
 
 void	print_token_list(t_token *token)
 {
-	while (token)
-	{
-		printf("Type: %-15s Quote: %-7s Value: \"%s\"\n",
-			token_type_str(token->type),
-			quote_type_str(token->quote_type),
-			token->value);
-		token = token->next;
-	}
+	(void)token; // Unused in production
+	// Debug function disabled for production
+}
 }
 
 void	free_token_list(t_token *head)

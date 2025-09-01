@@ -1,1 +1,0 @@
-echo DIRECT TEST > direct_final.txt

@@ -1,3 +1,0 @@
-This should go to the file
-This fprintf should also go to the file
-Direct write to STDOUT_FILENO

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 03:42:22 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/01 11:57:13 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int process_token(t_cmd *cmd, t_token *cur, int *argc)
 	frag = cur->fragments;
 	while (frag)
 	{
-		len += strlen(frag->text);
+		len += ft_strlen(frag->text);
 		frag = frag->next;
 	}
 	
@@ -113,18 +113,8 @@ int process_token(t_cmd *cmd, t_token *cur, int *argc)
 		return (0);
 	
 	arg[0] = '\0';
+	pos = 0;
 	
-	frag = cur->fragments;
-	while (frag)
-	{
-		len += ft_strlen(frag->text);
-		frag = frag->next;
-	}
-
-	arg = malloc(len + 1);
-	if (!arg)
-		return (0);
-
 	frag = cur->fragments;
 	while (frag)
 	{

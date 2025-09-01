@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
+#    By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/08/31 03:25:12 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/09/01 12:03:26 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,9 @@ SRC = main.c \
 		src/executor/expand_variables.c \
 		src/executor/expand_mixed_quotes.c \
 		src/executor/preprocess_dollar_quotes.c \
+		src/executor/dollar_string_fix.c \
+		src/executor/dollar_quotes_fix.c \
+		src/executor/expand_cmd_inplace.c \
 		src/builtins/builtins.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \
