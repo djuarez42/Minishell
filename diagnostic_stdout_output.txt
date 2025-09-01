@@ -1,0 +1,2 @@
+This is redirected stdout
+Direct write to redirected stdout

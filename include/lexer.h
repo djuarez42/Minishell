@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 03:16:51 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 00:08:30 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_fragment
 {
 	char				*text;
 	t_quote_type		quote_type;
+	bool				has_space_after;
 	struct s_fragment	*next;
 } t_fragment;
 
@@ -54,6 +55,8 @@ typedef struct s_token
 {
 	t_token_type	type;
 	t_fragment		*fragments;
+	bool			has_space_before;
+	char			*final_text;
 	struct s_token	*next;
 } t_token;
 
@@ -108,25 +111,31 @@ t_token		*tokenize_input(const char *input);
 char		*extract_token_text(const char *input, int *i, int type);
 int			detect_token_type(const char *input, int i);
 t_token		*new_token(t_token_type type);
-t_token *create_token(t_fragment *frags, int type);
+t_token 	*create_token(t_token_type type, bool space_before);
+t_token 	*create_token_from_fragments(t_fragment *first_frag, bool space_before);
+t_token		*append_token_eof(t_token *head);
 void        append_token(t_token **tokens, t_token *new);
+char 		*concat_fragments_for_token(t_fragment *frag);
+void 		print_final_token_list(t_token *tokens);
 
 
 //fragments
 t_fragment *parse_fragments(const char *text);
-void 		append_fragment(t_fragment **head, t_fragment *frag);
-t_fragment	*new_fragment(const char *text, int len, t_quote_type qtype);
+void 		append_fragment(t_fragment **head, t_fragment *new);
+t_fragment *new_fragment(const char *start, size_t len, t_quote_type qtype, bool space_after);
 t_token 	*create_token_group(t_fragment *frag_head, t_token_type type);
 t_token_type detect_operator_token(t_fragment *frag);
 t_token 	*build_token_list_from_fragments(t_token *raw_tokens);
 char 		*concat_fragments(t_fragment *frag);
+t_fragment 	*duplicate_fragment(t_fragment *frag);
 
 // Clasificación
 bool       		lx_is_space(char c);
-bool 			lx_is_space_between(t_fragment *cur, t_fragment *next);
+bool 			lx_is_space_between(t_fragment *a, t_fragment *b);
 bool			lx_is_meta(char c);
 t_token_type	lx_meta_type(const char *s, int *consumed);
 int				check_unmatched_quotes(const char *input);
+void			assign_token_types(t_token *tokens);
 
 // Construcción incremental
 t_token     *lx_token_open(t_token_type type);

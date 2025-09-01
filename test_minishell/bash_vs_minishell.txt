@@ -1,0 +1,110 @@
+=== Test: Basic echo ===
+Command: echo hello world
+Bash output:
+hello world
+Bash exit code: 0
+Minishell output:
+minishell$ echo hello world
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: Echo with single quotes ===
+Command: echo 'hello world'
+Bash output:
+hello world
+Bash exit code: 0
+Minishell output:
+minishell$ echo 'hello world'
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: Echo with double quotes ===
+Command: echo "hello world"
+Bash output:
+hello world
+Bash exit code: 0
+Minishell output:
+minishell$ echo "hello world"
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: Echo environment variable ===
+Command: echo $USER
+Bash output:
+ekakhmad
+Bash exit code: 0
+Minishell output:
+minishell$ echo $USER
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: ANSI-C Quote echo ===
+Command: echo $'USER'
+Bash output:
+USER
+Bash exit code: 0
+Minishell output:
+minishell$ echo $'USER'
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: Locale-specific translation ===
+Command: echo $"USER"
+Bash output:
+USER
+Bash exit code: 0
+Minishell output:
+minishell$ echo $"USER"
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: Echo HOME variable ===
+Command: echo $HOME
+Bash output:
+/home/ekakhmad
+Bash exit code: 0
+Minishell output:
+minishell$ echo $HOME
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: Variable assignment and echo ===
+Command: TEST=hello; echo $TEST
+Bash output:
+hello
+Bash exit code: 0
+Minishell output:
+minishell$ TEST=hello; echo $TEST
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: Echo non-existent variable ===
+Command: echo $NONEXISTENT
+Bash output:
+
+Bash exit code: 0
+Minishell output:
+minishell$ echo $NONEXISTENT
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: Echo variable in double quotes ===
+Command: echo "$USER"
+Bash output:
+ekakhmad
+Bash exit code: 0
+Minishell output:
+minishell$ echo "$USER"
+minishell$ exit
+Minishell exit code: 0
+
+=== Test: Echo variable in single quotes ===
+Command: echo '$USER'
+Bash output:
+$USER
+Bash exit code: 0
+Minishell output:
+minishell$ echo '$USER'
+minishell$ exit
+Minishell exit code: 0
+

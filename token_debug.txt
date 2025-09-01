@@ -1,0 +1,21 @@
+=== Token Constants Debug ===
+TOKEN_WORD = 0
+TOKEN_PIPE = 1
+TOKEN_REDIRECT_IN = 2
+TOKEN_REDIRECT_OUT = 3
+TOKEN_HEREDOC = 4
+TOKEN_APPEND = 5
+
+=== REDIR Constants ===
+REDIR_IN = 2
+REDIR_OUT = 3
+REDIR_HEREDOC = 4
+REDIR_APPEND = 5
+
+=== Basic Redirection Test ===
+Opened file redirect_test.txt with fd=4
+Duplicated stdout to fd=5
+Contents of redirect_test.txt: This text should be in redirect_test.txt
+
+
+=== Test Complete ===

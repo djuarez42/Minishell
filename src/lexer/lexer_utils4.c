@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 00:21:37 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/08/31 23:40:33 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,24 @@ void print_tokens(t_token *tokens)
     t_token *cur = tokens;
     int i = 0;
 
-    printf("=== TOKENS ===\n");
+    printf("=== FINAL TOKENS ===\n");
     while (cur)
     {
-        printf("Token %d: type=%d\n", i, cur->type);
+        printf("Token %d @%p: type=%d, has_space_before=%d\n",
+               i, (void*)cur, cur->type, cur->has_space_before);
+
+        if (cur->final_text)
+            printf("  Final text: \"%s\"\n", cur->final_text);
+        else
+            printf("  Final text: (NULL)\n");
 
         t_fragment *frag = cur->fragments;
         int j = 0;
         while (frag)
         {
-            printf("  Fragment %d: \"%s\" (quote=%d)\n", j, frag->text, frag->quote_type);
+            printf("  Frag %d @%p: \"%s\" (quote=%d, space_after=%d, next=%p)\n",
+                   j, (void*)frag, frag->text,
+                   frag->quote_type, frag->has_space_after, (void*)frag->next);
             frag = frag->next;
             j++;
         }
@@ -80,7 +88,7 @@ void print_tokens(t_token *tokens)
         cur = cur->next;
         i++;
     }
-    printf("==============\n\n");
+    printf("=======================================\n\n");
 }
 
 t_token *create_token_group(t_fragment *frag_head, t_token_type type)
@@ -94,26 +102,23 @@ t_token *create_token_group(t_fragment *frag_head, t_token_type type)
     return tok;
 }
 
-t_token_type detect_operator_token(t_fragment *frag)
+void assign_token_types(t_token *tokens)
 {
-    if (frag->quote_type != QUOTE_NONE)
-        return TOKEN_WORD;
+    while (tokens)
+    {
+        if (strcmp(tokens->fragments->text, "|") == 0)
+            tokens->type = TOKEN_PIPE;
+        else if (strcmp(tokens->fragments->text, "<") == 0)
+            tokens->type = TOKEN_REDIRECT_IN;
+        else if (strcmp(tokens->fragments->text, ">") == 0)
+            tokens->type = TOKEN_REDIRECT_OUT;
+        else if (strcmp(tokens->fragments->text, "<<") == 0)
+            tokens->type = TOKEN_HEREDOC;
+        else if (strcmp(tokens->fragments->text, ">>") == 0)
+            tokens->type = TOKEN_APPEND;
+        else
+            tokens->type = TOKEN_WORD;
 
-    if (ft_strlen(frag->text) == 1)
-    {
-        if (frag->text[0] == '|')
-            return TOKEN_PIPE;
-        if (frag->text[0] == '<')
-            return TOKEN_REDIRECT_IN;
-        if (frag->text[0] == '>')
-            return TOKEN_REDIRECT_OUT;
+        tokens = tokens->next;
     }
-    else if (ft_strlen(frag->text) == 2)
-    {
-        if (ft_strncmp(frag->text, ">>", 2) == 0)
-            return TOKEN_APPEND;
-        if (ft_strncmp(frag->text, "<<", 2) == 0)
-            return TOKEN_HEREDOC;
-    }
-    return TOKEN_WORD;
 }

@@ -1,0 +1,1 @@
+Test content created with REDIR_OUT=3
