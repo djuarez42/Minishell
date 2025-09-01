@@ -28,6 +28,49 @@ $ echo $?
 - Causes STD_OUT mismatches when undefined variables should expand to empty strings
 - Multiple test failures in builtin tests
 
+## Variable Expansion Issues
+
+### 1. Dollar-Quoted String Handling (`$"string"`)
+**Problem**: Incorrect expansion of `$"string"` syntax.
+
+**Expected behavior (bash)**:
+```bash
+$ /bin/echo $"HOME"
+HOME
+$ /bin/echo $"42$" 
+42$
+```
+
+**Current behavior (minishell)**:
+```bash
+$ /bin/echo $"HOME"
+/home/ekakhmad
+$ /bin/echo $"42$"
+$42$
+```
+
+**Analysis**: 
+- Our implementation treats `$"HOME"` as variable expansion `$HOME`
+- Bash treats `$"HOME"` as literal string "HOME" 
+- The `$"..."` syntax in bash is for locale-specific translation, not variable expansion
+
+### 2. External Command Variable Expansion Failures
+**Problem**: External commands fail when arguments contain undefined variables.
+
+**Examples**:
+- `/bin/echo $TESTNOTFOUND` → exit code 1 (should be 0)
+- `/bin/echo $UNDEFINED` → no output, wrong exit code
+
+**Impact**: 26 STD_OUT failures in variable tests (33/59 passed)
+
+### 3. Variable Expansion in Quotes
+**Problem**: Some edge cases with variable expansion in different quote contexts.
+
+**Test cases affected**:
+- `""$?""` - exit status in empty quotes
+- `$?"42"` - exit status with appended text  
+- `''$?''"42"` - mixed quote contexts
+
 ### Technical Analysis
 1. The command `/bin/echo $UNDEFINED_VAR` should:
    - Expand `$UNDEFINED_VAR` to empty string
@@ -124,6 +167,12 @@ minishell: syntax error near unexpected token `|'
 **Status**: Needs investigation - may be related to main variable expansion issue
 
 ## Investigation Priority
-1. **High**: Variable expansion with external commands (affects many tests)
-2. **Medium**: Heredoc parsing syntax (`<<delimiter command`)
-3. **Low**: Standalone redirection error messages
+1. **High**: External command execution failures with undefined variables
+2. **High**: Dollar-quoted string syntax (`$"string"`) implementation  
+3. **Medium**: Heredoc parsing syntax (`<<delimiter command`)
+4. **Low**: Standalone redirection error messages
+
+## Current Test Status
+- **Builtin Tests**: 261/297 passed (87.9%)
+- **Variable Tests**: 33/59 passed (55.9%) 
+- **Total Issues**: 26 STD_OUT + 9 STD_ERR + 11 EXIT_CODE failures
