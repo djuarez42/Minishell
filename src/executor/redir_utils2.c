@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/27 20:07:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 14:06:54 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,9 @@ void	redirect_stdin_heredoc(void)
 		exit(1);
 	}
 	close(fd);
+}
+
+void print_error_file(const char *context)
+{
+    fprintf(stderr, "minishell: line 1: %s: %s\n", context, strerror(errno));
 }

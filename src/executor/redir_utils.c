@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/25 14:13:54 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 14:39:57 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,18 @@ void	handle_redirections_out(const char *filename, int *error)
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		perror("open (redirect out)");
+        print_error_file(filename);
 		*error = 1;
 		return ;
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
-		perror("dup2 (redirect out)");
+        print_error_file("dup2");
 		close (fd);
 		*error = 1;
 		return ;
 	}
+	close(fd);
 }
 
 void	handle_redirections_in(const char *filename, int *error)
@@ -39,17 +40,18 @@ void	handle_redirections_in(const char *filename, int *error)
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 	{
-		perror("open (redirect in)");
+		print_error_file(filename);
 		*error = 1;
 		return ;
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
-		perror("dup2 (redirect in)");
+        print_error_file("dup2");
 		close(fd);
 		*error = 1;
 		return ;
 	}
+	close (fd);
 }
 
 void	handle_redirections_append(const char *filename, int *error)
@@ -59,17 +61,18 @@ void	handle_redirections_append(const char *filename, int *error)
 	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
-		perror("open (redirect append)");
+		print_error_file(filename);
 		*error = 1;
 		return ;
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
-		perror("dup2 (redirect append)");
+		print_error_file("dup2");
 		close(fd);
 		*error = 1;
 		return ;
 	}
+	close(fd);
 }
 
 int	handle_redirections_heredoc(const char *delimiter, bool quoted,
