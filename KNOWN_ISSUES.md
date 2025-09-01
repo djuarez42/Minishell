@@ -166,6 +166,43 @@ minishell: syntax error near unexpected token `|'
 **Example**: `/bin/echo 42 > tmp_redir_out` 
 **Status**: Needs investigation - may be related to main variable expansion issue
 
+## Path Handling and Navigation Issues
+
+### 1. Tilde Expansion Not Implemented
+**Problem**: The `~` symbol is not expanded to the home directory.
+
+**Expected behavior (bash)**:
+```bash
+$ echo ~
+/home/ekakhmad
+$ cd ~/Desktop/
+$ pwd
+/home/ekakhmad/Desktop
+```
+
+**Current behavior (minishell)**:
+```bash
+$ echo ~
+~
+$ cd ~/Desktop/
+cd: No such file or directory
+```
+
+**Impact**: 
+- `cd ~` and `cd ~/path` commands fail
+- Tilde expansion missing in echo and other commands
+- Path check tests failing
+
+### 2. PATH Variable Handling
+**Problem**: Some edge cases with PATH variable manipulation.
+
+**Test cases**:
+- `unset PATH` followed by `/bin/ls` (should work with absolute paths)
+- `export PATH=""` behavior 
+- Command resolution when PATH is modified
+
+**Status**: Most PATH handling works correctly, minor edge cases need investigation
+
 ## Syntax Error Handling Issues
 
 ### 1. Missing Syntax Error Detection and Exit Codes
@@ -229,14 +266,16 @@ $ echo $?
 
 ## Investigation Priority
 1. **Critical**: Add syntax error detection in parser
-2. **Critical**: Fix exit code handling (0 → 2 for syntax errors)  
-3. **High**: External command execution failures with undefined variables
-4. **High**: Dollar-quoted string syntax (`$"string"`) implementation  
-5. **Medium**: Heredoc parsing syntax (`<<delimiter command`)
-6. **Low**: Standalone redirection error messages
+2. **Critical**: Fix exit code handling (0 → 2 for syntax errors)
+3. **High**: Implement tilde expansion (~) for paths  
+4. **High**: External command execution failures with undefined variables
+5. **High**: Dollar-quoted string syntax (`$"string"`) implementation  
+6. **Medium**: Heredoc parsing syntax (`<<delimiter command`)
+7. **Low**: Standalone redirection error messages
 
 ## Current Test Status
+- **Syntax Error Tests**: ~6/49 passed (~12%)
+- **Path Check Tests**: 10/14 passed (71.4%)
 - **Builtin Tests**: 261/297 passed (87.9%)
 - **Variable Tests**: 33/59 passed (55.9%) 
-- **Syntax Error Tests**: ~6/49 passed (~12%)
-- **Total Issues**: Major syntax error handling gaps
+- **Major Gap**: Tilde expansion completely missing
