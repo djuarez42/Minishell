@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 22:59:54 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 11:57:13 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,18 +98,23 @@ int process_token(t_cmd *cmd, t_token *cur, int *argc)
 
 	if (*argc >= MAX_ARGS - 1)
 		return (0);
-
+		
+	// Calculate total size needed for all fragments
 	frag = cur->fragments;
 	while (frag)
 	{
 		len += ft_strlen(frag->text);
 		frag = frag->next;
 	}
-
-	arg = malloc(len + 1);
+	
+	// Allocate and combine fragments
+	arg = (char*)malloc(len + 1);
 	if (!arg)
 		return (0);
-
+	
+	arg[0] = '\0';
+	pos = 0;
+	
 	frag = cur->fragments;
 	while (frag)
 	{

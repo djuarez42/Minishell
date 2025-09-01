@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:21:10 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/23 20:21:11 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/30 18:14:52 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	dispatch_builtin(char **argv, char ***penvp)
 	if (!ft_strncmp(argv[0], "pwd", 4))
 		return (bi_pwd());
 	if (!ft_strncmp(argv[0], "env", 4))
-		return (bi_env(*penvp));
+		return (bi_env(argv, *penvp));
 	if (!ft_strncmp(argv[0], "cd", 3))
 		return (bi_cd(argv, penvp));
 	if (!ft_strncmp(argv[0], "export", 7))

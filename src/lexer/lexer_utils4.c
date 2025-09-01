@@ -63,32 +63,12 @@ void print_tokens(t_token *tokens)
     t_token *cur = tokens;
     int i = 0;
 
-    printf("=== FINAL TOKENS ===\n");
+    // Comment out debug print in production
     while (cur)
     {
-        printf("Token %d @%p: type=%d, has_space_before=%d\n",
-               i, (void*)cur, cur->type, cur->has_space_before);
-
-        if (cur->final_text)
-            printf("  Final text: \"%s\"\n", cur->final_text);
-        else
-            printf("  Final text: (NULL)\n");
-
-        t_fragment *frag = cur->fragments;
-        int j = 0;
-        while (frag)
-        {
-            printf("  Frag %d @%p: \"%s\" (quote=%d, space_after=%d, next=%p)\n",
-                   j, (void*)frag, frag->text,
-                   frag->quote_type, frag->has_space_after, (void*)frag->next);
-            frag = frag->next;
-            j++;
-        }
-
         cur = cur->next;
         i++;
     }
-    printf("=======================================\n\n");
 }
 
 t_token *create_token_group(t_fragment *frag_head, t_token_type type)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 01:09:34 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 11:00:43 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,17 @@ t_token	*parse_cmd_block(t_token *cur, t_cmd *cmd)
 		cur = parse_redirections(cur, cmd);
 		if (!cur)
 		{
-			/* redir parse failed: free argv/argv_quote and any redirs created */
+/* redir parse failed: free argv/argv_quote and any redirs created */
 			free_partial_cmd(cmd, -1);
 			free_redirs(cmd->redirs);
 			cmd->redirs = NULL;
 			return (NULL);
 		}
+		
+		/* If there are more arguments after redirection, stop here 
+		   These will be processed as a new command */
+		if (cur && cur->type == TOKEN_WORD)
+			break;
 	}
 	return (cur);
 }

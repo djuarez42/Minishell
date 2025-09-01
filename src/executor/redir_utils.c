@@ -6,11 +6,12 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 14:39:57 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 15:31:01 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <string.h> // For memset
 
 void	handle_redirections_out(const char *filename, int *error)
 {
@@ -81,7 +82,9 @@ int	handle_redirections_heredoc(const char *delimiter, bool quoted,
 	int	fd;
 	int	res;
 
-	fd = open_heredoc_file();
+	fd = open_heredoc_file(args);
+	if (fd == -1)
+		return (1);
 	args->fd = fd;
 	args->delimiter = delimiter;
 	args->quoted = quoted;
@@ -90,17 +93,18 @@ int	handle_redirections_heredoc(const char *delimiter, bool quoted,
 	close(fd);
 	if (res == 130)
 		return (130);
-	redirect_stdin_heredoc();
+	redirect_stdin_heredoc(args->heredoc_path);
 	return (0);
 }
 
-int	handle_redirections(t_redir *redir, char **envp)
+int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
 {
-	int				res;
-	int				err;
+	int			res;
+	int			err;
 	t_heredoc_args	args;
 
 	err = 0;
+	memset(&args, 0, sizeof(args));
 	while (redir)
 	{
 		if (redir->type == TOKEN_REDIRECT_OUT)
@@ -111,14 +115,22 @@ int	handle_redirections(t_redir *redir, char **envp)
 			handle_redirections_append(redir->file, &err);
 		else if (redir->type == TOKEN_HEREDOC)
 		{
-			res = handle_redirections_heredoc(redir->file, redir->quoted, envp,
-					&args);
+			args.state = state;
+			res = handle_redirections_heredoc(redir->file, redir->quoted, envp, &args);
 			if (res == 130)
 				return (130);
+			if (res != 0)
+				err = 1;
 		}
 		if (err)
 			return (1);
 		redir = redir->next;
 	}
+	return (0);
+
+		if (err)
+			return (1);
+		redir = redir->next;
+	
 	return (0);
 }

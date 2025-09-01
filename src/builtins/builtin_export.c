@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/23 20:25:49 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/30 18:14:52 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ int	bi_export(char **argv, char ***penvp)
 	int	status;
 
 	if (!argv[1])
-		return (bi_env(*penvp));
+	{
+	}
 	status = 0;
 	i = 1;
 	while (argv[i])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 23:00:23 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 11:57:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_redir *create_redir(t_token *cur)
 		return (NULL);
 
 	redir->type = cur->type;
+	
 	frag = cur->next->fragments;
 	redir->quoted = frag->quote_type != QUOTE_NONE;
 	redir->file = ft_strdup(frag->text);
