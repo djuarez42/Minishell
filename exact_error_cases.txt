@@ -1,0 +1,256 @@
+# Minishell Error Case Comparison
+
+## Format
+Each test follows this format:
+```
+# Test case title
+$ command to run
+
+# Bash output:
+standard output
+standard error
+Exit code: N
+
+# Minishell output:
+standard output 
+standard error
+Exit code: N
+```
+
+## Echo with Quotes and Variables
+
+### Test 1: Echo with double quotes containing variable
+```
+$ echo '"$USER"'
+
+# Bash output:
+"$USER"
+Exit code: 0
+
+# Minishell output:
+"$USER"
+Exit code: 0
+```
+
+### Test 2: Echo with single quotes containing variable
+```
+$ echo "'$USER'"
+
+# Bash output:
+'ekakhmad'
+Exit code: 0
+
+# Minishell output:
+'ekakhmad'
+Exit code: 0
+```
+
+### Test 3: Echo with complex quote nesting
+```
+$ echo '"'"$USER"'"'
+
+# Bash output:
+"ekakhmad"
+Exit code: 0
+
+# Minishell output:
+"ekakhmad"
+Exit code: 0
+```
+
+### Test 4: Echo with ANSI-C style quotes
+```
+$ echo $"HOME"
+
+# Bash output:
+HOME
+Exit code: 0
+
+# Minishell output:
+$HOME
+Exit code: 0
+```
+
+## Redirections
+
+### Test 5: Redirection to non-existent directory
+```
+$ echo hello > /nonexistent/file
+
+# Bash output:
+(no stdout)
+bash: /nonexistent/file: No such file or directory
+Exit code: 1
+
+# Minishell output:
+(no stdout)
+minishell: /nonexistent/file: No such file or directory
+Exit code: 0
+```
+
+### Test 6: Redirection with permission denied
+```
+$ echo hello > /etc/passwd
+
+# Bash output:
+(no stdout)
+bash: /etc/passwd: Permission denied
+Exit code: 1
+
+# Minishell output:
+(no stdout)
+minishell: /etc/passwd: Permission denied
+Exit code: 1
+```
+
+## Pipelines
+
+### Test 7: Command not found in pipeline
+```
+$ ls | nonexistentcmd | wc -l
+
+# Bash output:
+(error message on stderr)
+bash: nonexistentcmd: command not found
+0
+Exit code: 0
+
+# Minishell output:
+(error message on stderr)
+minishell: nonexistentcmd: command not found
+(output varies)
+Exit code: 127 or varies
+```
+
+### Test 8: Empty pipe
+```
+$ ls | | wc -l
+
+# Bash output:
+bash: syntax error near unexpected token `|'
+Exit code: 2
+
+# Minishell output:
+minishell: syntax error near unexpected token `|'
+Exit code: 2
+```
+
+## Variable Expansion
+
+### Test 9: Undefined variable
+```
+$ echo $NONEXISTENTVARIABLE
+
+# Bash output:
+(empty line)
+Exit code: 0
+
+# Minishell output:
+(empty line)
+Exit code: 0
+```
+
+## Syntax Errors
+
+### Test 10: Unclosed quotes
+```
+$ echo "unclosed quote
+
+# Bash output:
+bash: unexpected EOF while looking for matching `"'
+bash: syntax error: unexpected end of file
+Exit code: 2
+
+# Minishell output:
+minishell: syntax error: unexpected end of file
+Exit code: 2
+```
+
+### Test 11: Multiple redirections syntax error
+```
+$ < < file
+
+# Bash output:
+bash: syntax error near unexpected token `<'
+Exit code: 2
+
+# Minishell output:
+minishell: syntax error near unexpected token `<'
+Exit code: 2
+```
+
+## Exit Status
+
+### Test 12: Exit code handling
+```
+$ nonexistentcmd
+$ echo $?
+
+# Bash output:
+bash: nonexistentcmd: command not found
+127
+Exit code: 0
+
+# Minishell output:
+minishell: nonexistentcmd: command not found
+127
+Exit code: 0
+```
+
+## Builtins
+
+### Test 13: CD with too many arguments
+```
+$ cd /etc /var
+
+# Bash output:
+bash: cd: too many arguments
+Exit code: 1
+
+# Minishell output:
+minishell: cd: too many arguments
+Exit code: 1
+```
+
+### Test 14: Export with invalid identifier
+```
+$ export 1TEST=value
+
+# Bash output:
+bash: export: `1TEST=value': not a valid identifier
+Exit code: 1
+
+# Minishell output:
+minishell: export: `1TEST=value': not a valid identifier
+Exit code: 1
+```
+
+## Path and Command Execution
+
+### Test 15: Command execution with modified PATH
+```
+$ PATH= ls
+
+# Bash output:
+bash: ls: No such file or directory
+Exit code: 127
+
+# Minishell output:
+minishell: ls: command not found
+Exit code: 127
+```
+
+### Test 16: Executing directory
+```
+$ /etc
+
+# Bash output:
+bash: /etc: Is a directory
+Exit code: 126
+
+# Minishell output:
+minishell: /etc: Is a directory
+Exit code: 126
+```
+
+These examples demonstrate key differences in output formatting, error messages, and exit codes between bash and minishell. While some differences are acceptable, consistency within your implementation is important.
