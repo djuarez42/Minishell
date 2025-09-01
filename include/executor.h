@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 23:13:21 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ void	redirect_stdin_heredoc(const char *filepath);
 int		write_heredoc_lines(t_heredoc_args *args);
 int		handle_redirections_heredoc(const char *delimiter, bool quoted,
 			char **envp, t_heredoc_args *args);
+int		handle_redirections_heredoc_with_content(char **heredoc_content, bool quoted,
+			char **envp, t_exec_state *state, t_heredoc_args *args);
 void	cleanup_heredoc_file(t_heredoc_args *args);
 #endif
 

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 11:57:13 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,19 @@ void	free_cmds(t_cmd *cmd)
 void	free_redirs(t_redir *redir)
 {
 	t_redir	*tmp;
+	int		i;
 
 	while (redir)
 	{
 		tmp = redir->next;
 		free(redir->file);
+		if (redir->heredoc_content)
+		{
+			i = 0;
+			while (redir->heredoc_content[i])
+				free(redir->heredoc_content[i++]);
+			free(redir->heredoc_content);
+		}
 		free(redir);
 		redir = tmp;
 	}

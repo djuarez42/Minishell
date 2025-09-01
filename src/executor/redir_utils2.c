@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/27 20:07:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,35 @@ int	write_heredoc_lines(t_heredoc_args *args)
 {
 	char	*line;
 	char	*expanded_line;
+	int		is_interactive;
 
+	is_interactive = isatty(STDIN_FILENO);
 	while (1)
 	{
-		line = readline("> ");
+		if (is_interactive)
+		{
+			line = readline("> ");
+		}
+		else
+		{
+			// For non-interactive mode, read directly from stdin
+			char *buffer = NULL;
+			size_t len = 0;
+			ssize_t read_len = getline(&buffer, &len, stdin);
+			if (read_len == -1)
+			{
+				line = NULL;
+			}
+			else
+			{
+				// Remove trailing newline if present
+				if (read_len > 0 && buffer[read_len - 1] == '\n')
+					buffer[read_len - 1] = '\0';
+				line = ft_strdup(buffer);
+				free(buffer);
+			}
+		}
+		
 		if (!line)
 		{
 			return (130);

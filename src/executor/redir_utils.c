@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 23:11:48 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,43 @@ int	handle_redirections_heredoc(const char *delimiter, bool quoted,
 	return (0);
 }
 
+int	handle_redirections_heredoc_with_content(char **heredoc_content, bool quoted,
+			char **envp, t_exec_state *state, t_heredoc_args *args)
+{
+	int		fd;
+	int		i;
+	char	*expanded_line;
+
+	fd = open_heredoc_file(args);
+	if (fd == -1)
+		return (1);
+	
+	// Write pre-collected content to temp file
+	i = 0;
+	while (heredoc_content[i])
+	{
+		if (!quoted)
+			expanded_line = expand_variables(heredoc_content[i], envp, state, QUOTE_NONE);
+		else
+			expanded_line = ft_strdup(heredoc_content[i]);
+		
+		if (!expanded_line)
+		{
+			close(fd);
+			return (1);
+		}
+		
+		write(fd, expanded_line, ft_strlen(expanded_line));
+		write(fd, "\n", 1);
+		free(expanded_line);
+		i++;
+	}
+	
+	close(fd);
+	redirect_stdin_heredoc(args->heredoc_path);
+	return (0);
+}
+
 int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
 {
 	int			res;
@@ -113,7 +150,16 @@ int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
 		else if (redir->type == TOKEN_HEREDOC)
 		{
 			args.state = state;
-			res = handle_redirections_heredoc(redir->file, redir->quoted, envp, &args);
+			// Use pre-collected content if available, otherwise fall back to stdin reading
+			if (redir->heredoc_content)
+			{
+				res = handle_redirections_heredoc_with_content(redir->heredoc_content, 
+					redir->quoted, envp, state, &args);
+			}
+			else
+			{
+				res = handle_redirections_heredoc(redir->file, redir->quoted, envp, &args);
+			}
 			if (res == 130)
 				return (130);
 			if (res != 0)
@@ -123,11 +169,5 @@ int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
 			return (1);
 		redir = redir->next;
 	}
-	return (0);
-
-		if (err)
-			return (1);
-		redir = redir->next;
-	
 	return (0);
 }

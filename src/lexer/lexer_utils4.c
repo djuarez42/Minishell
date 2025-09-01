@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils4.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 23:40:33 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,40 @@ int check_unmatched_quotes(const char *input)
     return 0; // Todo está bien
 }
 
+/* DEBUG FUNCTION - COMMENTED OUT
 void print_tokens(t_token *tokens)
 {
     t_token *cur = tokens;
     int i = 0;
 
-    // Comment out debug print in production
+    printf("=== FINAL TOKENS ===\n");
     while (cur)
     {
+        printf("Token %d @%p: type=%d, has_space_before=%d\n",
+               i, (void*)cur, cur->type, cur->has_space_before);
+
+        if (cur->final_text)
+            printf("  Final text: \"%s\"\n", cur->final_text);
+        else
+            printf("  Final text: (NULL)\n");
+
+        t_fragment *frag = cur->fragments;
+        int j = 0;
+        while (frag)
+        {
+            printf("  Frag %d @%p: \"%s\" (quote=%d, space_after=%d, next=%p)\n",
+                   j, (void*)frag, frag->text,
+                   frag->quote_type, frag->has_space_after, (void*)frag->next);
+            frag = frag->next;
+            j++;
+        }
+
         cur = cur->next;
         i++;
     }
+    printf("=======================================\n\n");
 }
+*/
 
 t_token *create_token_group(t_fragment *frag_head, t_token_type type)
 {
@@ -86,16 +108,33 @@ void assign_token_types(t_token *tokens)
 {
     while (tokens)
     {
-        if (strcmp(tokens->fragments->text, "|") == 0)
+        char *text = tokens->fragments->text;
+        
+        if (strcmp(text, "|") == 0)
             tokens->type = TOKEN_PIPE;
-        else if (strcmp(tokens->fragments->text, "<") == 0)
+        else if (strcmp(text, "<") == 0)
             tokens->type = TOKEN_REDIRECT_IN;
-        else if (strcmp(tokens->fragments->text, ">") == 0)
+        else if (strcmp(text, ">") == 0)
             tokens->type = TOKEN_REDIRECT_OUT;
-        else if (strcmp(tokens->fragments->text, "<<") == 0)
+        else if (strcmp(text, "<<") == 0)
             tokens->type = TOKEN_HEREDOC;
-        else if (strcmp(tokens->fragments->text, ">>") == 0)
+        else if (strcmp(text, ">>") == 0)
             tokens->type = TOKEN_APPEND;
+        else if (text[0] == '|' && text[1] != '\0')
+        {
+            // Token starts with pipe but has more content - syntax error will be caught in parser
+            tokens->type = TOKEN_PIPE;
+        }
+        else if (text[0] == '<' && text[1] != '\0' && !(text[1] == '<' && text[2] == '\0'))
+        {
+            // Token starts with < but isn't just "<" or "<<"
+            tokens->type = TOKEN_REDIRECT_IN;
+        }
+        else if (text[0] == '>' && text[1] != '\0' && !(text[1] == '>' && text[2] == '\0'))
+        {
+            // Token starts with > but isn't just ">" or ">>"
+            tokens->type = TOKEN_REDIRECT_OUT;
+        }
         else
             tokens->type = TOKEN_WORD;
 

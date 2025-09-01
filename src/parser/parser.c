@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 11:00:43 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,24 @@ t_cmd	*parser_tokens(t_token *tokens)
 	head = NULL;
 	last = NULL;
 	cur = tokens;
+	
+	// Check for leading pipe or malformed pipe tokens
+	if (cur && cur->type == TOKEN_PIPE)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+		return (NULL);
+	}
+	
 	while (cur && cur->type != TOKEN_EOF)
 	{
+		// Check for pipe tokens with extra content (like "|ls")
+		if (cur->type == TOKEN_PIPE && cur->fragments && 
+			ft_strlen(cur->fragments->text) > 1)
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+			return (NULL);
+		}
+		
 		new_cmd = create_cmd_node(&cur);
 		if (!new_cmd)
 			return (free_cmds(head), NULL);

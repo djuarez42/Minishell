@@ -16,22 +16,17 @@
 int	bi_unset(char **argv, char ***penvp)
 {
 	int	i;
-	int	status;
 
-	status = 0;
 	i = 1;
 	while (argv[i])
 	{
 		if (env_identifier_valid(argv[i]))
 			(void)env_unset_var(penvp, argv[i]);
-		else
-		{
-			fprintf(stderr, "minishell: unset: `%s': not a valid identifier\n", argv[i]);
-			status = 1;
-		}
+		// Note: bash silently ignores invalid identifiers for unset
+		// No error message or exit status change needed
 		i++;
 	}
-	return (status);
+	return (0); // bash always returns 0 for unset unless syntax error
 }
 
 static int	is_valid_number(const char *s)

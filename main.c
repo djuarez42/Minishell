@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 11:01:47 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/01 22:04:11 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,59 +14,73 @@
 #include "executor.h"
 #include "signals.h"
 #include <unistd.h> // for isatty()
-#include <stdio.h>  // for getline
 
-int process_command(char *input, char ***envp_copy, t_exec_state *state)
+/*int main(void)
 {
-    t_token *tokens;
-    t_cmd *cmds;
-    t_cmd *cur;
-    int fail = 0;
-    
-    if (!input || !*input)
-        return 0;
-        
-    // 1. Lexer: tokens limpios listos para parser
-    tokens = tokenize_input(input);
-    if (!tokens)
-        return 0;
+    const char *tests[] = {
+        "echo hello",
+        "ls -l | grep 'test file'",
+        "echo \"double quoted text\" end",
+        "mix\"double\\\"escaped\"and'singles'",
+        "echo \"hello world\" 'and good bye'",
+        "\"\"ec\"\"ho\"\" hola\"\"mundo\"\"",
+        "\"\"echo\"\""
+    };
+    size_t n_tests = sizeof(tests)/sizeof(tests[0]);
 
-    // 2. Parser: construye lista de comandos
-    cmds = parser_tokens(tokens);
-    if (!cmds)
+    for (size_t i = 0; i < n_tests; i++)
     {
-        free_token_list(tokens);
-        return 0;
-    }
+        printf("\n=== TEST %zu: %s ===\n", i + 1, tests[i]);
 
-    // 3. Expansión de variables / sustituciones
-    cur = cmds;
-    while (cur)
-    {
-        if (expand_cmd_inplace(cur, *envp_copy, state) == -1)
+        // 1️⃣ Tokenizamos la entrada
+        t_token *raw_tokens = tokenize_input(tests[i]);
+        if (!raw_tokens)
         {
-            fail = 1;
-            break;
+            printf("Error tokenizing input\n");
+            continue;
         }
-        cur = cur->next;
+
+        // 2️⃣ Construimos lista final de tokens concatenando fragments
+        t_token *final_tokens = build_token_list_from_fragments(raw_tokens);
+        if (!final_tokens)
+        {
+            printf("Error building token list\n");
+            free_token_list(raw_tokens);
+            continue;
+        }
+
+        // 3️⃣ Parseamos tokens a lista de comandos
+        t_cmd *cmd_list = parser_tokens(final_tokens);
+        if (!cmd_list)
+        {
+            printf("Error parsing tokens to commands\n");
+            free_token_list(raw_tokens);
+            free_token_list(final_tokens);
+            continue;
+        }
+
+        // 5️⃣ Imprimimos lista de comandos
+        print_cmd_list(cmd_list);
+
+        // 6️⃣ Liberamos memoria
+    free_token_list(raw_tokens);
+    free_token_list(final_tokens);
+        free_cmds(cmd_list);
     }
 
-    // 4. Ejecutar
-    if (!fail)
-        executor(cmds, envp_copy, state);
-
-    // 5. Liberar memoria
-    free_token_list(tokens);
-    free_cmds(cmds);
-    
-    return (!fail);
-}
+    return 0;
+}*/
 
 int main(int argc, char **argv, char **envp)
 {
-    char **envp_copy;
+    char        *input;
+    t_token     *tokens;
+    t_cmd       *cmds;
+    char        **envp_copy;
     t_exec_state state;
-    int is_interactive;
+    t_cmd       *cur;
+    int         fail;
+    int         is_interactive;
 
     // Check for -c option (execute command and exit)
     if (argc >= 3 && ft_strncmp(argv[1], "-c", 3) == 0)
@@ -78,22 +92,48 @@ int main(int argc, char **argv, char **envp)
             
         state.last_status = 0;
         
-        // Process the command
-        char *input = ft_strdup(argv[2]);
+        // Use the command provided as argument
+        input = ft_strdup(argv[2]);
         if (!input)
         {
             free_envp(envp_copy);
             return (1);
         }
         
-        process_command(input, &envp_copy, &state);
+        // Execute single command
+        tokens = tokenize_input(input);
+        if (tokens)
+        {
+            cmds = parser_tokens(tokens);
+            if (cmds)
+            {
+                cur = cmds;
+                fail = 0;
+                
+                while (cur && !fail)
+                {
+                    if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
+                    {
+                        fail = 1;
+                        break;
+                    }
+                    cur = cur->next;
+                }
+                
+                if (!fail)
+                    executor(cmds, &envp_copy, &state);
+                    
+                free_cmds(cmds);
+            }
+            free_token_list(tokens);
+        }
         
         free(input);
         free_envp(envp_copy);
         return (state.last_status);
     }
     
-    // Normal mode (interactive or piped)
+    // Normal interactive mode
     envp_copy = new_envp(envp);
     if (!envp_copy)
         return (1);
@@ -103,46 +143,88 @@ int main(int argc, char **argv, char **envp)
     // Check if stdin is a terminal (interactive mode)
     is_interactive = isatty(STDIN_FILENO);
 
-    // Buffer for reading lines from stdin
-    char *line = NULL;
-    size_t line_cap = 0;
-    ssize_t line_len;
-    
     while (1)
     {
-        // Only show prompt in interactive mode
+        fail = 0;
+        
+        // Only show prompt in interactive mode and get input appropriately
         if (is_interactive)
         {
-            char *input = readline("minishell$ ");
-            if (!input)
-                break; // Ctrl+D or EOF
-                
-            if (*input)
-                add_history(input);
-                
-            // Process the command
-            process_command(input, &envp_copy, &state);
-            free(input);
+            input = readline("minishell$ ");
         }
         else
         {
-            // Non-interactive mode: read lines from stdin
-            line_len = getline(&line, &line_cap, stdin);
-            if (line_len <= 0)
-                break; // EOF or error
-                
-            // Remove trailing newline if present
-            if (line_len > 0 && line[line_len - 1] == '\n')
-                line[line_len - 1] = '\0';
-                
-            // Process the command
-            process_command(line, &envp_copy, &state);
+            // For non-interactive mode, read line by line
+            char *line = NULL;
+            size_t len = 0;
+            ssize_t read_len = getline(&line, &len, stdin);
+            if (read_len == -1)
+            {
+                input = NULL; // EOF or error
+                if (line)
+                    free(line);
+            }
+            else
+            {
+                // Remove trailing newline if present
+                if (read_len > 0 && line[read_len - 1] == '\n')
+                    line[read_len - 1] = '\0';
+                input = ft_strdup(line);
+                free(line);
+            }
+        }
+            
+        if (!input)
+            break ; // Ctrl+D or EOF
+
+        if (*input && is_interactive)
+            add_history(input);
+
+        // 1. Lexer: tokens limpios listos para parser
+        tokens = tokenize_input(input);
+        if (!tokens)
+        {
+            free(input);
+            continue ;
+        }
+
+        // 2. Parser: construye lista de comandos
+        cmds = parser_tokens(tokens);
+        if (!cmds)
+        {
+            free_token_list(tokens);
+            free(input);
+            continue ;
+        }
+
+        // 3. Expansión de variables / sustituciones
+        cur = cmds;
+        while (cur)
+        {
+            if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
+            {
+                fail = 1;
+                break ;
+            }
+            cur = cur->next;
+        }
+
+        // 4. Ejecutar
+        if (!fail)
+            executor(cmds, &envp_copy, &state);
+
+    // 5. Liberar memoria
+    free_token_list(tokens);
+    free_cmds(cmds);
+    free(input);
+
+        if (fail)
+        {
+            free_envp(envp_copy);
+            return (1);
         }
     }
-    
-    // Cleanup
-    if (line)
-        free(line);
+
     free_envp(envp_copy);
     return (state.last_status);
 }

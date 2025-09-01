@@ -6,11 +6,13 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 11:57:35 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+#include <unistd.h>
+#include <readline/readline.h>
 
 t_redir *create_redir(t_token *cur)
 {
@@ -32,6 +34,23 @@ t_redir *create_redir(t_token *cur)
 	if (!redir->file)
 		return (free(redir), NULL);
 
+	// For heredoc, collect content during parsing
+	if (redir->type == TOKEN_HEREDOC)
+	{
+		redir->heredoc_content = collect_heredoc_content(redir->file, redir->quoted);
+		if (!redir->heredoc_content)
+		{
+			// If heredoc collection fails (EOF), clean up and return NULL
+			free(redir->file);
+			free(redir);
+			return (NULL);
+		}
+	}
+	else
+	{
+		redir->heredoc_content = NULL;  // Initialize to NULL for non-heredoc
+	}
+	
 	redir->next = NULL;
 	return (redir);
 }
@@ -96,4 +115,89 @@ t_cmd	*create_cmd_node(t_token **cur)
 		*cur = (*cur)->next;
 	}
 	return (cmd);
+}
+
+char	**collect_heredoc_content(const char *delimiter, bool quoted __attribute__((unused)))
+{
+	char	**lines;
+	char	*line;
+	int		capacity;
+	int		count;
+	int		is_interactive;
+
+	is_interactive = isatty(STDIN_FILENO);
+	capacity = 10;
+	count = 0;
+	lines = malloc(sizeof(char *) * capacity);
+	if (!lines)
+		return (NULL);
+
+	while (1)
+	{
+		if (is_interactive)
+		{
+			line = readline("> ");
+		}
+		else
+		{
+			// For non-interactive mode, read directly from stdin
+			char *buffer = NULL;
+			size_t len = 0;
+			ssize_t read_len = getline(&buffer, &len, stdin);
+			if (read_len == -1)
+			{
+				line = NULL;
+			}
+			else
+			{
+				// Remove trailing newline if present
+				if (read_len > 0 && buffer[read_len - 1] == '\n')
+					buffer[read_len - 1] = '\0';
+				line = ft_strdup(buffer);
+				free(buffer);
+			}
+		}
+		
+		if (!line)
+		{
+			// EOF - free collected lines and return NULL
+			while (count > 0)
+				free(lines[--count]);
+			free(lines);
+			return (NULL);
+		}
+		
+		// Check if this is the delimiter
+		if ((ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+				&& line[ft_strlen(delimiter)] == '\0'))
+		{
+			free(line);
+			break ;
+		}
+		
+		// Expand lines array if needed
+		if (count >= capacity - 1)
+		{
+			capacity *= 2;
+			char **new_lines = malloc(sizeof(char *) * capacity);
+			int i;
+			if (!new_lines)
+			{
+				free(line);
+				while (count > 0)
+					free(lines[--count]);
+				free(lines);
+				return (NULL);
+			}
+			for (i = 0; i < count; i++)
+				new_lines[i] = lines[i];
+			free(lines);
+			lines = new_lines;
+		}
+		
+		lines[count++] = line;
+	}
+	
+	lines[count] = NULL;  // Null terminate the array
+	return (lines);
 }

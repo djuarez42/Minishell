@@ -17,6 +17,26 @@
 #include "builtins.h"
 #include <fcntl.h>
 
+static inline void fd_diag_log(const char *where)
+{
+	int fd = open("/tmp/ms_diag.log", O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd == -1) return;
+	char buf[512];
+	char link0[256], link1[256], link2[256];
+	ssize_t l0 = readlink("/proc/self/fd/0", link0, sizeof(link0)-1);
+	ssize_t l1 = readlink("/proc/self/fd/1", link1, sizeof(link1)-1);
+	ssize_t l2 = readlink("/proc/self/fd/2", link2, sizeof(link2)-1);
+	if (l0>0) link0[l0]=0; else strcpy(link0, "?");
+	if (l1>0) link1[l1]=0; else strcpy(link1, "?");
+	if (l2>0) link2[l2]=0; else strcpy(link2, "?");
+	int flags0 = fcntl(0, F_GETFL);
+	int flags1 = fcntl(1, F_GETFL);
+	int flags2 = fcntl(2, F_GETFL);
+	int len = snprintf(buf, sizeof(buf), "[%s] fd0:%s fl0:%d | fd1:%s fl1:%d | fd2:%s fl2:%d\n", where, link0, flags0, link1, flags1, link2, flags2);
+	if (len>0) write(fd, buf, (size_t)len);
+	close(fd);
+}
+
 /* ---------------- PATH search and exec helpers (existing) ---------------- */
 char	*find_executable(char *cmd, char **envp)
 {
@@ -253,22 +273,23 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
 
+			fd_diag_log("executor:child:before-wire");
 			wire_child_pipes(i, n_cmds, pipes);
 			if (pipes)
 				close_all_pipes(pipes, n_pipes);
-			
+			/* TEMP DBG */ // write(STDERR_FILENO, "[DBG] child before redirs\n", 24);
 			t_exec_state child_state = *state; // Copy state for child
 			res = handle_redirections_and_quotes(cur->redirs, envp, &child_state);
 			if (res == 130)
 				exit (130);
 			else if (res == 1)
 				exit (1);
-			
+			/* TEMP DBG */ // write(STDOUT_FILENO, "[DBG] child stdout token\n", 25);
 			if (!cur->argv || !cur->argv[0])
 				exit(2);
 			if (is_builtin(cur->argv[0]))
 				exit(run_builtin_in_child(cur, &envp));
-			
+			/* DIAG */ { int fd = open("./ms_diag.log", O_WRONLY|O_CREAT|O_APPEND, 0644); if (fd!=-1){ write(fd, "CHILD BEFORE EXECVE\n", 20); close(fd);} }
 			code = execute_command(NULL, cur, envp);
 			exit(code);
 		}
@@ -286,6 +307,7 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 /* ----------------------------- Entry point ------------------------------ */
 void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 {
+	/* DIAG */ { int fd = open("./ms_diag.log", O_WRONLY|O_CREAT|O_APPEND, 0644); if (fd!=-1){ write(fd, "EXECUTOR ENTER\n", 15); close(fd);} }
 	t_cmd	*cur;
 	size_t	n;
 	int		status;
@@ -304,11 +326,15 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 			continue;
 		}
 		n = count_pipeline_cmds(cur);
+		// fprintf(stderr, "[DBG] executor: cmd='%s' n=%zu pipe=%d builtin=%d\n", cur->argv[0], n, cur->pipe, is_builtin(cur->argv[0]));
+		fd_diag_log("executor:before-branch");
 		if (n == 1 && is_builtin(cur->argv[0]) && cur->pipe == 0)
 		{
 			int save_in;
 			int save_out;
 			int save_err;
+
+			/* TEMP DBG */ // write(STDERR_FILENO, "[DBG] parent builtin path\n", 25);
 			
 			// Ensure all output is flushed before saving FDs
 			fflush(stdout);
@@ -318,7 +344,11 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 			save_out = dup(STDOUT_FILENO);
 			save_err = dup(STDERR_FILENO);
 
+			fd_diag_log("executor:parent-builtin:before-redirs");
 			res = handle_redirections_and_quotes(cur->redirs, envp, state);
+			fd_diag_log("executor:parent-builtin:after-redirs");
+			
+			/* TEMP DBG */ // dprintf(STDERR_FILENO, "[DBG] parent after redirs res=%d\n", res);
 			
 			if (res == 130)
 				status = 130;
@@ -335,6 +365,8 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 				fflush(stdout);
 				fflush(stderr);
 			}
+			
+			/* TEMP DBG */ // dprintf(STDERR_FILENO, "[DBG] parent builtin status=%d\n", status);
 			
 			// Flush any pending output to redirected files before restoring FDs
 			fflush(stdout);
@@ -360,7 +392,9 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 		}
 		else
 		{
+			// fprintf(stderr, "[DBG] pipeline or external path: n=%zu\n", n);
 			status = run_pipeline(cur, n, envp, state);
+			// fprintf(stderr, "[DBG] pipeline/external status=%d\n", status);
 		}
 		state->last_status = status;
 		while (n-- > 0 && cur)

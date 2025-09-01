@@ -6,7 +6,7 @@
 /*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 11:03:33 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,9 @@ void            classify_redirection_files(t_token *token_list);
 t_fragment      *duplicate_fragment(t_fragment *frag);
 t_token         *create_token_from_fragments(t_fragment *frag, bool space_before);
 void            assign_token_types(t_token *head);
+
+// Debug functions
+void            print_tokens(t_token *tokens);
 
 #endif
 
