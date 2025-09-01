@@ -166,13 +166,77 @@ minishell: syntax error near unexpected token `|'
 **Example**: `/bin/echo 42 > tmp_redir_out` 
 **Status**: Needs investigation - may be related to main variable expansion issue
 
+## Syntax Error Handling Issues
+
+### 1. Missing Syntax Error Detection and Exit Codes
+**Problem**: Our minishell does not properly detect syntax errors or return the correct exit codes.
+
+**Expected behavior (bash)**:
+```bash
+$ >
+bash: syntax error near unexpected token `newline'
+$ echo $?
+2
+
+$ echo | |
+bash: syntax error near unexpected token `|'
+$ echo $?
+2
+```
+
+**Current behavior (minishell)**:
+```bash
+$ >
+(no error message, wrong exit code)
+$ echo $?
+0
+
+$ echo | |
+(may work differently)
+$ echo $?
+0 (should be 2)
+```
+
+**Impact**: 
+- 49 test failures in syntax error tests
+- Exit codes: minishell returns 0, bash returns 2 for syntax errors
+- Missing or incorrect stderr error messages
+
+### 2. Directory vs File Error Code Mismatch
+**Problem**: Wrong exit codes when trying to execute directories or files.
+
+**Examples**:
+- `~` command: minishell returns 127, bash returns 126
+- Directory execution: wrong error codes
+
+**Expected exit codes**:
+- 126: Command found but not executable (permission denied, directory)
+- 127: Command not found
+- 2: Syntax error
+
+### 3. Redirection Syntax Error Handling
+**Problem**: Lone redirection operators don't produce proper syntax errors.
+
+**Test cases**:
+- Single `>`, `<`, `<<`, `>>`
+- Multiple operators: `> > > >`, `<<<<<<<`
+- Malformed redirections: `echo >`, `echo > <`
+
+## Current Test Status
+- **Syntax Error Tests**: Very poor success rate
+- **Pattern**: Most cases return exit code 0 instead of 2
+- **Root Issue**: Missing comprehensive syntax validation in parser
+
 ## Investigation Priority
-1. **High**: External command execution failures with undefined variables
-2. **High**: Dollar-quoted string syntax (`$"string"`) implementation  
-3. **Medium**: Heredoc parsing syntax (`<<delimiter command`)
-4. **Low**: Standalone redirection error messages
+1. **Critical**: Add syntax error detection in parser
+2. **Critical**: Fix exit code handling (0 → 2 for syntax errors)  
+3. **High**: External command execution failures with undefined variables
+4. **High**: Dollar-quoted string syntax (`$"string"`) implementation  
+5. **Medium**: Heredoc parsing syntax (`<<delimiter command`)
+6. **Low**: Standalone redirection error messages
 
 ## Current Test Status
 - **Builtin Tests**: 261/297 passed (87.9%)
 - **Variable Tests**: 33/59 passed (55.9%) 
-- **Total Issues**: 26 STD_OUT + 9 STD_ERR + 11 EXIT_CODE failures
+- **Syntax Error Tests**: ~6/49 passed (~12%)
+- **Total Issues**: Major syntax error handling gaps
