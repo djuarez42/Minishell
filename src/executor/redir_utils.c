@@ -3,74 +3,77 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/02 23:13:06 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <string.h> // For memset
 
-void	handle_redirections_out(const char *filename, int *error)
+void handle_redirections_out(const char *filename, int *error)
 {
-	int	fd;
+    int fd;
 
-	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-	{
-		perror("open (redirect out)");
-		*error = 1;
-		return ;
-	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		perror("dup2 (redirect out)");
-		close (fd);
-		*error = 1;
-		return ;
-	}
+    fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd == -1)
+    {
+        print_error_file(filename);
+        *error = 1;
+        return ;
+    }
+    if (dup2(fd, STDOUT_FILENO) == -1)
+    {
+        print_error_file("dup2");
+        close(fd);
+        *error = 1;
+        return ;
+    }
+    close(fd);
 }
 
-void	handle_redirections_in(const char *filename, int *error)
+void handle_redirections_in(const char *filename, int *error)
 {
-	int	fd;
+    int fd;
 
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-	{
-		perror("open (redirect in)");
-		*error = 1;
-		return ;
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		perror("dup2 (redirect in)");
-		close(fd);
-		*error = 1;
-		return ;
-	}
+    fd = open(filename, O_RDONLY);
+    if (fd == -1)
+    {
+        print_error_file(filename);
+        *error = 1;
+        return ;
+    }
+    if (dup2(fd, STDIN_FILENO) == -1)
+    {
+        print_error_file("dup2");
+        close(fd);
+        *error = 1;
+        return ;
+    }
+    close(fd);
 }
 
-void	handle_redirections_append(const char *filename, int *error)
+void handle_redirections_append(const char *filename, int *error)
 {
-	int	fd;
+    int fd;
 
-	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1)
-	{
-		perror("open (redirect append)");
-		*error = 1;
-		return ;
-	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		perror("dup2 (redirect append)");
-		close(fd);
-		*error = 1;
-		return ;
-	}
+    fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    if (fd == -1)
+    {
+        print_error_file(filename);
+        *error = 1;
+        return ;
+    }
+    if (dup2(fd, STDOUT_FILENO) == -1)
+    {
+        print_error_file("dup2");
+        close(fd);
+        *error = 1;
+        return ;
+    }
+    close(fd);
 }
 
 int	handle_redirections_heredoc(const char *delimiter, bool quoted,
