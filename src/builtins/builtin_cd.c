@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/23 20:56:31 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:47:36 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,39 @@ static const char	*resolve_cd_target(char **argv, char ***penvp)
 {
 	const char	*path;
 
-	if (argv[1])
-		return (argv[1]);
-	path = env_get_value(*penvp, "HOME");
-	return (path);
+	if (!argv[1])
+	{
+		path = env_get_value(*penvp, "HOME");
+		return (path);
+	}
+	
+	// Handle cd - case (change to OLDPWD)
+	if (ft_strncmp(argv[1], "-", 2) == 0)
+	{
+		path = env_get_value(*penvp, "OLDPWD");
+		if (path)
+		{
+			char *temp = ft_strdup(path);
+			if (temp)
+			{
+				ft_putendl_fd(temp, STDOUT_FILENO);  // Print the directory we're changing to
+				free(temp);
+			}
+		}
+		return (path);
+	}
+	
+	return (argv[1]);
 }
 
 static int	change_dir_and_update(const char *path, char ***penvp)
 {
 	if (!path)
-		return (0);
+	{
+		ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO);
+		return (1);
+	}
+	
 	if (chdir(path) == -1)
 	{
 		perror("cd");

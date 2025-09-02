@@ -3,14 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 19:14:29 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// Functions from tokenizer_utils.c
+int	is_quote(char c)
+{
+	return (c == '\'' || c == '\"');
+}
+
+int	is_operator(char c)
+{
+	return (c == '|' || c == '<' || c == '>');
+}
+
+int	operator_len(const char *s)
+{
+	if ((s[0] == '>' && s[1] == '>') || (s[0] == '<' && s[1] == '<'))
+		return (2);
+	return (1);
+}
+
+// Function from lexer_utils_3.c
+char	*remove_quotes(char *str)
+{
+	int		len;
+	char	*result;
+
+	len = ft_strlen(str);
+	// Only remove double quotes, preserve single quotes
+	if (len > 1 && str[0] == '"' && str[len - 1] == '"')
+		result = ft_substr(str, 1, len - 2);
+	else
+		result = ft_strdup(str);
+	return (result);
+}
+
+bool	are_quotes_closed(const char *input)
+{
+	int		i;
+	char	quote_char;
+
+	i = 0;
+	while (input[i])
+	{
+		if (is_quote(input[i]))
+		{
+			quote_char = input[i++];
+			while (input[i] && input[i] != quote_char)
+				i++;
+			if (!input[i])
+				return (false);
+		}
+		i++;
+	}
+	return (true);
+}
 
 int	skip_spaces(const char *input, int i)
 {

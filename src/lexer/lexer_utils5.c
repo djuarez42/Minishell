@@ -12,6 +12,21 @@
 
 #include "minishell.h"
 
+// Helper function to check if a fragment contains an operator
+bool is_operator_fragment(t_fragment *frag)
+{
+    if (!frag || !frag->text)
+        return false;
+    
+    if (frag->quote_type != QUOTE_NONE)
+        return false; // Quoted text is never an operator
+    
+    const char *text = frag->text;
+    return (strcmp(text, "|") == 0 || strcmp(text, "<") == 0 || 
+            strcmp(text, ">") == 0 || strcmp(text, "<<") == 0 || 
+            strcmp(text, ">>") == 0);
+}
+
 t_token *build_token_list_from_fragments(t_token *raw)
 {
     if (!raw)
@@ -29,6 +44,7 @@ t_token *build_token_list_from_fragments(t_token *raw)
         while (frag)
         {
             bool empty_quote = (strlen(frag->text) == 0 && frag->quote_type != QUOTE_NONE);
+            bool is_operator = is_operator_fragment(frag);
 
             if (!current_token)
             {
@@ -45,6 +61,13 @@ t_token *build_token_list_from_fragments(t_token *raw)
 
                     prev_token = current_token;
                     next_space_before = false;
+                    
+                    // If this fragment is an operator, immediately close the token
+                    if (is_operator)
+                    {
+                        current_token = NULL;
+                        next_space_before = false;
+                    }
                 }
                 else if (frag->has_space_after)
                 {
@@ -53,7 +76,25 @@ t_token *build_token_list_from_fragments(t_token *raw)
             }
             else
             {
-                if (!empty_quote)
+                // If we hit an operator while building a token, we need to:
+                // 1. Close the current token
+                // 2. Create a new token for the operator
+                if (is_operator)
+                {
+                    current_token = NULL; // Close current token
+                    
+                    // Create new token for the operator
+                    t_fragment *frag_copy = duplicate_fragment(frag);
+                    current_token = create_token_from_fragments(frag_copy, false);
+                    
+                    if (prev_token)
+                        prev_token->next = current_token;
+                    
+                    prev_token = current_token;
+                    current_token = NULL; // Close operator token immediately
+                    next_space_before = false;
+                }
+                else if (!empty_quote)
                 {
                     t_fragment *frag_copy = duplicate_fragment(frag);
                     append_fragment(&current_token->fragments, frag_copy);

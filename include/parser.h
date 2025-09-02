@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/21 19:03:36 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct s_redir
 	char				*file;
 	int					type;
 	bool				quoted;
+	char				**heredoc_content;  // Pre-collected heredoc lines
 	struct s_redir		*next;
 }	t_redir;
 
@@ -49,5 +50,6 @@ int		init_cmd_args(t_cmd *cmd);
 int		process_token(t_cmd *cmd, t_token *cur, int *argc);
 t_cmd	*create_cmd_node(t_token **cur);
 void	add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd);
+char	**collect_heredoc_content(const char *delimiter, bool quoted);
 
 #endif

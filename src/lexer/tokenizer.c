@@ -3,10 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 21:10:57 by djuarez           #+#    #+#             */
 /*   Updated: 2025/09/01 00:51:32 by djuarez          ###   ########.fr       */
+/*   Created: 2025/08/31 03:34:47 by ekakhmad         #+#    #+#             */
+/*   Updated: 2025/08/31 03:34:47 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +53,9 @@ t_token *tokenize_input(const char *input)
     // 🔑 Nuevo paso: convertir raw_tokens a clean_tokens
     t_token *clean_tokens = build_token_list_from_fragments(raw_tokens);
 
-    free_tokens(raw_tokens); // ya no los necesitas
+    // Free the raw tokens and the original fragments
+    free_token_list(raw_tokens);
+    free_fragments(frags);
 
     return clean_tokens;
 }

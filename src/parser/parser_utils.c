@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 22:59:54 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,19 @@ void	free_cmds(t_cmd *cmd)
 void	free_redirs(t_redir *redir)
 {
 	t_redir	*tmp;
+	int		i;
 
 	while (redir)
 	{
 		tmp = redir->next;
 		free(redir->file);
+		if (redir->heredoc_content)
+		{
+			i = 0;
+			while (redir->heredoc_content[i])
+				free(redir->heredoc_content[i++]);
+			free(redir->heredoc_content);
+		}
 		free(redir);
 		redir = tmp;
 	}
@@ -98,18 +106,23 @@ int process_token(t_cmd *cmd, t_token *cur, int *argc)
 
 	if (*argc >= MAX_ARGS - 1)
 		return (0);
-
+		
+	// Calculate total size needed for all fragments
 	frag = cur->fragments;
 	while (frag)
 	{
 		len += ft_strlen(frag->text);
 		frag = frag->next;
 	}
-
-	arg = malloc(len + 1);
+	
+	// Allocate and combine fragments
+	arg = (char*)malloc(len + 1);
 	if (!arg)
 		return (0);
-
+	
+	arg[0] = '\0';
+	pos = 0;
+	
 	frag = cur->fragments;
 	while (frag)
 	{

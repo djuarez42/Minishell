@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 01:20:00 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 22:04:11 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "executor.h"
 #include "signals.h"
+#include <unistd.h> // for isatty()
 
 /*int main(void)
 {
@@ -44,20 +45,17 @@
         if (!final_tokens)
         {
             printf("Error building token list\n");
-            free_tokens(raw_tokens);
+            free_token_list(raw_tokens);
             continue;
         }
 
-        // 3️⃣ Imprimimos la lista de tokens final
-        print_final_token_list(final_tokens);
-
-        // 4️⃣ Parseamos tokens a lista de comandos
+        // 3️⃣ Parseamos tokens a lista de comandos
         t_cmd *cmd_list = parser_tokens(final_tokens);
         if (!cmd_list)
         {
             printf("Error parsing tokens to commands\n");
-            free_tokens(raw_tokens);
-            free_tokens(final_tokens);
+            free_token_list(raw_tokens);
+            free_token_list(final_tokens);
             continue;
         }
 
@@ -65,8 +63,8 @@
         print_cmd_list(cmd_list);
 
         // 6️⃣ Liberamos memoria
-        free_tokens(raw_tokens);
-        free_tokens(final_tokens);
+    free_token_list(raw_tokens);
+    free_token_list(final_tokens);
         free_cmds(cmd_list);
     }
 
@@ -82,25 +80,104 @@ int main(int argc, char **argv, char **envp)
     t_exec_state state;
     t_cmd       *cur;
     int         fail;
+    int         is_interactive;
 
-    (void)argc;
-    (void)argv;
-
-    // Copia dinámica de envp
+    // Check for -c option (execute command and exit)
+    if (argc >= 3 && ft_strncmp(argv[1], "-c", 3) == 0)
+    {
+        // Running in non-interactive mode with -c option
+        envp_copy = new_envp(envp);
+        if (!envp_copy)
+            return (1);
+            
+        state.last_status = 0;
+        
+        // Use the command provided as argument
+        input = ft_strdup(argv[2]);
+        if (!input)
+        {
+            free_envp(envp_copy);
+            return (1);
+        }
+        
+        // Execute single command
+        tokens = tokenize_input(input);
+        if (tokens)
+        {
+            cmds = parser_tokens(tokens);
+            if (cmds)
+            {
+                cur = cmds;
+                fail = 0;
+                
+                while (cur && !fail)
+                {
+                    if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
+                    {
+                        fail = 1;
+                        break;
+                    }
+                    cur = cur->next;
+                }
+                
+                if (!fail)
+                    executor(cmds, &envp_copy, &state);
+                    
+                free_cmds(cmds);
+            }
+            free_token_list(tokens);
+        }
+        
+        free(input);
+        free_envp(envp_copy);
+        return (state.last_status);
+    }
+    
+    // Normal interactive mode
     envp_copy = new_envp(envp);
     if (!envp_copy)
         return (1);
 
     state.last_status = 0;
+    
+    // Check if stdin is a terminal (interactive mode)
+    is_interactive = isatty(STDIN_FILENO);
 
     while (1)
     {
         fail = 0;
-        input = readline("minishell$ ");
+        
+        // Only show prompt in interactive mode and get input appropriately
+        if (is_interactive)
+        {
+            input = readline("minishell$ ");
+        }
+        else
+        {
+            // For non-interactive mode, read line by line
+            char *line = NULL;
+            size_t len = 0;
+            ssize_t read_len = getline(&line, &len, stdin);
+            if (read_len == -1)
+            {
+                input = NULL; // EOF or error
+                if (line)
+                    free(line);
+            }
+            else
+            {
+                // Remove trailing newline if present
+                if (read_len > 0 && line[read_len - 1] == '\n')
+                    line[read_len - 1] = '\0';
+                input = ft_strdup(line);
+                free(line);
+            }
+        }
+            
         if (!input)
-            break ; // Ctrl+D
+            break ; // Ctrl+D or EOF
 
-        if (*input)
+        if (*input && is_interactive)
             add_history(input);
 
         // 1. Lexer: tokens limpios listos para parser
@@ -115,7 +192,7 @@ int main(int argc, char **argv, char **envp)
         cmds = parser_tokens(tokens);
         if (!cmds)
         {
-            free_tokens(tokens);
+            free_token_list(tokens);
             free(input);
             continue ;
         }
@@ -136,10 +213,10 @@ int main(int argc, char **argv, char **envp)
         if (!fail)
             executor(cmds, &envp_copy, &state);
 
-        // 5. Liberar memoria
-        free_tokens(tokens);
-        free_cmds(cmds);
-        free(input);
+    // 5. Liberar memoria
+    free_token_list(tokens);
+    free_cmds(cmds);
+    free(input);
 
         if (fail)
         {

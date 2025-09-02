@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 18:27:29 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 20:45:09 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,21 @@ void free_fragments(t_fragment *frag)
     }
 }
 
-void	free_tokens(t_token *tokens)
+void	free_token_list(t_token *tokens)
 {
 	t_token	*tmp;
 
-	while (tokens)
-	{
-		tmp = tokens->next;
-		if (tokens->fragments)
-			free_fragments(tokens->fragments);
-		free(tokens);
-		tokens = tmp;
-	}
+    while (tokens)
+    {
+        tmp = tokens->next;
+        if (tokens->fragments)
+            free_fragments(tokens->fragments);
+        free(tokens);
+        tokens = tmp;
+    }
 }
 
+/* DEBUG FUNCTION - COMMENTED OUT
 void print_token_list_from_fragments(t_token *tokens)
 {
     int i = 0;
@@ -62,7 +63,9 @@ void print_token_list_from_fragments(t_token *tokens)
     }
     printf("=======================================\n\n");
 }
+*/
 
+/* DEBUG FUNCTION - COMMENTED OUT
 void print_final_token_list(t_token *tokens)
 {
     int i = 0;
@@ -82,3 +85,4 @@ void print_final_token_list(t_token *tokens)
     }
     printf("=======================================\n\n");
 }
+*/

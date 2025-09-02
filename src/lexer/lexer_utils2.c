@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 20:22:09 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,20 @@ t_fragment *parse_fragments(const char *text) {
             space_after = text[i] && ft_isspace((unsigned char)text[i + 1]);
             append_fragment(&fragments, new_fragment(&text[start], i - start, qtype, space_after));
             if (text[i] == '"') i++;
+        } else if (text[i] == '|' || text[i] == '<' || text[i] == '>') { // operators
+            start = i;
+            if (text[i] == '<' && text[i + 1] == '<') {
+                i += 2; // heredoc <<
+            } else if (text[i] == '>' && text[i + 1] == '>') {
+                i += 2; // append >>
+            } else {
+                i++; // single character operator
+            }
+            space_after = text[i] && ft_isspace((unsigned char)text[i]);
+            append_fragment(&fragments, new_fragment(&text[start], i - start, QUOTE_NONE, space_after));
         } else { // texto normal
-            while (text[i] && !ft_isspace((unsigned char)text[i]) && text[i] != '\'' && text[i] != '"') i++;
+            while (text[i] && !ft_isspace((unsigned char)text[i]) && text[i] != '\'' && text[i] != '"' 
+                   && text[i] != '|' && text[i] != '<' && text[i] != '>') i++;
             space_after = text[i] && ft_isspace((unsigned char)text[i]);
             append_fragment(&fragments, new_fragment(&text[start], i - start, QUOTE_NONE, space_after));
         }

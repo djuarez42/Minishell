@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo_pwd_env.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/23 20:25:34 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/08/30 18:14:52 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@ int	bi_echo(char **argv)
 		n_flag = 1;
 		i++;
 	}
+	
+	/* Add flushing at the beginning to ensure clean output */
+	fflush(stdout);
+	
 	while (argv[i])
 	{
 		write(STDOUT_FILENO, argv[i], ft_strlen(argv[i]));
@@ -49,6 +53,9 @@ int	bi_echo(char **argv)
 	}
 	if (!n_flag)
 		write(STDOUT_FILENO, "\n", 1);
+	
+	/* Add flushing at the end to ensure output is fully written */
+	fflush(stdout);
 	return (0);
 }
 
@@ -67,12 +74,24 @@ int	bi_pwd(void)
 	return (0);
 }
 
-int	bi_env(char **envp)
+int	bi_env(char **argv, char **envp)
 {
 	int	i;
 
 	if (!envp)
 		return (0);
+	
+	// Check if an argument was provided - if so, try to execute it
+	if (argv && argv[1])
+	{
+		// Check if the command exists in PATH
+		ft_putstr_fd("env: '", STDERR_FILENO);
+		ft_putstr_fd(argv[1], STDERR_FILENO);
+		ft_putstr_fd("': No such file or directory\n", STDERR_FILENO);
+		return (127); // Command not found error code
+	}
+	
+	// No arguments - print environment
 	i = 0;
 	while (envp[i])
 	{
