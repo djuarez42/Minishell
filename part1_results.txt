@@ -1,0 +1,220 @@
+=== MINISHELL DIAGNOSTIC TEST SCRIPT ===
+Testing Part 1: Core Variable Expansion & Path Issues
+
+=== PART 1.1: PATH AND TILDE EXPANSION ===
+----------------------------------------
+TEST: Basic tilde expansion
+COMMAND: echo ~
+
+BASH OUTPUT:
+/home/ekakhmad
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Tilde with path
+COMMAND: echo ~/Desktop
+
+BASH OUTPUT:
+/home/ekakhmad/Desktop
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Tilde in echo cd
+COMMAND: echo cd ~
+
+BASH OUTPUT:
+cd /home/ekakhmad
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+=== PART 1.2: QUOTE AND VARIABLE MIXING ===
+----------------------------------------
+TEST: Single quotes around double quotes with variable
+COMMAND: echo '"'$USER'"'
+
+BASH OUTPUT:
+"testuser"
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Same with /bin/echo
+COMMAND: /bin/echo '"'$USER'"'
+
+BASH OUTPUT:
+"testuser"
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Complex quote nesting pattern 1
+COMMAND: /bin/echo "'"'$USER'"'"
+
+BASH OUTPUT:
+'$USER'
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Complex quote nesting pattern 2
+COMMAND: /bin/echo '"'"'$USER'"'"'
+
+BASH OUTPUT:
+"'testuser'"
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+=== PART 1.3: DOLLAR QUOTE SYNTAX ===
+----------------------------------------
+TEST: Dollar quotes with variables
+COMMAND: /bin/echo $"HOME"$USER
+
+BASH OUTPUT:
+HOMEtestuser
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Partial dollar quotes
+COMMAND: /bin/echo $"HOM"E$USER
+
+BASH OUTPUT:
+HOMEtestuser
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Simple dollar quotes
+COMMAND: /bin/echo $"HOME"
+
+BASH OUTPUT:
+HOME
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Dollar quotes with special chars
+COMMAND: /bin/echo $"42$"
+
+BASH OUTPUT:
+42$
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+=== BASIC VARIABLE EXPANSION TESTS ===
+----------------------------------------
+TEST: Basic variable expansion
+COMMAND: echo $USER
+
+BASH OUTPUT:
+testuser
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Exit code variable
+COMMAND: echo $?
+
+BASH OUTPUT:
+0
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: HOME variable
+COMMAND: echo $HOME
+
+BASH OUTPUT:
+/home/ekakhmad
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+----------------------------------------
+TEST: Non-existent variable
+COMMAND: echo $NONEXISTENT
+
+BASH OUTPUT:
+
+[EXIT CODE: 0]
+
+MINISHELL OUTPUT:
+timeout: failed to run command ‘../minishell’: No such file or directory
+[EXIT CODE: 127]
+
+EXIT CODE: ❌ DIFFERENT (bash: 0, minishell: 127)
+
+=== TEST COMPLETE ===
+Check output above for differences between bash and minishell
+Focus on fixing issues in order of priority listed in TESTING_PLAN.md
