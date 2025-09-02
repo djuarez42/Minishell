@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:54:04 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ void append_fragment(t_fragment **head, t_fragment *frag)
 t_fragment *parse_fragments(const char *text) {
     t_fragment *fragments = NULL;
     int i = 0;
-    while (text[i]) {
+    while (text[i]) 
+    {
         t_quote_type qtype = QUOTE_NONE;
         int start = i;
         bool space_after = false;
@@ -87,6 +88,7 @@ t_fragment *parse_fragments(const char *text) {
             append_fragment(&fragments, new_fragment(&text[start], i - start, QUOTE_NONE, space_after));
         }
     }
+    print_fragments(fragments);
     return fragments;
 }
 
@@ -122,4 +124,22 @@ char *concat_fragments_for_token(t_fragment *frag)
     }
     res[pos] = '\0';
     return res;
+}
+
+void	print_fragments(t_fragment *fragments)
+{
+	int	i;
+
+	i = 0;
+	while (fragments)
+	{
+		printf("Fragment %d:\n", i);
+		printf("  text           : \"%s\"\n", fragments->text);
+		printf("  quote_type     : %d\n", fragments->quote_type);
+		printf("  has_space_after: %s\n",
+			fragments->has_space_after ? "true" : "false");
+		printf("  next           : %p\n\n", (void *)fragments->next);
+		fragments = fragments->next;
+		i++;
+	}
 }

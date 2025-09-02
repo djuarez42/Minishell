@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:35:31 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ void			free_tokens(char **tokens, int count);
 int				is_blank(const char *s);
 t_token_type	determine_token_type(char *str);
 t_token			*build_token_list(char **tokens, t_quote_type *quotes);
-void			print_token_list(t_token *token);
 void			free_token_list(t_token *head);
 t_token			*append_token_eof(t_token *head);
 const char		*token_type_str(t_token_type type);
@@ -116,6 +115,7 @@ int				init_tokens_and_quotes(char ***tokens_out,
 const char		*quote_type_str(t_quote_type q);
 char			*strip_comments(const char *input);
 void            classify_redirection_files(t_token *token_list);
+int 			check_unmatched_quotes(const char *input);
 
 // Additional function prototypes for lexer_utils5.c
 t_fragment      *duplicate_fragment(t_fragment *frag);
@@ -123,7 +123,8 @@ t_token         *create_token_from_fragments(t_fragment *frag, bool space_before
 void            assign_token_types(t_token *head);
 
 // Debug functions
-void            print_tokens(t_token *tokens);
+void			print_fragments(t_fragment *fragments);
+void 			print_final_token_list(t_token *tokens);
 
 #endif
 

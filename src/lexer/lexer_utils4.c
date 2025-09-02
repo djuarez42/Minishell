@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils4.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:35:50 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,59 +39,26 @@ t_token_type lx_meta_type(const char *s, int *consumed)
 
 int check_unmatched_quotes(const char *input)
 {
-    int single_quote = 0;
-    int double_quote = 0;
-
-    for (int i = 0; input[i] != '\0'; i++)
-    {
-        if (input[i] == '\'')
-            single_quote = !single_quote;
-        else if (input[i] == '"')
-            double_quote = !double_quote;
-    }
-
-    if (single_quote || double_quote)
-    {
-        fprintf(stderr, "Syntax error: unmatched quote\n");
-        return 1; // Error si las comillas no están balanceadas
-    }
-    return 0; // Todo está bien
-}
-
-/* DEBUG FUNCTION - COMMENTED OUT
-void print_tokens(t_token *tokens)
-{
-    t_token *cur = tokens;
+    int single_open = 0;
+    int double_open = 0;
     int i = 0;
 
-    printf("=== FINAL TOKENS ===\n");
-    while (cur)
+    while (input[i])
     {
-        printf("Token %d @%p: type=%d, has_space_before=%d\n",
-               i, (void*)cur, cur->type, cur->has_space_before);
-
-        if (cur->final_text)
-            printf("  Final text: \"%s\"\n", cur->final_text);
-        else
-            printf("  Final text: (NULL)\n");
-
-        t_fragment *frag = cur->fragments;
-        int j = 0;
-        while (frag)
-        {
-            printf("  Frag %d @%p: \"%s\" (quote=%d, space_after=%d, next=%p)\n",
-                   j, (void*)frag, frag->text,
-                   frag->quote_type, frag->has_space_after, (void*)frag->next);
-            frag = frag->next;
-            j++;
-        }
-
-        cur = cur->next;
+        if (input[i] == '\'' && double_open == 0) // solo cuenta si NO estás dentro de ""
+            single_open = !single_open;
+        else if (input[i] == '"' && single_open == 0) // solo cuenta si NO estás dentro de ''
+            double_open = !double_open;
         i++;
     }
-    printf("=======================================\n\n");
+    if (single_open || double_open)
+    {
+        fprintf(stderr, "minishell: syntax error: unmatched quotes\n");
+        return (1); // error
+    }
+    return (0); // ok
 }
-*/
+
 
 t_token *create_token_group(t_fragment *frag_head, t_token_type type)
 {

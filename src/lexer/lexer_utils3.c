@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 18:27:29 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:34:55 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,35 +37,7 @@ void	free_token_list(t_token *tokens)
         tokens = tmp;
     }
 }
-
-/* DEBUG FUNCTION - COMMENTED OUT
-void print_token_list_from_fragments(t_token *tokens)
-{
-    int i = 0;
-    printf("=== RAW TOKEN LIST (from fragments) ===\n");
-    while (tokens)
-    {
-        printf("Token %d: type=%d (has_space_before=%d)\n",
-               i, tokens->type, tokens->has_space_before);
-
-        t_fragment *frag = tokens->fragments;
-        int j = 0;
-        while (frag)
-        {
-            printf("  Frag %d @%p: text=\"%s\" quote=%d space_after=%d next=%p\n",
-                   j, (void*)frag, frag->text,
-                   frag->quote_type, frag->has_space_after, (void*)frag->next);
-            frag = frag->next;
-            j++;
-        }
-        tokens = tokens->next;
-        i++;
-    }
-    printf("=======================================\n\n");
-}
-*/
-
-/* DEBUG FUNCTION - COMMENTED OUT
+    
 void print_final_token_list(t_token *tokens)
 {
     int i = 0;
@@ -85,4 +57,3 @@ void print_final_token_list(t_token *tokens)
     }
     printf("=======================================\n\n");
 }
-*/
