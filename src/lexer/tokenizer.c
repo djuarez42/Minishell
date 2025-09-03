@@ -50,11 +50,13 @@ t_token *tokenize_input(const char *input)
         }
 
         append_token(&raw_tokens, tok);
+
     }
 
     // 🔑 Nuevo paso: convertir raw_tokens a clean_tokens
     t_token *clean_tokens = build_token_list_from_fragments(raw_tokens);
     //print_final_token_list(clean_tokens);
+    //print_clean_tokens_with_fragments(clean_tokens);
     // Free the raw tokens and the original fragments
     free_token_list(raw_tokens);
     free_fragments(frags);

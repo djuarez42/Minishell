@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:47:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "minishell.h"
 
 /* Free argv entries up to argc (if argc >= 0), and argv/argv_quote arrays.
    Does not free cmd itself. */
@@ -98,42 +98,41 @@ int	init_cmd_args(t_cmd *cmd)
 	return (1);
 }
 
-int process_token(t_cmd *cmd, t_token *cur, int *argc)
+int	process_token(t_cmd *cmd, t_token *cur, int *argc,
+			char **envp, t_exec_state *state)
 {
-	t_fragment *frag;
-	char *arg;
-	int len = 0, pos = 0;
+	t_fragment	*frag;
+	char		*arg;
+	char		*expanded;
+	char		*tmp;
 
 	if (*argc >= MAX_ARGS - 1)
 		return (0);
-		
-	// Calculate total size needed for all fragments
-	frag = cur->fragments;
-	while (frag)
-	{
-		len += ft_strlen(frag->text);
-		frag = frag->next;
-	}
-	
-	// Allocate and combine fragments
-	arg = (char*)malloc(len + 1);
+
+	arg = ft_strdup("");
 	if (!arg)
 		return (0);
-	
-	arg[0] = '\0';
-	pos = 0;
-	
+
 	frag = cur->fragments;
 	while (frag)
 	{
-		ft_memcpy(arg + pos, frag->text, ft_strlen(frag->text));
-		pos += ft_strlen(frag->text);
+		expanded = expand_fragment(frag->text, frag->quote_type, envp, state);
+		if (!expanded)
+		{
+			free(arg);
+			return (0);
+		}
+		tmp = str_append(arg, expanded);
+		free(expanded);
+		arg = tmp;
+		if (!arg)
+			return (0);
 		frag = frag->next;
 	}
-	arg[pos] = '\0';
 
 	cmd->argv[*argc] = arg;
-	cmd->argv_quote[*argc] = cur->fragments ? cur->fragments->quote_type : QUOTE_NONE;
+	cmd->argv_quote[*argc] = cur->fragments
+		? cur->fragments->quote_type : QUOTE_NONE;
 	(*argc)++;
 	return (1);
 }

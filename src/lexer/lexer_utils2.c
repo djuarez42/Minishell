@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/02 21:11:55 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/03 17:02:45 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,40 +90,6 @@ t_fragment *parse_fragments(const char *text) {
     }
     //print_fragments(fragments);
     return fragments;
-}
-
-char *concat_fragments_for_token(t_fragment *frag)
-{
-    if (!frag) return NULL;
-
-    // Calcular longitud total considerando solo fragmentos válidos
-    size_t len = 0;
-    t_fragment *cur = frag;
-    while (cur)
-    {
-        // Ignorar fragmentos vacíos sin quotes
-        if (!(cur->text[0] == '\0' && cur->quote_type == QUOTE_NONE))
-            len += strlen(cur->text);
-        cur = cur->next;
-    }
-
-    char *res = malloc(len + 1);
-    if (!res) return NULL;
-
-    size_t pos = 0;
-    cur = frag;
-    while (cur)
-    {
-        if (!(cur->text[0] == '\0' && cur->quote_type == QUOTE_NONE))
-        {
-            size_t i = 0;
-            while (cur->text[i])
-                res[pos++] = cur->text[i++];
-        }
-        cur = cur->next;
-    }
-    res[pos] = '\0';
-    return res;
 }
 
 void	print_fragments(t_fragment *fragments)

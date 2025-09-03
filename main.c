@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/02 21:16:44 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/03 20:33:42 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int main(int argc, char **argv, char **envp)
 {
     char        *input;
     t_token     *tokens;
-    t_cmd       *cmds;
+    t_cmd       *cmds = NULL;   // ✅ inicializar
     char        **envp_copy;
     t_exec_state state;
     t_cmd       *cur;
@@ -85,31 +85,27 @@ int main(int argc, char **argv, char **envp)
     // Check for -c option (execute command and exit)
     if (argc >= 3 && ft_strncmp(argv[1], "-c", 3) == 0)
     {
-        // Running in non-interactive mode with -c option
         envp_copy = new_envp(envp);
         if (!envp_copy)
             return (1);
-            
+
         state.last_status = 0;
-        
-        // Use the command provided as argument
+
         input = ft_strdup(argv[2]);
         if (!input)
         {
             free_envp(envp_copy);
             return (1);
         }
-        
-        // Execute single command
+
         tokens = tokenize_input(input);
         if (tokens)
         {
-            cmds = parser_tokens(tokens);
+            cmds = parser_tokens(tokens, envp_copy, &state);   // ✅ asignar retorno
             if (cmds)
             {
                 cur = cmds;
                 fail = 0;
-                
                 while (cur && !fail)
                 {
                     if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
@@ -119,104 +115,89 @@ int main(int argc, char **argv, char **envp)
                     }
                     cur = cur->next;
                 }
-                
                 if (!fail)
                     executor(cmds, &envp_copy, &state);
-                    
                 free_cmds(cmds);
             }
             free_token_list(tokens);
         }
-        
+
         free(input);
         free_envp(envp_copy);
         return (state.last_status);
     }
-    
+
     // Normal interactive mode
     envp_copy = new_envp(envp);
     if (!envp_copy)
         return (1);
 
     state.last_status = 0;
-    
-    // Check if stdin is a terminal (interactive mode)
     is_interactive = isatty(STDIN_FILENO);
 
     while (1)
     {
         fail = 0;
-        
-        // Only show prompt in interactive mode and get input appropriately
         if (is_interactive)
-        {
             input = readline("minishell$ ");
-        }
         else
         {
-            // For non-interactive mode, read line by line
             char *line = NULL;
             size_t len = 0;
             ssize_t read_len = getline(&line, &len, stdin);
             if (read_len == -1)
             {
-                input = NULL; // EOF or error
+                input = NULL;
                 if (line)
                     free(line);
             }
             else
             {
-                // Remove trailing newline if present
                 if (read_len > 0 && line[read_len - 1] == '\n')
                     line[read_len - 1] = '\0';
                 input = ft_strdup(line);
                 free(line);
             }
         }
-            
+
         if (!input)
-            break ; // Ctrl+D or EOF
+            break; // Ctrl+D or EOF
 
         if (*input && is_interactive)
             add_history(input);
 
-        // 1. Lexer: tokens limpios listos para parser
         tokens = tokenize_input(input);
         if (!tokens)
         {
             free(input);
-            continue ;
+            continue;
         }
 
-        // 2. Parser: construye lista de comandos
-        cmds = parser_tokens(tokens);
+        cmds = parser_tokens(tokens, envp_copy, &state);   // ✅ asignar retorno
         if (!cmds)
         {
             free_token_list(tokens);
             free(input);
-            continue ;
+            continue;
         }
 
-        // 3. Expansión de variables / sustituciones
         cur = cmds;
         while (cur)
         {
             if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
             {
                 fail = 1;
-                break ;
+                break;
             }
             cur = cur->next;
         }
 
-        // 4. Ejecutar
         if (!fail)
             executor(cmds, &envp_copy, &state);
 
-    // 5. Liberar memoria
-    free_token_list(tokens);
-    free_cmds(cmds);
-    free(input);
+        free_token_list(tokens);
+        free_cmds(cmds);
+        free(input);
 
         if (fail)
         {

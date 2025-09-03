@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/02 20:40:45 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/03 18:53:21 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ t_token *build_token_list_from_fragments(t_token *raw)
             frag = frag->next;
         }
     }
-
+    
     assign_token_types(head);
     head = append_token_eof(head);
     return head;

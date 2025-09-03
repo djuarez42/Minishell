@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:11:45 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include <unistd.h>
-#include <readline/readline.h>
+#include "minishell.h"
 
 t_redir *create_redir(t_token *cur)
 {
@@ -94,27 +92,27 @@ int	add_argument(t_cmd *cmd, char *value, t_quote_type quote, int *argc)
 	return (1);
 }
 
-t_cmd	*create_cmd_node(t_token **cur)
+t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
 {
-	t_cmd	*cmd;
+    t_cmd *cmd;
 
-	cmd = malloc(sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->argv = NULL;
-	cmd->argv_quote = NULL;
-	cmd->redirs = NULL;
-	cmd->pipe = 0;
-	cmd->next = NULL;
-	*cur = parse_cmd_block(*cur, cmd);
-	if (!*cur)
-		return (free(cmd), NULL);
-	if ((*cur)->type == TOKEN_PIPE)
-	{
-		cmd->pipe = 1;
-		*cur = (*cur)->next;
-	}
-	return (cmd);
+    cmd = malloc(sizeof(t_cmd));
+    if (!cmd)
+        return (NULL);
+    cmd->argv = NULL;
+    cmd->argv_quote = NULL;
+    cmd->redirs = NULL;
+    cmd->pipe = 0;
+    cmd->next = NULL;
+    *cur = parse_cmd_block(*cur, cmd, envp, state);
+    if (!*cur)
+        return (free(cmd), NULL);
+    if ((*cur)->type == TOKEN_PIPE)
+    {
+        cmd->pipe = 1;
+        *cur = (*cur)->next;
+    }
+    return (cmd);
 }
 
 char	**collect_heredoc_content(const char *delimiter, bool quoted __attribute__((unused)))

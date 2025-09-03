@@ -17,25 +17,43 @@ compare_output() {
     echo "COMMAND: $test_cmd"
     echo
     
-    # Get bash output
+    # Get bash output and store it
     echo "BASH OUTPUT:"
-    bash -c "$test_cmd" 2>&1
+    local bash_output=$(bash -c "$test_cmd" 2>&1)
+    echo "$bash_output"
     local bash_exit=$?
     echo "[EXIT CODE: $bash_exit]"
     echo
     
-    # Get minishell output  
+    # Get minishell output and store it
     echo "MINISHELL OUTPUT:"
-    echo "$test_cmd" | timeout 3 ../minishell 2>&1
+    local ms_output=$(echo "$test_cmd" | timeout 3 /home/djuarez/minishell/minishell 2>&1)
+    echo "$ms_output"
     local ms_exit=$?
     echo "[EXIT CODE: $ms_exit]"
     echo
+    
+    # Compare outputs
+    if [ "$bash_output" = "$ms_output" ]; then
+        echo "STDOUT: ✅ MATCH"
+    else
+        echo "STDOUT: ❌ DIFFERENT"
+        echo "  Expected: '$bash_output'"
+        echo "  Got:      '$ms_output'"
+    fi
     
     # Compare exit codes
     if [ $bash_exit -eq $ms_exit ]; then
         echo "EXIT CODE: ✅ MATCH"
     else
         echo "EXIT CODE: ❌ DIFFERENT (bash: $bash_exit, minishell: $ms_exit)"
+    fi
+    
+    # Overall result
+    if [ "$bash_output" = "$ms_output" ] && [ $bash_exit -eq $ms_exit ]; then
+        echo "OVERALL: ✅ PASS"
+    else
+        echo "OVERALL: ❌ FAIL"
     fi
     echo
 }

@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/02 19:35:31 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/03 18:52:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ void            assign_token_types(t_token *head);
 // Debug functions
 void			print_fragments(t_fragment *fragments);
 void 			print_final_token_list(t_token *tokens);
+void 			print_clean_tokens_with_fragments(t_token *tokens);
 
 #endif
 
