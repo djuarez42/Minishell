@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/03 18:52:43 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/03 21:05:17 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ typedef enum e_quote_type
 	QUOTE_NONE,
 	QUOTE_SINGLE,
 	QUOTE_DOUBLE,
-	QUOTE_MIXED
+	QUOTE_MIXED,
+	QUOTE_DOLLAR
 }	t_quote_type;
 
 

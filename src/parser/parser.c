@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/03 20:12:38 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/03 21:08:01 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,45 +137,44 @@ t_token *parse_arguments(t_token *cur, t_cmd *cmd,
 }
 
 
-char	*expand_fragment(const char *text, t_quote_type quote,
-			char **envp, t_exec_state *state)
+char *expand_fragment(const char *text, t_quote_type quote,
+                      char **envp, t_exec_state *state)
 {
-	char	*expanded;
+    char *expanded;
 
-	if (!text)
-		return (ft_strdup(""));
+    if (!text)
+        return (ft_strdup(""));
 
-	// Caso 1: comillas simples → literal
-	if (quote == QUOTE_SINGLE)
-		return (ft_strdup(text));
+    // 1. Comillas simples → literal
+    if (quote == QUOTE_SINGLE)
+        return (ft_strdup(text));
 
-	// Caso 2: tilde expansion (~ al inicio del fragmento)
-	if (text[0] == '~' && (quote == QUOTE_NONE || quote == QUOTE_DOUBLE))
-	{
-		char *home = getenv("HOME");
-		if (home)
-		{
-			if (text[1] == '\0') // solo "~"
-				return (ft_strdup(home));
-			else
-			{
-				// "~" seguido de path
-				char *suffix = ft_strdup(text + 1);
-				if (!suffix)
-					return (NULL);
-				char *result = str_append(ft_strdup(home), suffix);
-				free(suffix);
-				return (result);
-			}
-		}
-		// si no hay $HOME definido, dejar "~" literal
-	}
+    // 2. Tilde (~) al inicio
+    if (text[0] == '~' && (quote == QUOTE_NONE || quote == QUOTE_DOUBLE))
+    {
+        char *home = getenv("HOME");
+        if (home)
+        {
+            if (text[1] == '\0')
+                return (ft_strdup(home));
+            else
+            {
+                char *suffix = ft_strdup(text + 1);
+                if (!suffix)
+                    return (NULL);
+                char *res = str_append(ft_strdup(home), suffix);
+                free(suffix);
+                return (res);
+            }
+        }
+        return (ft_strdup("~")); // si no hay $HOME
+    }
 
-	// Caso 3: variables ($VAR, $?)
-	expanded = expand_variables(text, envp, state, quote);
-	if (!expanded)
-		return (NULL);
+    // 3. Variables ($VAR, $?)
+    // Si es $"" literal (dollar string), handle_dollar_string se encarga dentro de expand_variables
+    expanded = expand_variables(text, envp, state, quote);
+    if (!expanded)
+        return (NULL);
 
-	return (expanded);
+    return (expanded);
 }
-
