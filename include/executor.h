@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 22:04:27 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/02 23:13:52 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,3 +106,5 @@ void	cleanup_heredoc_file(t_heredoc_args *args);
 /* Dollar string ($"string") handling */
 int     is_dollar_string_pattern(const char *input, int pos);
 char    *process_dollar_string(const char *input, int *pos);
+void 	print_error_file(const char *context);
+

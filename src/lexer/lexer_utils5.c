@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 00:57:06 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/02 20:40:45 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_token *build_token_list_from_fragments(t_token *raw)
 
     t_token *head = NULL;
     t_token *current_token = NULL;
-    t_token *prev_token = NULL; // para enlazar tokens
+    t_token *prev_token = NULL;
     bool next_space_before = false;
 
     for (t_token *raw_tok = raw; raw_tok; raw_tok = raw_tok->next)
@@ -48,7 +48,8 @@ t_token *build_token_list_from_fragments(t_token *raw)
 
             if (!current_token)
             {
-                if (!empty_quote)
+                // ⚡ Cambio: permitimos crear token para fragments vacíos con quotes
+                if (!empty_quote || frag->quote_type != QUOTE_NONE)
                 {
                     t_fragment *frag_copy = duplicate_fragment(frag);
                     current_token = create_token_from_fragments(frag_copy, next_space_before);
@@ -62,7 +63,6 @@ t_token *build_token_list_from_fragments(t_token *raw)
                     prev_token = current_token;
                     next_space_before = false;
                     
-                    // If this fragment is an operator, immediately close the token
                     if (is_operator)
                     {
                         current_token = NULL;
@@ -71,19 +71,15 @@ t_token *build_token_list_from_fragments(t_token *raw)
                 }
                 else if (frag->has_space_after)
                 {
-                    next_space_before = true; // token siguiente tendrá espacio antes
+                    next_space_before = true;
                 }
             }
             else
             {
-                // If we hit an operator while building a token, we need to:
-                // 1. Close the current token
-                // 2. Create a new token for the operator
                 if (is_operator)
                 {
-                    current_token = NULL; // Close current token
+                    current_token = NULL;
                     
-                    // Create new token for the operator
                     t_fragment *frag_copy = duplicate_fragment(frag);
                     current_token = create_token_from_fragments(frag_copy, false);
                     
@@ -91,11 +87,17 @@ t_token *build_token_list_from_fragments(t_token *raw)
                         prev_token->next = current_token;
                     
                     prev_token = current_token;
-                    current_token = NULL; // Close operator token immediately
+                    current_token = NULL;
                     next_space_before = false;
                 }
                 else if (!empty_quote)
                 {
+                    t_fragment *frag_copy = duplicate_fragment(frag);
+                    append_fragment(&current_token->fragments, frag_copy);
+                }
+                else if (empty_quote && frag->quote_type != QUOTE_NONE)
+                {
+                    // ⚡ Nuevo: fragment vacío con quote dentro de token actual
                     t_fragment *frag_copy = duplicate_fragment(frag);
                     append_fragment(&current_token->fragments, frag_copy);
                 }
@@ -110,11 +112,11 @@ t_token *build_token_list_from_fragments(t_token *raw)
             frag = frag->next;
         }
     }
+
     assign_token_types(head);
     head = append_token_eof(head);
     return head;
 }
-
 
 bool lx_is_space_between(t_fragment *cur, t_fragment *next)
 {

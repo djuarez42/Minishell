@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 14:30:00 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/02 21:24:07 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ char	*expand_variables(const char *input, char **envp, t_exec_state *state,
 
 	if (!input)
 		return (NULL);
+	if (input[0] == '\0')
+		return (ft_strdup(""));
 	i = 0;
 	tmp = NULL;
 	piece = NULL;

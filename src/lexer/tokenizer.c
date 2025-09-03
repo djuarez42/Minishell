@@ -16,6 +16,8 @@
 
 t_token *tokenize_input(const char *input) 
 {
+    if (check_unmatched_quotes(input))
+        return (NULL);
     t_fragment *frags = parse_fragments(input);
     t_fragment *cur = frags;
     t_token *raw_tokens = NULL;
@@ -52,7 +54,7 @@ t_token *tokenize_input(const char *input)
 
     // 🔑 Nuevo paso: convertir raw_tokens a clean_tokens
     t_token *clean_tokens = build_token_list_from_fragments(raw_tokens);
-
+    //print_final_token_list(clean_tokens);
     // Free the raw tokens and the original fragments
     free_token_list(raw_tokens);
     free_fragments(frags);
