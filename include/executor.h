@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/02 23:13:52 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/04 17:30:32 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int		env_unset_var(char ***penvp, const char *name);
 void	handle_redirections_out(const char *filename, int *error);
 void	handle_redirections_in(const char *filename, int *error);
 void	handle_redirections_append(const char *filename, int *error);
+void	print_error_file(const char *context);
 int		handle_redirections(t_redir *redir, char **envp, t_exec_state *state);
 int		handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state);
 
