@@ -31,7 +31,7 @@ output.txt
 *.bak
 
 # External testers and tools
-# 42_minishell_tester/  # Commented out to include our custom tester
+42_minishell_tester/  # Commented out to include our custom tester
 
 # Test files and outputs
 test_*.txt
