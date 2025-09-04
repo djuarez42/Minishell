@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/03 21:05:17 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/04 16:19:02 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ const char		*quote_type_str(t_quote_type q);
 char			*strip_comments(const char *input);
 void            classify_redirection_files(t_token *token_list);
 int 			check_unmatched_quotes(const char *input);
+t_fragment		*extract_dollar_quote(const char *text, int *i);
+
 
 // Additional function prototypes for lexer_utils5.c
 t_fragment      *duplicate_fragment(t_fragment *frag);
