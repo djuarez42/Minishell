@@ -1,0 +1,1779 @@
+=== List of All Failing Tests ===
+
+Test #: echo cd ~ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:7)
+Test #: echo "'$USER'" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:19)
+Test #: echo '"'$USER'"' (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:23)
+Test #: echo "''$USER''" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:25)
+Test #: echo '"'"$USER"'"' (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:29)
+Test #: echo $"HOME"$USER (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:31)
+Test #: echo $"HOM"E$USER (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:33)
+Test #: echo $"HOME" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:37)
+Test #: echo $"42$" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:39)
+Test #: echo """"""""$USER"""""""" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:41)
+Test #: echo hi >./outfiles/outfile01 | echo bye (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:45)
+Test #: echo <123 <456 hi | echo 42 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:47)
+Test #: echo \\$USER (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:61)
+Test #: echo \\\$USER (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:63)
+Test #: echo \\\\$USER (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:65)
+Test #: echo \\\\\$USER (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:67)
+Test #: echo \\\\\\\\\$USER (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:69)
+Test #: echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:71)
+Test #: echo '$USER' "$USER" "text  ' text" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:77)
+Test #: echo "'$USER'" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:83)
+Test #: echo " '$USER' " (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:85)
+Test #: echo text"$USER" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:87)
+Test #: echo text"'$USER'" ' $USER ' (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:89)
+Test #: echo "text"   "$USER"    "$USER" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:91)
+Test #: echo ''''''''''$USER'''''''''' (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:95)
+Test #: echo """"""""$USER"""""""" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:97)
+Test #: echo $USER'$USER'text oui oui     oui  oui $USER oui      $USER '' (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:99)
+Test #: echo "text" "text$USER" ... "$USER" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:101)
+Test #: echo "" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:107)
+Test #: echo '' "" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:109)
+Test #: eCho (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:181)
+Test #: eChO (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:183)
+Test #: eCHO (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:185)
+Test #: ECHO (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:187)
+Test #: cd "doesntexist" 2>/dev/null  (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:239)
+Test #: cd "wtf" 2>/dev/null  (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:243)
+Test #: cd ? (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:245)
+Test #: cd + (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:247)
+Test #: cd _ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:249)
+Test #: cd woof (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:251)
+Test #: cd bark bark (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:253)
+Test #: cd ../../ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:290)
+Test #: pwd (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:314)
+Test #: pwd (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:328)
+Test #: pwd (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:333)
+Test #: pwd (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:337)
+Test #: pwd (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:347)
+Test #: env | grep DOESNT_EXIST (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:352)
+Test #: env what (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:360)
+Test #: /bin/echo $HALLO42 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:376)
+Test #: export =============123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:388)
+Test #: export (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:390)
+Test #: export = (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:392)
+Test #: export =42 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:394)
+Test #: export ''='' (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:396)
+Test #: export ""="" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:398)
+Test #: export $?  (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:410)
+Test #: export --TEST=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:420)
+Test #: export ''='' (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:422)
+Test #: export "="="=" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:424)
+Test #: export '='='=' (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:426)
+Test #: export TE-ST=100 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:428)
+Test #: export -TEST=100 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:430)
+Test #: export TEST-=100 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:432)
+Test #: export ========== (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:436)
+Test #: export 1TEST= (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:438)
+Test #: export ""="" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:440)
+Test #: export TE+S=T="" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:444)
+Test #: export TES.T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:446)
+Test #: export TES.T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:448)
+Test #: export TES+T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:450)
+Test #: export TES}T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:454)
+Test #: export TES{T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:456)
+Test #: export TES-T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:458)
+Test #: export -TEST=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:460)
+Test #: export TE*ST=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:468)
+Test #: export TES#T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:470)
+Test #: export TES@T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:472)
+Test #: export TES!T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:474)
+Test #: export =============123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:478)
+Test #: export +++++++=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:480)
+Test #: export TES^T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:484)
+Test #: export TES!T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:486)
+Test #: export TES\~T=123 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:488)
+Test #: export TEST+=100 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:490)
+Test #: /bin/echo $test (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:505)
+Test #: /bin/echo $mini_test (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:509)
+Test #: unset "" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:518)
+Test #: unset = (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:520)
+Test #: unset "=" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:522)
+Test #: unset ""= (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:524)
+Test #: unset ="" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:526)
+Test #: unset == (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:528)
+Test #: unset ? (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:530)
+Test #: unset "?" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:532)
+Test #: unset $ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:534)
+Test #: unset "$" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:536)
+Test #: unset $"" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:538)
+Test #: unset TES;T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:552)
+Test #: unset TES.T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:554)
+Test #: unset TES+T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:556)
+Test #: unset TES=T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:558)
+Test #: unset TES}T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:560)
+Test #: unset TES{T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:562)
+Test #: unset TES-T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:564)
+Test #: unset -TEST (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:566)
+Test #: unset TE*ST (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:574)
+Test #: unset TES#T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:576)
+Test #: unset TES@T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:578)
+Test #: unset TES!T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:580)
+Test #: unset ============ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:584)
+Test #: unset +++++++ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:586)
+Test #: unset TES^T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:602)
+Test #: unset TES!T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:604)
+Test #: unset TES\~T (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:606)
+Test #: /bin/echo $HOME (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:608)
+Test #: /bin/echo $HOME (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:612)
+Test #: /bin/echo $HOME (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:616)
+Test #: /bin/echo $HOME (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:622)
+Test #: exit something somethingv2 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:633)
+Test #: exit 0 0 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:635)
+Test #: exit "" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:639)
+Test #: exit +++++ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:655)
+Test #: exit ++++++ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:657)
+Test #: exit ++1 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:661)
+Test #: exit ++12560 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:663)
+Test #: exit ----- (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:665)
+Test #: exit ------ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:667)
+Test #: exit --1 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:671)
+Test #: exit --12560 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:675)
+Test #: exit 1 2 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:679)
+Test #: exit 1 2 3 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:681)
+Test #: exit A (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:683)
+Test #: exit A 2 3 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:685)
+Test #: exit "A" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:687)
+Test #: exit "+++" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:689)
+Test #: exit ++++3193912939 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:691)
+Test #: exit +++000 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:699)
+Test #: exit ++++000 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:701)
+Test #: exit ---000 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:703)
+Test #: exit ----000 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:705)
+Test #: exit "something" (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:707)
+Test #: exit x (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:709)
+Test #: exit echo (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:711)
+Test #: exit cd .. (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:713)
+Test #: exit exit (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:715)
+Test #: exit 42 42 42 42 42  (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:717)
+
+=== Detailed Test Results ===
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:7
+=== Test command ===
+    
+    echo cd ~
+    
+BASH OUTPUT:
+cd /home/ekakhmad
+
+MINISHELL OUTPUT:
+cd ~
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:19
+=== Test command ===
+    
+    echo "'$USER'"
+    
+BASH OUTPUT:
+'ekakhmad'
+
+MINISHELL OUTPUT:
+'$USER'
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:23
+=== Test command ===
+    
+    echo '"'$USER'"'
+    
+BASH OUTPUT:
+"ekakhmad"
+
+MINISHELL OUTPUT:
+"$USER"
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:25
+=== Test command ===
+    
+    echo "''$USER''"
+    
+BASH OUTPUT:
+''ekakhmad''
+
+MINISHELL OUTPUT:
+''$USER''
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:29
+=== Test command ===
+    
+    echo '"'"$USER"'"'
+    
+BASH OUTPUT:
+"ekakhmad"
+
+MINISHELL OUTPUT:
+"$USER"
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:31
+=== Test command ===
+    
+    echo $"HOME"$USER
+    
+BASH OUTPUT:
+HOMEekakhmad
+
+MINISHELL OUTPUT:
+/home/ekakhmadekakhmad
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:33
+=== Test command ===
+    
+    echo $"HOM"E$USER
+    
+BASH OUTPUT:
+HOMEekakhmad
+
+MINISHELL OUTPUT:
+/home/ekakhmadekakhmad
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:37
+=== Test command ===
+    
+    echo $"HOME"
+    
+BASH OUTPUT:
+HOME
+
+MINISHELL OUTPUT:
+/home/ekakhmad
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:39
+=== Test command ===
+    
+    echo $"42$"
+    
+BASH OUTPUT:
+42$
+
+MINISHELL OUTPUT:
+$42$
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:41
+=== Test command ===
+    
+    echo """"""""$USER""""""""
+    
+BASH OUTPUT:
+ekakhmad
+
+MINISHELL OUTPUT:
+$USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:45
+=== Test command ===
+    
+    echo hi >./outfiles/outfile01 | echo bye
+    
+BASH OUTPUT:
+bye
+
+MINISHELL OUTPUT:
+bye
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:47
+=== Test command ===
+    
+    echo <123 <456 hi | echo 42
+    
+BASH OUTPUT:
+42
+
+MINISHELL OUTPUT:
+42
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:61
+=== Test command ===
+    
+    echo \\$USER
+    
+BASH OUTPUT:
+\ekakhmad
+
+MINISHELL OUTPUT:
+\$USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:63
+=== Test command ===
+    
+    echo \\\$USER
+    
+BASH OUTPUT:
+\$USER
+
+MINISHELL OUTPUT:
+\\$USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:65
+=== Test command ===
+    
+    echo \\\\$USER
+    
+BASH OUTPUT:
+\\ekakhmad
+
+MINISHELL OUTPUT:
+\\\$USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:67
+=== Test command ===
+    
+    echo \\\\\$USER
+    
+BASH OUTPUT:
+\\$USER
+
+MINISHELL OUTPUT:
+\\\\$USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:69
+=== Test command ===
+    
+    echo \\\\\\\\\$USER
+    
+BASH OUTPUT:
+\\\\$USER
+
+MINISHELL OUTPUT:
+\\\\\\\\$USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:71
+=== Test command ===
+    
+    echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD
+    
+BASH OUTPUT:
+\\\\\\\\\\\\\\\\$USER $PATH \/home/ekakhmad/Minishell/42_minishell_tester
+
+MINISHELL OUTPUT:
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER $PATH \$PWD
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:77
+=== Test command ===
+    
+    echo '$USER' "$USER" "text  ' text"
+    
+BASH OUTPUT:
+$USER ekakhmad text  ' text
+
+MINISHELL OUTPUT:
+$USER $USER text  ' text
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:83
+=== Test command ===
+    
+    echo "'$USER'"
+    
+BASH OUTPUT:
+'ekakhmad'
+
+MINISHELL OUTPUT:
+'$USER'
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:85
+=== Test command ===
+    
+    echo " '$USER' "
+    
+BASH OUTPUT:
+ 'ekakhmad' 
+
+MINISHELL OUTPUT:
+ '$USER' 
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:87
+=== Test command ===
+    
+    echo text"$USER"
+    
+BASH OUTPUT:
+textekakhmad
+
+MINISHELL OUTPUT:
+text$USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:89
+=== Test command ===
+    
+    echo text"'$USER'" ' $USER '
+    
+BASH OUTPUT:
+text'ekakhmad'  $USER 
+
+MINISHELL OUTPUT:
+text'$USER'  $USER 
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:91
+=== Test command ===
+    
+    echo "text"   "$USER"    "$USER"
+    
+BASH OUTPUT:
+text ekakhmad ekakhmad
+
+MINISHELL OUTPUT:
+text $USER $USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:95
+=== Test command ===
+    
+    echo ''''''''''$USER''''''''''
+    
+BASH OUTPUT:
+ekakhmad
+
+MINISHELL OUTPUT:
+$USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:97
+=== Test command ===
+    
+    echo """"""""$USER""""""""
+    
+BASH OUTPUT:
+ekakhmad
+
+MINISHELL OUTPUT:
+$USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:99
+=== Test command ===
+    
+    echo $USER'$USER'text oui oui     oui  oui $USER oui      $USER ''
+    
+BASH OUTPUT:
+ekakhmad$USERtext oui oui oui oui ekakhmad oui ekakhmad 
+
+MINISHELL OUTPUT:
+$USER$USERtext oui oui oui oui ekakhmad oui ekakhmad 
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:101
+=== Test command ===
+    
+    echo "text" "text$USER" ... "$USER"
+    
+BASH OUTPUT:
+text textekakhmad ... ekakhmad
+
+MINISHELL OUTPUT:
+text text$USER ... $USER
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:107
+=== Test command ===
+    
+    echo ""
+    
+BASH OUTPUT:
+
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:109
+=== Test command ===
+    
+    echo '' ""
+    
+BASH OUTPUT:
+ 
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:181
+=== Test command ===
+    
+    eCho
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:183
+=== Test command ===
+    
+    eChO
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:185
+=== Test command ===
+    
+    eCHO
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:187
+=== Test command ===
+    
+    ECHO
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:239
+=== Test command ===
+    
+    cd "doesntexist" 2>/dev/null 
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:243
+=== Test command ===
+    
+    cd "wtf" 2>/dev/null 
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:245
+=== Test command ===
+    
+    cd ?
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:247
+=== Test command ===
+    
+    cd +
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:249
+=== Test command ===
+    
+    cd _
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:251
+=== Test command ===
+    
+    cd woof
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:253
+=== Test command ===
+    
+    cd bark bark
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:290
+=== Test command ===
+    
+    cd ../../
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:314
+=== Test command ===
+    
+    pwd
+    
+BASH OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+MINISHELL OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:328
+=== Test command ===
+    
+    pwd
+    
+BASH OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+MINISHELL OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:333
+=== Test command ===
+    
+    pwd
+    
+BASH OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+MINISHELL OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:337
+=== Test command ===
+    
+    pwd
+    
+BASH OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+MINISHELL OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:347
+=== Test command ===
+    
+    pwd
+    
+BASH OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+MINISHELL OUTPUT:
+/home/ekakhmad/Minishell/42_minishell_tester
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:352
+=== Test command ===
+    
+    env | grep DOESNT_EXIST
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:360
+=== Test command ===
+    
+    env what
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+SHELL=/bin/zsh
+LSCOLORS=Gxfxcxdxbxegedabagacad
+SESSION_MANAGER=local/cbr13s5.42barcelona.com:@/tmp/.ICE-unix/135042,unix/cbr13s5.42barcelona.com:/tmp/.ICE-unix/135042
+USER_ZDOTDIR=/home/ekakhmad
+QT_ACCESSIBILITY=1
+COLORTERM=truecolor
+XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+SSH_AGENT_LAUNCHER=gnome-keyring
+LESS=-R
+XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session3
+XDG_MENU_PREFIX=gnome-
+TERM_PROGRAM_VERSION=1.103.2
+GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+GTK_IM_MODULE=ibus
+LANGUAGE=en
+SSH_AUTH_SOCK=/run/user/101836/keyring/ssh
+XMODIFIERS=@im=ibus
+DESKTOP_SESSION=ubuntu
+FT_HOOK_NAME=login-user
+GTK_MODULES=gail:atk-bridge
+FT_HOOK_PATHNAME=login-user.d
+PWD=/home/ekakhmad/Minishell/42_minishell_tester
+KRB5CCNAME=FILE:/tmp/krb5cc_101836_Tbl5NY
+XDG_SESSION_DESKTOP=ubuntu
+LOGNAME=ekakhmad
+XDG_SESSION_TYPE=x11
+GPG_AGENT_INFO=/run/user/101836/gnupg/S.gpg-agent:0:1
+SYSTEMD_EXEC_PID=135064
+XAUTHORITY=/home/ekakhmad/.Xauthority
+VSCODE_GIT_ASKPASS_NODE=/home/ekakhmad/.local/share/vscode/code
+XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/ekakhmad
+GJS_DEBUG_TOPICS=JS ERROR;JS LOG
+VSCODE_INJECTION=1
+GDM_LANG=en
+HOME=/home/ekakhmad
+IM_CONFIG_PHASE=1
+LANG=en_US.UTF-8
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+XDG_CURRENT_DESKTOP=Unity
+GIT_ASKPASS=/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass.sh
+XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+INVOCATION_ID=f4d84709ff184d35a7be4443ebd3f45b
+MANAGERPID=134451
+CHROME_DESKTOP=code.desktop
+GJS_DEBUG_OUTPUT=stderr
+VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+XDG_SESSION_CLASS=user
+TERM=xterm-256color
+ZSH=/home/ekakhmad/.oh-my-zsh
+ZDOTDIR=/home/ekakhmad
+LIBVIRT_DEFAULT_URI=qemu:///system
+USER=ekakhmad
+GIT_PAGER=cat
+VSCODE_GIT_IPC_HANDLE=/run/user/101836/vscode-git-7413fa43eb.sock
+DISPLAY=:0
+SHLVL=1
+PAGER=less
+QT_IM_MODULE=ibus
+XDG_RUNTIME_DIR=/run/user/101836
+DOCKER_HOST=unix:///run/user/101836/docker.sock
+VSCODE_GIT_ASKPASS_MAIN=/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass-main.js
+JOURNAL_STREAM=8:742920
+XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+GDK_BACKEND=x11
+PATH=/home/ekakhmad/bin:/home/ekakhmad/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ekakhmad/.local/share/vscode/:/home/ekakhmad/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/ekakhmad/.local/share/vscode/
+MACADDRESS=18:7e:b9:06:d5:ca
+GDMSESSION=ubuntu
+ORIGINAL_XDG_CURRENT_DESKTOP=ubuntu:GNOME
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/101836/bus
+MAIL=ekakhmad@student.42.fr
+GIO_LAUNCHED_DESKTOP_FILE_PID=135903
+GIO_LAUNCHED_DESKTOP_FILE=/home/ekakhmad/.local/share/applications/vscode.desktop
+OLDPWD=/home/ekakhmad/Minishell/42_minishell_tester
+TERM_PROGRAM=vscode
+_=../minishell
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:376
+=== Test command ===
+    
+    /bin/echo $HALLO42
+    
+BASH OUTPUT:
+
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:388
+=== Test command ===
+    
+    export =============123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:390
+=== Test command ===
+    
+    export
+    
+BASH OUTPUT:
+declare -x CHROME_DESKTOP="code.desktop"
+declare -x COLORTERM="truecolor"
+declare -x DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/101836/bus"
+declare -x DESKTOP_SESSION="ubuntu"
+declare -x DISPLAY=":0"
+declare -x DOCKER_HOST="unix:///run/user/101836/docker.sock"
+declare -x FT_HOOK_NAME="login-user"
+declare -x FT_HOOK_PATHNAME="login-user.d"
+declare -x GDK_BACKEND="x11"
+declare -x GDMSESSION="ubuntu"
+declare -x GDM_LANG="en"
+declare -x GIO_LAUNCHED_DESKTOP_FILE="/home/ekakhmad/.local/share/applications/vscode.desktop"
+declare -x GIO_LAUNCHED_DESKTOP_FILE_PID="135903"
+declare -x GIT_ASKPASS="/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass.sh"
+declare -x GIT_PAGER="cat"
+declare -x GJS_DEBUG_OUTPUT="stderr"
+declare -x GJS_DEBUG_TOPICS="JS ERROR;JS LOG"
+declare -x GNOME_DESKTOP_SESSION_ID="this-is-deprecated"
+declare -x GPG_AGENT_INFO="/run/user/101836/gnupg/S.gpg-agent:0:1"
+declare -x GTK_IM_MODULE="ibus"
+declare -x GTK_MODULES="gail:atk-bridge"
+declare -x HOME="/home/ekakhmad"
+declare -x IM_CONFIG_PHASE="1"
+declare -x INVOCATION_ID="f4d84709ff184d35a7be4443ebd3f45b"
+declare -x JOURNAL_STREAM="8:742920"
+declare -x KRB5CCNAME="FILE:/tmp/krb5cc_101836_Tbl5NY"
+declare -x LANG="en_US.UTF-8"
+declare -x LANGUAGE="en"
+declare -x LESS="-R"
+declare -x LIBVIRT_DEFAULT_URI="qemu:///system"
+declare -x LOGNAME="ekakhmad"
+declare -x LSCOLORS="Gxfxcxdxbxegedabagacad"
+declare -x LS_COLORS="rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:"
+declare -x MACADDRESS="18:7e:b9:06:d5:ca"
+declare -x MAIL="ekakhmad@student.42.fr"
+declare -x MANAGERPID="134451"
+declare -x OLDPWD="/home/ekakhmad/Minishell/42_minishell_tester"
+declare -x ORIGINAL_XDG_CURRENT_DESKTOP="ubuntu:GNOME"
+declare -x PAGER="less"
+declare -x PATH="/home/ekakhmad/bin:/home/ekakhmad/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ekakhmad/.local/share/vscode/:/home/ekakhmad/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/ekakhmad/.local/share/vscode/"
+declare -x PWD="/home/ekakhmad/Minishell/42_minishell_tester"
+declare -x QT_ACCESSIBILITY="1"
+declare -x QT_IM_MODULE="ibus"
+declare -x SESSION_MANAGER="local/cbr13s5.42barcelona.com:@/tmp/.ICE-unix/135042,unix/cbr13s5.42barcelona.com:/tmp/.ICE-unix/135042"
+declare -x SHELL="/bin/zsh"
+declare -x SHLVL="3"
+declare -x SSH_AGENT_LAUNCHER="gnome-keyring"
+declare -x SSH_AUTH_SOCK="/run/user/101836/keyring/ssh"
+declare -x SYSTEMD_EXEC_PID="135064"
+declare -x TERM="xterm-256color"
+declare -x TERM_PROGRAM="vscode"
+declare -x TERM_PROGRAM_VERSION="1.103.2"
+declare -x USER="ekakhmad"
+declare -x USER_ZDOTDIR="/home/ekakhmad"
+declare -x VSCODE_GIT_ASKPASS_EXTRA_ARGS=""
+declare -x VSCODE_GIT_ASKPASS_MAIN="/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass-main.js"
+declare -x VSCODE_GIT_ASKPASS_NODE="/home/ekakhmad/.local/share/vscode/code"
+declare -x VSCODE_GIT_IPC_HANDLE="/run/user/101836/vscode-git-7413fa43eb.sock"
+declare -x VSCODE_INJECTION="1"
+declare -x XAUTHORITY="/home/ekakhmad/.Xauthority"
+declare -x XDG_CONFIG_DIRS="/etc/xdg/xdg-ubuntu:/etc/xdg"
+declare -x XDG_CURRENT_DESKTOP="Unity"
+declare -x XDG_DATA_DIRS="/usr/share/ubuntu:/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop"
+declare -x XDG_GREETER_DATA_DIR="/var/lib/lightdm-data/ekakhmad"
+declare -x XDG_MENU_PREFIX="gnome-"
+declare -x XDG_RUNTIME_DIR="/run/user/101836"
+declare -x XDG_SEAT_PATH="/org/freedesktop/DisplayManager/Seat0"
+declare -x XDG_SESSION_CLASS="user"
+declare -x XDG_SESSION_DESKTOP="ubuntu"
+declare -x XDG_SESSION_PATH="/org/freedesktop/DisplayManager/Session3"
+declare -x XDG_SESSION_TYPE="x11"
+declare -x XMODIFIERS="@im=ibus"
+declare -x ZDOTDIR="/home/ekakhmad"
+declare -x ZSH="/home/ekakhmad/.oh-my-zsh"
+declare -x _="/usr/bin/bash"
+
+MINISHELL OUTPUT:
+SHELL=/bin/zsh
+LSCOLORS=Gxfxcxdxbxegedabagacad
+SESSION_MANAGER=local/cbr13s5.42barcelona.com:@/tmp/.ICE-unix/135042,unix/cbr13s5.42barcelona.com:/tmp/.ICE-unix/135042
+USER_ZDOTDIR=/home/ekakhmad
+QT_ACCESSIBILITY=1
+COLORTERM=truecolor
+XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+SSH_AGENT_LAUNCHER=gnome-keyring
+LESS=-R
+XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session3
+XDG_MENU_PREFIX=gnome-
+TERM_PROGRAM_VERSION=1.103.2
+GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+GTK_IM_MODULE=ibus
+LANGUAGE=en
+SSH_AUTH_SOCK=/run/user/101836/keyring/ssh
+XMODIFIERS=@im=ibus
+DESKTOP_SESSION=ubuntu
+FT_HOOK_NAME=login-user
+GTK_MODULES=gail:atk-bridge
+FT_HOOK_PATHNAME=login-user.d
+PWD=/home/ekakhmad/Minishell/42_minishell_tester
+KRB5CCNAME=FILE:/tmp/krb5cc_101836_Tbl5NY
+XDG_SESSION_DESKTOP=ubuntu
+LOGNAME=ekakhmad
+XDG_SESSION_TYPE=x11
+GPG_AGENT_INFO=/run/user/101836/gnupg/S.gpg-agent:0:1
+SYSTEMD_EXEC_PID=135064
+XAUTHORITY=/home/ekakhmad/.Xauthority
+VSCODE_GIT_ASKPASS_NODE=/home/ekakhmad/.local/share/vscode/code
+XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/ekakhmad
+GJS_DEBUG_TOPICS=JS ERROR;JS LOG
+VSCODE_INJECTION=1
+GDM_LANG=en
+HOME=/home/ekakhmad
+IM_CONFIG_PHASE=1
+LANG=en_US.UTF-8
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+XDG_CURRENT_DESKTOP=Unity
+GIT_ASKPASS=/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass.sh
+XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+INVOCATION_ID=f4d84709ff184d35a7be4443ebd3f45b
+MANAGERPID=134451
+CHROME_DESKTOP=code.desktop
+GJS_DEBUG_OUTPUT=stderr
+VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+XDG_SESSION_CLASS=user
+TERM=xterm-256color
+ZSH=/home/ekakhmad/.oh-my-zsh
+ZDOTDIR=/home/ekakhmad
+LIBVIRT_DEFAULT_URI=qemu:///system
+USER=ekakhmad
+GIT_PAGER=cat
+VSCODE_GIT_IPC_HANDLE=/run/user/101836/vscode-git-7413fa43eb.sock
+DISPLAY=:0
+SHLVL=1
+PAGER=less
+QT_IM_MODULE=ibus
+XDG_RUNTIME_DIR=/run/user/101836
+DOCKER_HOST=unix:///run/user/101836/docker.sock
+VSCODE_GIT_ASKPASS_MAIN=/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass-main.js
+JOURNAL_STREAM=8:742920
+XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+GDK_BACKEND=x11
+PATH=/home/ekakhmad/bin:/home/ekakhmad/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ekakhmad/.local/share/vscode/:/home/ekakhmad/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/ekakhmad/.local/share/vscode/
+MACADDRESS=18:7e:b9:06:d5:ca
+GDMSESSION=ubuntu
+ORIGINAL_XDG_CURRENT_DESKTOP=ubuntu:GNOME
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/101836/bus
+MAIL=ekakhmad@student.42.fr
+GIO_LAUNCHED_DESKTOP_FILE_PID=135903
+GIO_LAUNCHED_DESKTOP_FILE=/home/ekakhmad/.local/share/applications/vscode.desktop
+OLDPWD=/home/ekakhmad/Minishell/42_minishell_tester
+TERM_PROGRAM=vscode
+_=../minishell
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:392
+=== Test command ===
+    
+    export =
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:394
+=== Test command ===
+    
+    export =42
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:396
+=== Test command ===
+    
+    export ''=''
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:398
+=== Test command ===
+    
+    export ""=""
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:410
+=== Test command ===
+    
+    export $? 
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:420
+=== Test command ===
+    
+    export --TEST=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:422
+=== Test command ===
+    
+    export ''=''
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:424
+=== Test command ===
+    
+    export "="="="
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:426
+=== Test command ===
+    
+    export '='='='
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:428
+=== Test command ===
+    
+    export TE-ST=100
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:430
+=== Test command ===
+    
+    export -TEST=100
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:432
+=== Test command ===
+    
+    export TEST-=100
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:436
+=== Test command ===
+    
+    export ==========
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:438
+=== Test command ===
+    
+    export 1TEST=
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:440
+=== Test command ===
+    
+    export ""=""
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:444
+=== Test command ===
+    
+    export TE+S=T=""
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:446
+=== Test command ===
+    
+    export TES.T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:448
+=== Test command ===
+    
+    export TES.T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:450
+=== Test command ===
+    
+    export TES+T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:454
+=== Test command ===
+    
+    export TES}T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:456
+=== Test command ===
+    
+    export TES{T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:458
+=== Test command ===
+    
+    export TES-T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:460
+=== Test command ===
+    
+    export -TEST=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:468
+=== Test command ===
+    
+    export TE*ST=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:470
+=== Test command ===
+    
+    export TES#T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:472
+=== Test command ===
+    
+    export TES@T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:474
+=== Test command ===
+    
+    export TES!T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:478
+=== Test command ===
+    
+    export =============123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:480
+=== Test command ===
+    
+    export +++++++=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:484
+=== Test command ===
+    
+    export TES^T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:486
+=== Test command ===
+    
+    export TES!T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:488
+=== Test command ===
+    
+    export TES\~T=123
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:490
+=== Test command ===
+    
+    export TEST+=100
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:505
+=== Test command ===
+    
+    /bin/echo $test
+    
+BASH OUTPUT:
+
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:509
+=== Test command ===
+    
+    /bin/echo $mini_test
+    
+BASH OUTPUT:
+
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:518
+=== Test command ===
+    
+    unset ""
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:520
+=== Test command ===
+    
+    unset =
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:522
+=== Test command ===
+    
+    unset "="
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:524
+=== Test command ===
+    
+    unset ""=
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:526
+=== Test command ===
+    
+    unset =""
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:528
+=== Test command ===
+    
+    unset ==
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:530
+=== Test command ===
+    
+    unset ?
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:532
+=== Test command ===
+    
+    unset "?"
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:534
+=== Test command ===
+    
+    unset $
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:536
+=== Test command ===
+    
+    unset "$"
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:538
+=== Test command ===
+    
+    unset $""
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:552
+=== Test command ===
+    
+    unset TES;T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:554
+=== Test command ===
+    
+    unset TES.T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:556
+=== Test command ===
+    
+    unset TES+T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:558
+=== Test command ===
+    
+    unset TES=T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:560
+=== Test command ===
+    
+    unset TES}T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:562
+=== Test command ===
+    
+    unset TES{T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:564
+=== Test command ===
+    
+    unset TES-T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:566
+=== Test command ===
+    
+    unset -TEST
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:574
+=== Test command ===
+    
+    unset TE*ST
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:576
+=== Test command ===
+    
+    unset TES#T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:578
+=== Test command ===
+    
+    unset TES@T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:580
+=== Test command ===
+    
+    unset TES!T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:584
+=== Test command ===
+    
+    unset ============
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:586
+=== Test command ===
+    
+    unset +++++++
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:602
+=== Test command ===
+    
+    unset TES^T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:604
+=== Test command ===
+    
+    unset TES!T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:606
+=== Test command ===
+    
+    unset TES\~T
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:608
+=== Test command ===
+    
+    /bin/echo $HOME
+    
+BASH OUTPUT:
+/home/ekakhmad
+
+MINISHELL OUTPUT:
+/home/ekakhmad
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:612
+=== Test command ===
+    
+    /bin/echo $HOME
+    
+BASH OUTPUT:
+/home/ekakhmad
+
+MINISHELL OUTPUT:
+/home/ekakhmad
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:616
+=== Test command ===
+    
+    /bin/echo $HOME
+    
+BASH OUTPUT:
+/home/ekakhmad
+
+MINISHELL OUTPUT:
+/home/ekakhmad
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:622
+=== Test command ===
+    
+    /bin/echo $HOME
+    
+BASH OUTPUT:
+/home/ekakhmad
+
+MINISHELL OUTPUT:
+/home/ekakhmad
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:633
+=== Test command ===
+    
+    exit something somethingv2
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:635
+=== Test command ===
+    
+    exit 0 0
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:639
+=== Test command ===
+    
+    exit ""
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:655
+=== Test command ===
+    
+    exit +++++
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:657
+=== Test command ===
+    
+    exit ++++++
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:661
+=== Test command ===
+    
+    exit ++1
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:663
+=== Test command ===
+    
+    exit ++12560
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:665
+=== Test command ===
+    
+    exit -----
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:667
+=== Test command ===
+    
+    exit ------
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:671
+=== Test command ===
+    
+    exit --1
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:675
+=== Test command ===
+    
+    exit --12560
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:679
+=== Test command ===
+    
+    exit 1 2
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:681
+=== Test command ===
+    
+    exit 1 2 3
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:683
+=== Test command ===
+    
+    exit A
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:685
+=== Test command ===
+    
+    exit A 2 3
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:687
+=== Test command ===
+    
+    exit "A"
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:689
+=== Test command ===
+    
+    exit "+++"
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:691
+=== Test command ===
+    
+    exit ++++3193912939
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:699
+=== Test command ===
+    
+    exit +++000
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:701
+=== Test command ===
+    
+    exit ++++000
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:703
+=== Test command ===
+    
+    exit ---000
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:705
+=== Test command ===
+    
+    exit ----000
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:707
+=== Test command ===
+    
+    exit "something"
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:709
+=== Test command ===
+    
+    exit x
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:711
+=== Test command ===
+    
+    exit echo
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:713
+=== Test command ===
+    
+    exit cd ..
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:715
+=== Test command ===
+    
+    exit exit
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/1_builtins.sh:717
+=== Test command ===
+    
+    exit 42 42 42 42 42 
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+

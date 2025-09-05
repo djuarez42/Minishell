@@ -18,6 +18,7 @@ compare_output() {
     echo
     
     # Get bash output and store it
+    # Get bash output and store it
     echo "BASH OUTPUT:"
     local bash_output=$(bash -c "$test_cmd" 2>&1)
     echo "$bash_output"
@@ -27,8 +28,7 @@ compare_output() {
     
     # Get minishell output and store it
     echo "MINISHELL OUTPUT:"
-    local ms_output=$(echo "$test_cmd" | timeout 3 /home/ekakhmad/Minishell/minishell 2>&1)
-    echo "$ms_output"
+    echo "$test_cmd" | timeout 3 ../minishell 2>&1
     local ms_exit=$?
     echo "[EXIT CODE: $ms_exit]"
     echo
