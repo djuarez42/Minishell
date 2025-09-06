@@ -32,6 +32,7 @@ output.txt
 
 # External testers and tools
 42_minishell_tester/  # Commented out to include our custom tester
+42_minishell_tester/file
 
 # Test files and outputs
 test_*.txt
