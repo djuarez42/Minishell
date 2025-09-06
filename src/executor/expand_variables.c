@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/03 21:09:54 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/06 19:59:08 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,17 @@ static int is_dollar_string(const char *input, int pos)
 char *expand_variables(const char *input, char **envp, t_exec_state *state,
                        t_quote_type quote)
 {
-    int i = 0;
-    char *tmp = NULL;
-    char *piece;
+    int     i;
+    char    *tmp;
+    char    *piece;
 
     if (!input)
-        return NULL;
+        return (NULL);
     if (input[0] == '\0')
-        return ft_strdup("");
+        return (ft_strdup(""));
 
+    i = 0;
+    tmp = NULL;
     while (input[i])
     {
         if (input[i] == '\\' && input[i + 1] == '$')
@@ -91,15 +93,14 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
         else if (input[i] == '$')
         {
             if (is_dollar_string(input, i))
-                piece = handle_dollar_string(input, &i); // devuelve literal sin expandir
+                piece = handle_dollar_string(input, &i);
             else if (quote == QUOTE_DOUBLE || quote == QUOTE_NONE)
                 piece = handle_dollar_quotes_fix(input, &i, envp, state);
-            else // quote simple
+            else
             {
                 piece = ft_strdup("$");
                 i++;
             }
-
             tmp = str_append(tmp, piece);
             free(piece);
         }
@@ -111,6 +112,6 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
             i++;
         }
     }
-    return tmp;
+    return (tmp);
 }
 

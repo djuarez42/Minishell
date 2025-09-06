@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+         #
+#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/01 12:03:26 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/09/06 02:50:12 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,7 @@ SRC = main.c \
 		src/parser/parser.c \
 		src/parser/parser_utils.c \
 		src/parser/parser_utils2.c \
+		src/parser/parser_utils3.c \
 		src/parser/parser_print_utils.c \
 		src/executor/executor.c \
 		src/executor/executor_utils.c \

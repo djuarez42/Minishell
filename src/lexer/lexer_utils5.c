@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/03 18:53:21 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/06 01:27:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool is_operator_fragment(t_fragment *frag)
             strcmp(text, ">>") == 0);
 }
 
-t_token *build_token_list_from_fragments(t_token *raw)
+/*t_token *build_token_list_from_fragments(t_token *raw)
 {
     if (!raw)
         return NULL;
@@ -116,7 +116,7 @@ t_token *build_token_list_from_fragments(t_token *raw)
     assign_token_types(head);
     head = append_token_eof(head);
     return head;
-}
+}*/
 
 bool lx_is_space_between(t_fragment *cur, t_fragment *next)
 {
@@ -190,6 +190,7 @@ t_fragment *duplicate_fragment(t_fragment *frag)
 }
 
 t_token *append_token_eof(t_token *head)
+
 {
     t_token *new;
 
@@ -213,4 +214,17 @@ t_token *append_token_eof(t_token *head)
 
     cur->next = new;
     return head;
+}
+
+void free_tokens(t_token *tokens)
+{
+    t_token *tmp;
+    while (tokens)
+    {
+        tmp = tokens->next;
+        free_fragments(tokens->fragments);
+        free(tokens->final_text);
+        free(tokens);
+        tokens = tmp;
+    }
 }

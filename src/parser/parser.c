@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/03 21:08:01 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/06 19:58:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,35 +105,52 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 t_token *parse_arguments(t_token *cur, t_cmd *cmd,
                          char **envp, t_exec_state *state)
 {
-    int argc;
+    int argc = 0;
+    t_proc_ctx ctx;
 
-    argc = 0;
-    if (!init_cmd_args(cmd))
-        return (NULL);
+    ctx.cmd = cmd;
+    ctx.argc = &argc;
+    ctx.envp = envp;
+    ctx.state = state;
 
-    while (cur && cur->type != TOKEN_PIPE && cur->type != TOKEN_EOF)
+    while (cur && cur->type == TOKEN_WORD)
     {
-        if (cur->type == TOKEN_WORD)
+        printf("\n=== parse_arguments ===\n");
+        printf("Procesando token final_text='%s'\n",
+               cur->final_text ? cur->final_text : "(null)");
+
+        cmd->argv = process_token_with_quotes(cur, &ctx);
+
+        if (!cmd->argv)
         {
-            if (!process_token(cmd, cur, &argc, envp, state))
-            {
-                free_partial_cmd(cmd, argc);
-                return (NULL);
-            }
+            printf("DEBUG parse_arguments: fallo al procesar token '%s'\n",
+                   cur->final_text ? cur->final_text : "(null)");
+            free_partial_cmd(cmd, argc);
+            return (NULL);
         }
-        else if (cur->type == TOKEN_REDIRECT_OUT
-            || cur->type == TOKEN_REDIRECT_IN
-            || cur->type == TOKEN_APPEND
-            || cur->type == TOKEN_HEREDOC)
+        else
         {
-            break;
+            printf("DEBUG parse_arguments: token '%s' procesado -> argv[%d]='%s'\n",
+                   cur->final_text ? cur->final_text : "(null)",
+                   argc - 1,
+                   cmd->argv[argc - 1] ? cmd->argv[argc - 1] : "(null)");
         }
         cur = cur->next;
     }
 
     cmd->argv[argc] = NULL;
     cmd->argv_quote[argc] = QUOTE_NONE;
-    return (cur);
+
+    printf("=== parse_arguments end ===\n");
+    for (int i = 0; i < argc; i++)
+    {
+        printf("argv[%d] = '%s' (quote=%d)\n",
+               i,
+               cmd->argv[i] ? cmd->argv[i] : "(null)",
+               cmd->argv_quote[i]);
+    }
+
+    return cur;
 }
 
 
@@ -170,8 +187,7 @@ char *expand_fragment(const char *text, t_quote_type quote,
         return (ft_strdup("~")); // si no hay $HOME
     }
 
-    // 3. Variables ($VAR, $?)
-    // Si es $"" literal (dollar string), handle_dollar_string se encarga dentro de expand_variables
+    // 3. Variables ($VAR, $?, etc.)
     expanded = expand_variables(text, envp, state, quote);
     if (!expanded)
         return (NULL);

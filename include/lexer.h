@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/04 16:19:02 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/06 19:11:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef enum e_token_type
 {
 	TOKEN_WORD,// normal word   #0
 	TOKEN_PIPE,// pipe '|'      #1
-	TOKEN_REDIRECT_IN,// 		#2
+	TOKEN_REDIRECT_IN,// <		#2
 	TOKEN_REDIRECT_OUT,// >		#3
 	TOKEN_HEREDOC,// <<			#4
 	TOKEN_APPEND,// >>			#5
@@ -35,11 +35,11 @@ typedef enum e_token_type
 //Quotes
 typedef enum e_quote_type
 {
-	QUOTE_NONE,
-	QUOTE_SINGLE,
-	QUOTE_DOUBLE,
-	QUOTE_MIXED,
-	QUOTE_DOLLAR
+	QUOTE_NONE,   //#0
+	QUOTE_SINGLE, //#1
+	QUOTE_DOUBLE, //#2
+	QUOTE_MIXED,  //#3
+	QUOTE_DOLLAR  //#4
 }	t_quote_type;
 
 
@@ -73,6 +73,7 @@ void append_token(t_token **list, t_token *new_token);
 t_token *build_token_list_from_fragments(t_token *raw_tokens);
 void free_fragments(t_fragment *frag);
 void free_token_list(t_token *tokens);
+void free_tokens(t_token *tokens);
 
 enum lexer_state 
 {
@@ -87,7 +88,6 @@ t_token			*tokenize_input(const char *input);
 int				is_quote(char c);
 int				is_operator(char c);
 int				operator_len(const char *s);
-void			free_tokens(char **tokens, int count);
 int				is_blank(const char *s);
 t_token_type	determine_token_type(char *str);
 t_token			*build_token_list(char **tokens, t_quote_type *quotes);
@@ -118,6 +118,8 @@ char			*strip_comments(const char *input);
 void            classify_redirection_files(t_token *token_list);
 int 			check_unmatched_quotes(const char *input);
 t_fragment		*extract_dollar_quote(const char *text, int *i);
+t_fragment 		*parse_mixed_fragments(const char *text);
+int 			should_expand_fragment(t_fragment *frag);
 
 
 // Additional function prototypes for lexer_utils5.c
@@ -127,8 +129,8 @@ void            assign_token_types(t_token *head);
 
 // Debug functions
 void			print_fragments(t_fragment *fragments);
-void 			print_final_token_list(t_token *tokens);
-void 			print_clean_tokens_with_fragments(t_token *tokens);
+void 			print_tokens_raw(t_token *tokens);
+
 
 #endif
 
