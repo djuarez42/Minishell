@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 19:04:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:05:13 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void    add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd);
 char    **collect_heredoc_content(const char *delimiter, bool quoted);
 
 /* Aux de expansión en parser */
+void    free_expanded_texts(t_token *tok);
 void    expand_fragments(t_token *tok, char **envp, t_exec_state *state);
 char    *expand_fragment(const char *text, t_quote_type quote, char **envp, t_exec_state *state);
 //char    *build_final_text(t_token *tok, char **envp, t_exec_state *state);

@@ -45,13 +45,13 @@ t_token *tokenize_input(const char *input)
                                                  cur->quote_type, cur->has_space_after);
             append_fragment(&tok->fragments, frag_copy);
 
-            printf("DEBUG tokenizing OP: frag_copy text='%s' quote_type=%d\n",
-                   frag_copy->text, frag_copy->quote_type);
+            // printf("DEBUG tokenizing OP: frag_copy text='%s' quote_type=%d\n",
+            //        frag_copy->text, frag_copy->quote_type);
 
             tok->final_text = concat_fragments(tok->fragments);
-            printf("DEBUG tokenizing OP: final_text='%s' first frag quote_type=%d\n",
-                   tok->final_text,
-                   tok->fragments ? tok->fragments->quote_type : -1);
+            // printf("DEBUG tokenizing OP: final_text='%s' first frag quote_type=%d\n",
+            //        tok->final_text,
+            //        tok->fragments ? tok->fragments->quote_type : -1);
 
             if (!tokens)
                 tokens = tok;
@@ -72,8 +72,8 @@ t_token *tokenize_input(const char *input)
                                                  cur->quote_type, cur->has_space_after);
             append_fragment(&tok->fragments, frag_copy);
 
-            printf("DEBUG tokenizing WORD: frag_copy text='%s' quote_type=%d\n",
-                   frag_copy->text, frag_copy->quote_type);
+            // printf("DEBUG tokenizing WORD: frag_copy text='%s' quote_type=%d\n",
+            //        frag_copy->text, frag_copy->quote_type);
 
             if (cur->has_space_after)
             {
@@ -90,9 +90,9 @@ t_token *tokenize_input(const char *input)
         tok->type = determine_token_type(tok->fragments->text);
         tok->final_text = concat_fragments(tok->fragments);
 
-        printf("DEBUG tokenizing WORD: final_text='%s' first frag quote_type=%d\n",
-               tok->final_text,
-               tok->fragments ? tok->fragments->quote_type : -1);
+    // printf("DEBUG tokenizing WORD: final_text='%s' first frag quote_type=%d\n",
+    //        tok->final_text,
+    //        tok->fragments ? tok->fragments->quote_type : -1);
 
         if (!tokens)
             tokens = tok;

@@ -32,6 +32,10 @@ typedef struct s_heredoc_args
     char            *heredoc_path;
 }   t_heredoc_args;
 
+/* --- Special Echo Handler Functions --- */
+char    *process_ansi_c_quotes(const char *input);
+int     is_ansi_c_quoted(const char *str);
+
 /* --- Funciones principales --- */
 void    execute_cmds(t_cmd *cmd, char **envp);
 void    executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state);

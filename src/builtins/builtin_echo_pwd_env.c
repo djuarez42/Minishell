@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo_pwd_env.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/07 19:36:39 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:05:13 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,29 +28,16 @@ static int	is_n_flag(const char *s)
 	return (s[i] == '\0');
 }
 
-int bi_echo(t_cmd *cmd)
+static int bi_echo_with_argv(t_cmd *cmd)
 {
-    int n_flag = 0;
-
-    if (cmd->argv_final_text)
-    {
-        printf("DEBUG bi_echo: usando argv_final_text: '%s'\n", cmd->argv_final_text);
-
-        if (is_n_flag(cmd->argv_final_text))
-            n_flag = 1;
-
-        write(STDOUT_FILENO, cmd->argv_final_text, ft_strlen(cmd->argv_final_text));
-        if (!n_flag)
-            write(STDOUT_FILENO, "\n", 1);
-
-        return 0;
-    }
-
-    printf("DEBUG bi_echo: usando argv fragmentado\n");
-
     int i = 1;
+    int n_flag = 0;
+    
     while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
-        n_flag = 1, i++;
+    {
+        n_flag = 1;
+        i++;
+    }
 
     while (cmd->argv[i])
     {
@@ -64,6 +51,19 @@ int bi_echo(t_cmd *cmd)
         write(STDOUT_FILENO, "\n", 1);
 
     return 0;
+}
+
+int bi_echo(t_cmd *cmd)
+{
+    if (cmd->argv_final_text)
+    {
+	// printf("DEBUG bi_echo: usando argv_final_text: '%s'\n", cmd->argv_final_text);
+        // For argv_final_text, we can't parse options like -n properly
+        // So we'll just use the normal argv processing path
+    }
+
+    // Process arguments normally
+    return bi_echo_with_argv(cmd);
 }
 
 int	bi_pwd(void)

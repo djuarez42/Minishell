@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 18:27:29 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 00:53:08 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:05:13 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	free_token_list(t_token *tokens)
         tmp = tokens->next;
         if (tokens->fragments)
             free_fragments(tokens->fragments);
+        free(tokens->final_text);  // Free the final_text field to prevent memory leak
         free(tokens);
         tokens = tmp;
     }

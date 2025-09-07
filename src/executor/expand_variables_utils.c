@@ -47,6 +47,9 @@ char	*expand_exit_status(t_exec_state *state)
 	if (state)
 		code = state->last_status;
 	num = ft_itoa(code);
+	
+	// Don't add a space after the exit status
+	// Return the raw value
 	return (num);
 }
 

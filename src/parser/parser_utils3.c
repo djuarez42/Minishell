@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 18:42:26 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:05:13 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char *concat_final_text(t_token *tok)
     t_fragment *frag = tok->fragments;
     char *final_text = ft_strdup("");
     char *tmp;
-    char *new_result;
+    char *result;
 
     while (frag)
     {
@@ -89,13 +89,34 @@ char *concat_final_text(t_token *tok)
         else
             tmp = ft_strdup(frag->text);
 
-        new_result = str_append(final_text, tmp);
+        /* str_append frees final_text internally, so we just need to update our pointer */
+        result = str_append(final_text, tmp);
         free(tmp);
-        final_text = new_result;
-
+        
+        /* If str_append returns NULL (allocation failure), we should return NULL */
+        if (!result)
+            return (NULL);
+            
+        final_text = result;
         frag = frag->next;
     }
     return (final_text);
+}
+
+/* Free expanded_text in all fragments to prevent memory leaks */
+void free_expanded_texts(t_token *tok)
+{
+    t_fragment *frag = tok->fragments;
+    
+    while (frag)
+    {
+        if (frag->expanded_text)
+        {
+            free(frag->expanded_text);
+            frag->expanded_text = NULL;
+        }
+        frag = frag->next;
+    }
 }
 
 int should_expand_fragment(t_fragment *frag)

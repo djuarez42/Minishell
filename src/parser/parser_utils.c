@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 20:11:51 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/07 21:05:13 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ void	free_cmds(t_cmd *cmd)
 		}
 		if (cmd->argv_quote)
 			free(cmd->argv_quote);
+        if (cmd->argv_final_text)
+            free(cmd->argv_final_text);
 		free_redirs(cmd->redirs);
 		free(cmd);
 		cmd = tmp;
@@ -160,24 +162,24 @@ char **process_token(t_token *tok, char **argv, int *argc, char **envp)
     {
         if (should_expand_fragment(frag))
         {
-            printf("DEBUG expand_fragment: text='%s' quote_type=%d -> EXPAND\n",
-                   frag->text, frag->quote_type);
+            // printf("DEBUG expand_fragment: text='%s' quote_type=%d -> EXPAND\n",
+            //        frag->text, frag->quote_type);
 
             // Llamamos a expand_variables con los 4 args correctos
             expanded = expand_variables(frag->text, envp, NULL, frag->quote_type);
         }
         else
         {
-            printf("DEBUG expand_fragment: text='%s' quote_type=%d -> NO EXPAND\n",
-                   frag->text, frag->quote_type);
+            // printf("DEBUG expand_fragment: text='%s' quote_type=%d -> NO EXPAND\n",
+            //        frag->text, frag->quote_type);
             expanded = strdup(frag->text);
         }
 
         if (expanded)
         {
             argv[*argc] = expanded;
-            printf("DEBUG process_token: argv[%d]='%s' quote=%d\n",
-                   *argc, argv[*argc], frag->quote_type);
+            // printf("DEBUG process_token: argv[%d]='%s' quote=%d\n",
+            //        *argc, argv[*argc], frag->quote_type);
             (*argc)++;
         }
 
@@ -397,18 +399,27 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
     // 2️⃣ Construir final_text para el token
     free(tok->final_text);
     tok->final_text = concat_final_text(tok);
-    printf("DEBUG FINAL_TEXT limpio (tok): '%s'\n", tok->final_text);
+    // printf("DEBUG FINAL_TEXT limpio (tok): '%s'\n", tok->final_text);
 
     // 2b️⃣ Asignar final_text al cmd->argv_final_text (solo un string)
     free(ctx->cmd->argv_final_text);
     ctx->cmd->argv_final_text = ft_strdup(tok->final_text);
 
     // DEBUG para verificar que se asignó correctamente
-    if (ctx->cmd->argv_final_text)
-        printf("DEBUG CMD->ARGV_FINAL_TEXT: '%s'\n", ctx->cmd->argv_final_text);
-    else
-        printf("DEBUG CMD->ARGV_FINAL_TEXT es NULL\n");
+    // if (ctx->cmd->argv_final_text)
+    //     printf("DEBUG CMD->ARGV_FINAL_TEXT: '%s'\n", ctx->cmd->argv_final_text);
+    // else
+    //     printf("DEBUG CMD->ARGV_FINAL_TEXT es NULL\n");
 
     // 3️⃣ Construir argv real desde los fragments expandidos
-    return build_argv_from_fragments(tok, ctx);
+    char **result = build_argv_from_fragments(tok, ctx);
+    
+    // Free expanded_text fields to prevent memory leaks
+    free_expanded_texts(tok);
+    
+    // Free final_text after it's been used to build the argv
+    free(tok->final_text);
+    tok->final_text = NULL;
+    
+    return result;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 16:25:24 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:05:13 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,10 +228,10 @@ void expand_fragments(t_token *tok, char **envp, t_exec_state *state)
                                                   state);
         else
             frag->expanded_text = ft_strdup(frag->text);
-        printf("DEBUG FRAGMENT expanded_text: original='%s' quote=%d expanded='%s'\n",
-                frag->text,
-                frag->quote_type,
-                frag->expanded_text ? frag->expanded_text : "(NULL)");
+    // printf("DEBUG FRAGMENT expanded_text: original='%s' quote=%d expanded='%s'\n",
+    //         frag->text,
+    //         frag->quote_type,
+    //         frag->expanded_text ? frag->expanded_text : "(NULL)");
         frag = frag->next;
     }
 }

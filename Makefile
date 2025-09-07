@@ -61,6 +61,7 @@ SRC = main.c \
 		src/executor/dollar_string_fix.c \
 		src/executor/dollar_quotes_fix.c \
 		src/executor/expand_cmd_inplace.c \
+		src/executor/special_echo_handler.c \
 		src/builtins/builtins.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \
