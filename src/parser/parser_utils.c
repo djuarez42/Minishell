@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:17:57 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 22:22:03 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,55 +98,6 @@ int	init_cmd_args(t_cmd *cmd)
 	return (1);
 }
 
-/*int process_token(t_cmd *cmd, t_token *cur, int *argc,
-                  char **envp, t_exec_state *state)
-{
-    t_fragment *frag;
-    char *arg;
-    char *expanded;
-    char *tmp;
-    int skip;
-
-    if (*argc >= MAX_ARGS - 1)
-        return 0;
-
-    arg = ft_strdup("");
-    if (!arg)
-        return 0;
-
-    skip = should_skip_expansion(cur);
-
-    frag = cur->fragments;
-    while (frag)
-    {
-        if (skip)
-            expanded = ft_strdup(frag->text);
-        else
-            expanded = expand_fragment_with_context(frag, cur, envp, state);
-
-        if (!expanded)
-        {
-            free(arg);
-            return 0;
-        }
-
-        tmp = str_append(arg, expanded);
-        free(expanded);
-        arg = tmp;
-        if (!arg)
-            return 0;
-
-        frag = frag->next;
-    }
-
-    cmd->argv[*argc] = arg;
-    cmd->argv_quote[*argc] = cur->fragments
-        ? cur->fragments->quote_type
-        : QUOTE_NONE;
-    (*argc)++;
-    return 1;
-}*/
-
 char **process_token(t_token *tok, char **argv, int *argc, char **envp)
 {
     t_fragment *frag;
@@ -159,25 +110,13 @@ char **process_token(t_token *tok, char **argv, int *argc, char **envp)
     while (frag)
     {
         if (should_expand_fragment(frag))
-        {
-            printf("DEBUG expand_fragment: text='%s' quote_type=%d -> EXPAND\n",
-                   frag->text, frag->quote_type);
-
-            // Llamamos a expand_variables con los 4 args correctos
             expanded = expand_variables(frag->text, envp, NULL, frag->quote_type);
-        }
         else
-        {
-            printf("DEBUG expand_fragment: text='%s' quote_type=%d -> NO EXPAND\n",
-                   frag->text, frag->quote_type);
             expanded = strdup(frag->text);
-        }
 
         if (expanded)
         {
             argv[*argc] = expanded;
-            printf("DEBUG process_token: argv[%d]='%s' quote=%d\n",
-                   *argc, argv[*argc], frag->quote_type);
             (*argc)++;
         }
 
@@ -238,14 +177,11 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
     // 2️⃣ Construir final_text
     free(tok->final_text);
     tok->final_text = concat_final_text(tok);
-    printf("DEBUG FINAL_TEXT limpio (tok): '%s'\n", tok->final_text);
 
     // 3️⃣ Guardar en argv_final_text (una posición por token)
     if (ctx->cmd->argv_final_text)
     {
         ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text);
-        printf("DEBUG CMD->ARGV_FINAL_TEXT[%d]: '%s'\n",
-               *ctx->argc_final_text, ctx->cmd->argv_final_text[*ctx->argc_final_text]);
         (*ctx->argc_final_text)++;
     }
 

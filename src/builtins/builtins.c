@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:21:10 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/07 19:53:58 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 22:38:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int is_builtin(const char *cmd)
 static int dispatch_builtin(t_cmd *cmd, char ***penvp)
 {
     const char *base_cmd = get_base_cmd(cmd->argv[0]);
-    printf("DEBUG dispatch_builtin: base_cmd='%s'\n", base_cmd);
 
     if (!ft_strncmp(base_cmd, "echo", 5))
         return bi_echo(cmd);

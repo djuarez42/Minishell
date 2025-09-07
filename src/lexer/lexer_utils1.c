@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/01 21:18:35 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/07 22:32:46 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Functions from tokenizer_utils.c
 int	is_quote(char c)
 {
 	return (c == '\'' || c == '\"');
@@ -30,7 +29,6 @@ int	operator_len(const char *s)
 	return (1);
 }
 
-// Function from lexer_utils_3.c
 char	*remove_quotes(char *str)
 {
 	int		len;
@@ -120,9 +118,6 @@ char	*extract_token_text(const char *input, int *i, int type)
 	return res;
 }
 
-/* 
-** Construye un nuevo token con texto + tipo + lista de fragmentos.
-*/
 t_token *create_token(t_token_type type, bool space_before) 
 {
     t_token *tok = malloc(sizeof(t_token));
@@ -146,9 +141,6 @@ t_token *create_token_from_fragments(t_fragment *first_frag, bool space_before)
     return tok;
 }
 
-/* 
-** Añade un token al final de la lista.
-*/
 void append_token(t_token **head, t_token *tok) 
 {
     if (!tok) return;

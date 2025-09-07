@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 19:18:09 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 22:27:42 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,6 @@ int				is_operator(char c);
 int				operator_len(const char *s);
 int				is_blank(const char *s);
 t_token_type	determine_token_type(char *str);
-t_token			*build_token_list(char **tokens, t_quote_type *quotes);
-void			free_token_list(t_token *head);
 t_token			*append_token_eof(t_token *head);
 const char		*token_type_str(t_token_type type);
 char			*remove_quotes(char *str);
@@ -115,7 +113,6 @@ int				init_tokens_and_quotes(char ***tokens_out,
 					t_quote_type **quotes_out);
 const char		*quote_type_str(t_quote_type q);
 char			*strip_comments(const char *input);
-void            classify_redirection_files(t_token *token_list);
 int 			check_unmatched_quotes(const char *input);
 t_fragment		*extract_dollar_quote(const char *text, int *i);
 t_fragment 		*parse_mixed_fragments(const char *text);

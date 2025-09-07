@@ -3,19 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils_3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 16:45:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 20:00:00 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/07 22:33:35 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "minishell.h"
 
-/*
- * Handle quoted parts with improved dollar-sign handling
- */
+
 char	*handle_quoted_part(const char *input, int *i, char *tmp,
 	t_quote_type *last_quote)
 {

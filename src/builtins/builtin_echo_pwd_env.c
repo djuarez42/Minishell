@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/07 21:00:57 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 22:38:58 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int bi_echo(t_cmd *cmd)
 
     if (cmd->argv_final_text && cmd->argv_final_text[0])
     {
-        printf("DEBUG bi_echo: usando argv_final_text\n");
 
         // manejar flags -n
         while (cmd->argv_final_text[i] && is_n_flag(cmd->argv_final_text[i]))
@@ -43,7 +42,6 @@ int bi_echo(t_cmd *cmd)
             n_flag = 1;
             i++;
         }
-
         // imprimir argumentos
         while (cmd->argv_final_text[i])
         {
@@ -52,14 +50,10 @@ int bi_echo(t_cmd *cmd)
                 write(STDOUT_FILENO, " ", 1);
             i++;
         }
-
         if (!n_flag)
             write(STDOUT_FILENO, "\n", 1);
-
         return 0;
     }
-
-    printf("DEBUG bi_echo: argv_final_text vacío o NULL\n");
     return 0;
 }
 

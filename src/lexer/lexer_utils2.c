@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 20:12:10 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 00:04:32 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,78 +37,6 @@ void append_fragment(t_fragment **head, t_fragment *frag)
     tmp->next = frag;
 }
 
-/*t_fragment *parse_fragments(const char *text) {
-    t_fragment *fragments = NULL;
-    int i = 0;
-    while (text[i]) 
-    {
-        t_quote_type qtype = QUOTE_NONE;
-        int start = i;
-        bool space_after = false;
-
-        while (text[i] && ft_isspace((unsigned char)text[i]))
-            i++;
-        if (!text[i])
-            break;
-
-        start = i;
-        if (text[i] == '\'') { // simple quote
-            qtype = QUOTE_SINGLE;
-            i++;
-            start = i;
-            while (text[i] && text[i] != '\'')
-                i++;
-            space_after = text[i] && ft_isspace((unsigned char)text[i + 1]);
-            append_fragment(&fragments, new_fragment(&text[start], i - start, qtype, space_after));
-            if (text[i] == '\'')
-                i++;
-        } else if (text[i] == '"') { // double quote
-            qtype = QUOTE_DOUBLE;
-            i++;
-            start = i;
-            while (text[i] && text[i] != '"') {
-                if (text[i] == '\\' && text[i + 1])
-                    i += 2;
-                else
-                    i++;
-            }
-            space_after = text[i] && ft_isspace((unsigned char)text[i + 1]);
-            append_fragment(&fragments, new_fragment(&text[start], i - start, qtype, space_after));
-            if (text[i] == '"')
-                i++;
-        } else if (text[i] == '|' || text[i] == '<' || text[i] == '>') { // operators
-            start = i;
-            if (text[i] == '<' && text[i + 1] == '<') {
-                i += 2;
-            } else if (text[i] == '>' && text[i + 1] == '>') {
-                i += 2;
-            } else {
-                i++;
-            }
-            space_after = text[i] && ft_isspace((unsigned char)text[i]);
-            append_fragment(&fragments, new_fragment(&text[start], i - start, QUOTE_NONE, space_after));
-        } else { // texto normal
-
-            // ⚡ chequeamos si empieza con $" o $'
-            t_fragment *dfrag = extract_dollar_quote(text, &i);
-            if (dfrag) {
-                append_fragment(&fragments, dfrag);
-                continue; // ya avanzamos i dentro de extract_dollar_quote
-            }
-
-            start = i;
-            while (text[i] && !ft_isspace((unsigned char)text[i]) &&
-                   text[i] != '\'' && text[i] != '"' &&
-                   text[i] != '|' && text[i] != '<' && text[i] != '>')
-                i++;
-            space_after = text[i] && ft_isspace((unsigned char)text[i]);
-            append_fragment(&fragments, new_fragment(&text[start], i - start, QUOTE_NONE, space_after));
-        }
-    }
-    print_fragments(fragments);
-    return fragments;
-}*/
-
 t_fragment *parse_mixed_fragments(const char *text)
 {
     t_fragment *fragments = NULL;
@@ -121,6 +49,25 @@ t_fragment *parse_mixed_fragments(const char *text)
             i++;
         if (!text[i])
             break;
+
+        // Detectar $ seguido de " (Dollar-quote)
+        if (text[i] == '$' && text[i + 1] == '"')
+        {
+            i += 2; // saltar $"
+            int start = i;
+            while (text[i] && text[i] != '"')
+            {
+                if (text[i] == '\\' && text[i + 1])
+                    i += 2;
+                else
+                    i++;
+            }
+            int len = i - start;
+            bool space_after = text[i + 1] && ft_isspace((unsigned char)text[i + 1]);
+            append_fragment(&fragments, new_fragment(&text[start], len, QUOTE_DOUBLE, space_after));
+            if (text[i] == '"') i++; // saltar la comilla final
+            continue;
+        }
 
         // Comillas simples
         if (text[i] == '\'')
