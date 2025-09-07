@@ -6,6 +6,7 @@
 echo "=== MINISHELL DIAGNOSTIC TEST SCRIPT ==="
 echo "Testing Part 1: Core Variable Expansion & Path Issues"
 echo
+MINISHELL_DIR="$(cd "$(dirname "$0")"; pwd)"
 
 # Function to compare bash vs minishell output
 compare_output() {
@@ -28,7 +29,7 @@ compare_output() {
     
     # Get minishell output and store it
     echo "MINISHELL OUTPUT:"
-    echo "$test_cmd" | timeout 3 ../minishell 2>&1
+    echo "$test_cmd" | timeout 3 "$MINISHELL_DIR/minishell" 2>&1
     local ms_exit=$?
     echo "[EXIT CODE: $ms_exit]"
     echo
