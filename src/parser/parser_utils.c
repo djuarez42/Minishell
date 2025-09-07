@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 19:38:23 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:25:21 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,21 +394,21 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
     // 1️⃣ Expandir fragments primero
     expand_fragments(tok, ctx->envp, ctx->state);
 
-    // 2️⃣ Construir final_text para el token
+    // 2️⃣ Construir final_text para este token
     free(tok->final_text);
     tok->final_text = concat_final_text(tok);
     printf("DEBUG FINAL_TEXT limpio (tok): '%s'\n", tok->final_text);
 
-    // 2b️⃣ Asignar final_text al cmd->argv_final_text (solo un string)
-    free(ctx->cmd->argv_final_text);
-    ctx->cmd->argv_final_text = ft_strdup(tok->final_text);
+    // 3️⃣ Guardar en argv_final_text (solo para referencia, sin tocar argc)
+    if (ctx->cmd->argv_final_text && *ctx->argc < MAX_ARGS - 1)
+    {
+        free(ctx->cmd->argv_final_text[*ctx->argc]); // por si ya existía
+        ctx->cmd->argv_final_text[*ctx->argc] = ft_strdup(tok->final_text);
+        printf("DEBUG CMD->ARGV_FINAL_TEXT[%d]: '%s'\n",
+               *ctx->argc, ctx->cmd->argv_final_text[*ctx->argc]);
+        // ❌ NO incrementes argc aquí
+    }
 
-    // DEBUG para verificar que se asignó correctamente
-    if (ctx->cmd->argv_final_text)
-        printf("DEBUG CMD->ARGV_FINAL_TEXT: '%s'\n", ctx->cmd->argv_final_text);
-    else
-        printf("DEBUG CMD->ARGV_FINAL_TEXT es NULL\n");
-
-    // 3️⃣ Construir argv real desde los fragments expandidos
+    // 4️⃣ Construir argv real desde los fragments expandidos
     return build_argv_from_fragments(tok, ctx);
 }

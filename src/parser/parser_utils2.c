@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 16:47:41 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:00:34 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,12 @@ t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
 
     cmd->argv = malloc(sizeof(char *) * MAX_ARGS);
     cmd->argv_quote = malloc(sizeof(int) * MAX_ARGS);
-    if (!cmd->argv || !cmd->argv_quote)
+    cmd->argv_final_text = malloc(sizeof(char *) * MAX_ARGS); // reservar también
+    if (!cmd->argv || !cmd->argv_quote || !cmd->argv_final_text)
     {
         free(cmd->argv);
         free(cmd->argv_quote);
+        free(cmd->argv_final_text);
         free(cmd);
         return NULL;
     }
@@ -114,6 +116,7 @@ t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
     {
         cmd->argv[i] = NULL;
         cmd->argv_quote[i] = QUOTE_NONE;
+        cmd->argv_final_text[i] = NULL; // inicializar
     }
 
     cmd->redirs = NULL;
@@ -125,6 +128,7 @@ t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
     {
         free(cmd->argv);
         free(cmd->argv_quote);
+        free(cmd->argv_final_text);
         free(cmd);
         return NULL;
     }

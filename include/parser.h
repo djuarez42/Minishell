@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 19:04:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 20:52:06 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_cmd
 {
     char            **argv;
     t_quote_type    *argv_quote;
-    char            *argv_final_text;
+    char            **argv_final_text;
     t_redir         *redirs;
     int             pipe;
     struct s_cmd    *next;

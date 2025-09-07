@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/07 19:36:39 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:00:57 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,39 +30,36 @@ static int	is_n_flag(const char *s)
 
 int bi_echo(t_cmd *cmd)
 {
+    int i = 1;
     int n_flag = 0;
 
-    if (cmd->argv_final_text)
+    if (cmd->argv_final_text && cmd->argv_final_text[0])
     {
-        printf("DEBUG bi_echo: usando argv_final_text: '%s'\n", cmd->argv_final_text);
+        printf("DEBUG bi_echo: usando argv_final_text\n");
 
-        if (is_n_flag(cmd->argv_final_text))
+        // manejar flags -n
+        while (cmd->argv_final_text[i] && is_n_flag(cmd->argv_final_text[i]))
+        {
             n_flag = 1;
+            i++;
+        }
 
-        write(STDOUT_FILENO, cmd->argv_final_text, ft_strlen(cmd->argv_final_text));
+        // imprimir argumentos
+        while (cmd->argv_final_text[i])
+        {
+            write(STDOUT_FILENO, cmd->argv_final_text[i], ft_strlen(cmd->argv_final_text[i]));
+            if (cmd->argv_final_text[i + 1])
+                write(STDOUT_FILENO, " ", 1);
+            i++;
+        }
+
         if (!n_flag)
             write(STDOUT_FILENO, "\n", 1);
 
         return 0;
     }
 
-    printf("DEBUG bi_echo: usando argv fragmentado\n");
-
-    int i = 1;
-    while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
-        n_flag = 1, i++;
-
-    while (cmd->argv[i])
-    {
-        write(STDOUT_FILENO, cmd->argv[i], ft_strlen(cmd->argv[i]));
-        if (cmd->argv[i + 1])
-            write(STDOUT_FILENO, " ", 1);
-        i++;
-    }
-
-    if (!n_flag)
-        write(STDOUT_FILENO, "\n", 1);
-
+    printf("DEBUG bi_echo: argv_final_text vacío o NULL\n");
     return 0;
 }
 

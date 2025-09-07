@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 16:25:24 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:18:48 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,8 +169,12 @@ t_token *parse_arguments(t_token *cur, t_cmd *cmd,
         cur = cur->next;
     }
 
+    // 🔹 cerramos argv y argv_final_text aquí
     cmd->argv[argc] = NULL;
     cmd->argv_quote[argc] = QUOTE_NONE;
+    if (cmd->argv_final_text)
+        cmd->argv_final_text[argc] = NULL;
+
     return cur;
 }
 
