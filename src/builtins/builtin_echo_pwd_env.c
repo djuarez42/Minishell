@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/07 02:10:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 19:36:39 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,35 +28,42 @@ static int	is_n_flag(const char *s)
 	return (s[i] == '\0');
 }
 
-int	bi_echo(char **argv)
+int bi_echo(t_cmd *cmd)
 {
-	int	i;
-	int	n_flag;
+    int n_flag = 0;
 
-	i = 1;
-	n_flag = 0;
-	while (argv[i] && is_n_flag(argv[i]))
-	{
-		n_flag = 1;
-		i++;
-	}
-	
-	/* Add flushing at the beginning to ensure clean output */
-	fflush(stdout);
-	
-	while (argv[i])
-	{
-		write(STDOUT_FILENO, argv[i], ft_strlen(argv[i]));
-		if (argv[i + 1])
-			write(STDOUT_FILENO, " ", 1);
-		i++;
-	}
-	if (!n_flag)
-		write(STDOUT_FILENO, "\n", 1);
-	
-	/* Add flushing at the end to ensure output is fully written */
-	fflush(stdout);
-	return (0);
+    if (cmd->argv_final_text)
+    {
+        printf("DEBUG bi_echo: usando argv_final_text: '%s'\n", cmd->argv_final_text);
+
+        if (is_n_flag(cmd->argv_final_text))
+            n_flag = 1;
+
+        write(STDOUT_FILENO, cmd->argv_final_text, ft_strlen(cmd->argv_final_text));
+        if (!n_flag)
+            write(STDOUT_FILENO, "\n", 1);
+
+        return 0;
+    }
+
+    printf("DEBUG bi_echo: usando argv fragmentado\n");
+
+    int i = 1;
+    while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
+        n_flag = 1, i++;
+
+    while (cmd->argv[i])
+    {
+        write(STDOUT_FILENO, cmd->argv[i], ft_strlen(cmd->argv[i]));
+        if (cmd->argv[i + 1])
+            write(STDOUT_FILENO, " ", 1);
+        i++;
+    }
+
+    if (!n_flag)
+        write(STDOUT_FILENO, "\n", 1);
+
+    return 0;
 }
 
 int	bi_pwd(void)

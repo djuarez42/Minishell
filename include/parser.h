@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 00:56:29 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 19:04:03 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_cmd
 {
     char            **argv;
     t_quote_type    *argv_quote;
+    char            *argv_final_text;
     t_redir         *redirs;
     int             pipe;
     struct s_cmd    *next;
@@ -70,10 +71,12 @@ void    add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd);
 char    **collect_heredoc_content(const char *delimiter, bool quoted);
 
 /* Aux de expansión en parser */
+void    expand_fragments(t_token *tok, char **envp, t_exec_state *state);
 char    *expand_fragment(const char *text, t_quote_type quote, char **envp, t_exec_state *state);
-char    *build_final_text(t_token *tok, char **envp, t_exec_state *state);
+//char    *build_final_text(t_token *tok, char **envp, t_exec_state *state);
 int      should_expand_fragment(t_fragment *frag);
 char    *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state);
-
+char    *concat_final_text(t_token *tok);
+char    **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx);
 
 #endif

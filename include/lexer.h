@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 19:11:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 19:18:09 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ typedef enum e_quote_type
 	QUOTE_DOLLAR  //#4
 }	t_quote_type;
 
-
 //Fragment structure
 typedef struct s_fragment 
 {
 	char				*text;
+	char				*expanded_text;
 	t_quote_type		quote_type;
 	bool				has_space_after;
 	struct s_fragment	*next;

@@ -6,14 +6,14 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 00:42:31 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 18:42:26 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-char *build_final_text(t_token *tok, char **envp, t_exec_state *state)
+/*char *build_final_text(t_token *tok, char **envp, t_exec_state *state)
 {
     t_fragment *f;
     char *result;
@@ -49,7 +49,7 @@ char *build_final_text(t_token *tok, char **envp, t_exec_state *state)
     }
 
     return result;
-}
+}*/
 
 
 /*int should_expand_fragment(t_fragment *frag)
@@ -74,6 +74,30 @@ char *build_final_text(t_token *tok, char **envp, t_exec_state *state)
     }
     return (0); // no hay nada a expandir
 }*/
+
+char *concat_final_text(t_token *tok)
+{
+    t_fragment *frag = tok->fragments;
+    char *final_text = ft_strdup("");
+    char *tmp;
+    char *new_result;
+
+    while (frag)
+    {
+        if (frag->expanded_text)
+            tmp = ft_strdup(frag->expanded_text);
+        else
+            tmp = ft_strdup(frag->text);
+
+        new_result = str_append(final_text, tmp);
+        free(tmp);
+        final_text = new_result;
+
+        frag = frag->next;
+    }
+    return (final_text);
+}
+
 int should_expand_fragment(t_fragment *frag)
 {
     int i;
@@ -95,4 +119,26 @@ int should_expand_fragment(t_fragment *frag)
         i++;
     }
     return 0; /* nada que expandir */
+}
+
+char **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx)
+{
+    t_fragment *frag = tok->fragments;
+    char *tmp;
+
+    while (frag)
+    {
+        if (frag->expanded_text && frag->expanded_text[0] != '\0')
+        {
+            tmp = ft_strdup(frag->expanded_text);
+            if (tmp)
+            {
+                ctx->cmd->argv[*ctx->argc] = tmp;
+                ctx->cmd->argv_quote[*ctx->argc] = frag->quote_type;
+                (*ctx->argc)++;
+            }
+        }
+        frag = frag->next;
+    }
+    return ctx->cmd->argv;
 }

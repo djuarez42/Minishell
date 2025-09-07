@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 00:45:09 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 16:25:24 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,3 +214,25 @@ char *expand_fragment(const char *text, t_quote_type quote,
 
     return (expanded);
 }
+
+void expand_fragments(t_token *tok, char **envp, t_exec_state *state)
+{
+    t_fragment *frag = tok->fragments;
+
+    while (frag)
+    {
+        if (should_expand_fragment(frag))
+            frag->expanded_text = expand_fragment(frag->text,
+                                                  frag->quote_type,
+                                                  envp,
+                                                  state);
+        else
+            frag->expanded_text = ft_strdup(frag->text);
+        printf("DEBUG FRAGMENT expanded_text: original='%s' quote=%d expanded='%s'\n",
+                frag->text,
+                frag->quote_type,
+                frag->expanded_text ? frag->expanded_text : "(NULL)");
+        frag = frag->next;
+    }
+}
+
