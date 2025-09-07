@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 21:18:48 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 22:19:44 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,11 +150,13 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 t_token *parse_arguments(t_token *cur, t_cmd *cmd,
                          char **envp, t_exec_state *state)
 {
-    int argc = 0;
+    int argc_argv = 0;
+    int argc_final_text = 0;
     t_proc_ctx ctx;
 
     ctx.cmd = cmd;
-    ctx.argc = &argc;
+    ctx.argc_argv = &argc_argv;
+    ctx.argc_final_text = &argc_final_text;
     ctx.envp = envp;
     ctx.state = state;
 
@@ -163,17 +165,17 @@ t_token *parse_arguments(t_token *cur, t_cmd *cmd,
         cmd->argv = process_token_with_quotes(cur, &ctx);
         if (!cmd->argv)
         {
-            free_partial_cmd(cmd, argc);
+            free_partial_cmd(cmd, argc_argv);
             return NULL;
         }
         cur = cur->next;
     }
 
-    // 🔹 cerramos argv y argv_final_text aquí
-    cmd->argv[argc] = NULL;
-    cmd->argv_quote[argc] = QUOTE_NONE;
+    // 🔹 Poner NULL terminators
+    cmd->argv[argc_argv] = NULL;
+    cmd->argv_quote[argc_argv] = QUOTE_NONE;
     if (cmd->argv_final_text)
-        cmd->argv_final_text[argc] = NULL;
+        cmd->argv_final_text[argc_final_text] = NULL;
 
     return cur;
 }

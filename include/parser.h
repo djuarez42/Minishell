@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 20:52:06 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 21:55:08 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,12 @@ typedef struct s_cmd
 
 typedef struct s_proc_ctx
 {
-    t_cmd        *cmd;
-    int          *argc;
-    char        **envp;
-    t_exec_state *state;
-}   t_proc_ctx;
+    t_cmd           *cmd;
+    char            **envp;
+    t_exec_state    *state;
+    int             *argc_argv;         // para argv
+    int             *argc_final_text;   // para argv_final_text
+} t_proc_ctx;
 
 /* Prototipos del parser (ya con envp/state) */
 void    free_cmds(t_cmd *cmd);

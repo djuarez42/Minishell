@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 18:42:26 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 22:04:03 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,9 +133,9 @@ char **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx)
             tmp = ft_strdup(frag->expanded_text);
             if (tmp)
             {
-                ctx->cmd->argv[*ctx->argc] = tmp;
-                ctx->cmd->argv_quote[*ctx->argc] = frag->quote_type;
-                (*ctx->argc)++;
+                ctx->cmd->argv[*ctx->argc_argv] = tmp;
+                ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
+                (*ctx->argc_argv)++;
             }
         }
         frag = frag->next;

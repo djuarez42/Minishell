@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 21:25:21 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 22:17:57 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,167 +186,6 @@ char **process_token(t_token *tok, char **argv, int *argc, char **envp)
 
     return argv;
 }
-//versiones que no expanden
-/*char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
-{
-    t_fragment *frag;
-    char *tmp;
-    char *display_buf;
-
-    if (!tok)
-        return ctx->cmd->argv;
-
-    display_buf = concat_token_fragments(tok, ctx->envp, ctx->state);
-    if (!display_buf)
-        display_buf = ft_strdup(""); // fallback
-
-    frag = tok->fragments;
-    while (frag)
-    {
-        if (should_expand_fragment(frag))
-            tmp = expand_variables(frag->text, ctx->envp, ctx->state, frag->quote_type);
-        else
-            tmp = ft_strdup(frag->text);
-
-        if (tmp)
-        {
-            // Solo prints para debug
-            printf("DEBUG FRAGMENT: text='%s' quote=%d tmp='%s'\n",
-                   frag->text, frag->quote_type, tmp);
-
-            ctx->cmd->argv[*ctx->argc] = tmp;
-            ctx->cmd->argv_quote[*ctx->argc] = frag->quote_type;
-            (*ctx->argc)++;
-
-            printf("DEBUG display_buf antes append: '%s'\n", display_buf);
-            char *new_display = str_append(display_buf, tmp);
-            printf("DEBUG display_buf despues append: '%s'\n", new_display);
-
-            display_buf = new_display;
-        }
-
-        frag = frag->next;
-    }
-
-    printf("DEBUG final_text antes asignar: '%s'\n", display_buf);
-    free(tok->final_text);
-    tok->final_text = display_buf;
-    printf("DEBUG tok->final_text asignado: '%s'\n", tok->final_text);
-
-    return ctx->cmd->argv;
-}
-
-char *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state)
-{
-    t_fragment *frag = tok->fragments;
-    char *result = ft_strdup("");
-    char *tmp;
-
-    while (frag)
-    {
-        if (frag->quote_type == QUOTE_SINGLE && frag->text[0] == '\0')
-        {
-            printf("DEBUG SKIP EMPTY SINGLE QUOTE FRAGMENT\n");
-            frag = frag->next;
-            continue;
-        }
-
-        if (should_expand_fragment(frag))
-            tmp = expand_variables(frag->text, envp, state, frag->quote_type);
-        else
-            tmp = ft_strdup(frag->text);
-
-        printf("DEBUG CONCAT FRAGMENT: text='%s' quote=%d tmp='%s'\n",
-               frag->text, frag->quote_type, tmp ? tmp : "(NULL)");
-
-        if (tmp)
-        {
-            result = str_append(result, tmp); // concatenación normal
-            free(tmp);
-        }
-
-        frag = frag->next;
-    }
-
-    printf("DEBUG CONCAT FINAL RESULT: '%s'\n", result);
-    return result;
-}*/
-// versiones que expanden 
-/*char *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state)
-{
-    t_fragment *frag;
-    char *result;
-    char *piece;
-
-    if (!tok)
-        return NULL;
-    result = ft_strdup("");
-    if (!result)
-        return NULL;
-
-    frag = tok->fragments;
-    while (frag)
-    {
-       
-        if (!frag->text || frag->text[0] == '\0')
-        {
-            frag = frag->next;
-            continue;
-        }
-
-       
-        if (frag->quote_type == QUOTE_SINGLE)
-            piece = ft_strdup(frag->text);
-        else if (should_expand_fragment(frag))
-            piece = expand_variables(frag->text, envp, state, frag->quote_type);
-        else
-            piece = ft_strdup(frag->text);
-
-        if (!piece)
-        {
-            free(result);
-            return NULL;
-        }
-
-       
-        result = str_append(result, piece);
-        free(piece);
-
-        frag = frag->next;
-    }
-
-    return result;
-}*/
-/*
-char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
-{
-    char *final_text;
-    int idx;
-
-    if (!tok || !ctx || !ctx->cmd || !ctx->argc)
-        return ctx ? ctx->cmd->argv : NULL;
-
-    
-    final_text = concat_token_fragments(tok, ctx->envp, ctx->state);
-    if (!final_text)
-        final_text = ft_strdup("");
-
-    
-    idx = *ctx->argc;
-    ctx->cmd->argv[idx] = ft_strdup(final_text);
-    
-    ctx->cmd->argv_quote[idx] = (tok->fragments ? tok->fragments->quote_type : QUOTE_NONE);
-    (*ctx->argc)++;
-
-    
-    if (tok->final_text)
-        free(tok->final_text);
-    tok->final_text = final_text; 
-
-    return ctx->cmd->argv;
-}
-*/
-
 
 char *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state)
 {
@@ -388,27 +227,40 @@ char *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state)
 
 char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
 {
+    t_fragment *frag;
+
     if (!tok)
         return ctx->cmd->argv;
 
-    // 1️⃣ Expandir fragments primero
+    // 1️⃣ Expandir fragments
     expand_fragments(tok, ctx->envp, ctx->state);
 
-    // 2️⃣ Construir final_text para este token
+    // 2️⃣ Construir final_text
     free(tok->final_text);
     tok->final_text = concat_final_text(tok);
     printf("DEBUG FINAL_TEXT limpio (tok): '%s'\n", tok->final_text);
 
-    // 3️⃣ Guardar en argv_final_text (solo para referencia, sin tocar argc)
-    if (ctx->cmd->argv_final_text && *ctx->argc < MAX_ARGS - 1)
+    // 3️⃣ Guardar en argv_final_text (una posición por token)
+    if (ctx->cmd->argv_final_text)
     {
-        free(ctx->cmd->argv_final_text[*ctx->argc]); // por si ya existía
-        ctx->cmd->argv_final_text[*ctx->argc] = ft_strdup(tok->final_text);
+        ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text);
         printf("DEBUG CMD->ARGV_FINAL_TEXT[%d]: '%s'\n",
-               *ctx->argc, ctx->cmd->argv_final_text[*ctx->argc]);
-        // ❌ NO incrementes argc aquí
+               *ctx->argc_final_text, ctx->cmd->argv_final_text[*ctx->argc_final_text]);
+        (*ctx->argc_final_text)++;
     }
 
-    // 4️⃣ Construir argv real desde los fragments expandidos
-    return build_argv_from_fragments(tok, ctx);
+    // 4️⃣ Construir argv real (una posición por fragment)
+    frag = tok->fragments;
+    while (frag)
+    {
+        if (frag->expanded_text)
+        {
+            ctx->cmd->argv[*ctx->argc_argv] = ft_strdup(frag->expanded_text);
+            ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
+            (*ctx->argc_argv)++;
+        }
+        frag = frag->next;
+    }
+
+    return ctx->cmd->argv;
 }
