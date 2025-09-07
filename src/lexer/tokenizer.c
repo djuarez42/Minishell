@@ -14,52 +14,96 @@
 
 #include "minishell.h"
 
-t_token *tokenize_input(const char *input) 
+t_token *tokenize_input(const char *input)
 {
     if (check_unmatched_quotes(input))
-        return (NULL);
-    t_fragment *frags = parse_fragments(input);
-    t_fragment *cur = frags;
-    t_token *raw_tokens = NULL;
+        return NULL;
+
+    t_fragment *frags = parse_mixed_fragments(input);
+    if (!frags)
+        return NULL;
+
+    t_token *tokens = NULL;
+    t_token *last_token = NULL;
     bool space_before = false;
 
-    while (cur) {
-        // Saltar fragments vacíos que no sean quotes
+    t_fragment *cur = frags;
+    while (cur)
+    {
         while (cur && strlen(cur->text) == 0 && cur->quote_type == QUOTE_NONE)
             cur = cur->next;
-        if (!cur) break;
+        if (!cur)
+            break;
 
-        t_token *tok = create_token(TOKEN_WORD, space_before);
-        space_before = false;
+        t_token_type op_type = determine_token_type(cur->text);
+        if (op_type != TOKEN_WORD)
+        {
+            t_token *tok = create_token(op_type, space_before);
+            space_before = cur->has_space_after;
 
-        t_fragment *last_frag = NULL;
-
-        while (cur) {
-            // Añadir fragment
             t_fragment *frag_copy = new_fragment(cur->text, strlen(cur->text),
                                                  cur->quote_type, cur->has_space_after);
             append_fragment(&tok->fragments, frag_copy);
 
-            last_frag = cur;
-            cur = cur->next;
+            printf("DEBUG tokenizing OP: frag_copy text='%s' quote_type=%d\n",
+                   frag_copy->text, frag_copy->quote_type);
 
-            if (last_frag->has_space_after) {
-                space_before = true;
-                break; // nuevo token después del espacio
-            }
+            tok->final_text = concat_fragments(tok->fragments);
+            printf("DEBUG tokenizing OP: final_text='%s' first frag quote_type=%d\n",
+                   tok->final_text,
+                   tok->fragments ? tok->fragments->quote_type : -1);
+
+            if (!tokens)
+                tokens = tok;
+            else
+                last_token->next = tok;
+            last_token = tok;
+
+            cur = cur->next;
+            continue;
         }
 
-        append_token(&raw_tokens, tok);
+        t_token *tok = create_token(TOKEN_WORD, space_before);
+        space_before = false;
 
+        while (cur)
+        {
+            t_fragment *frag_copy = new_fragment(cur->text, strlen(cur->text),
+                                                 cur->quote_type, cur->has_space_after);
+            append_fragment(&tok->fragments, frag_copy);
+
+            printf("DEBUG tokenizing WORD: frag_copy text='%s' quote_type=%d\n",
+                   frag_copy->text, frag_copy->quote_type);
+
+            if (cur->has_space_after)
+            {
+                space_before = true;
+                cur = cur->next;
+                break;
+            }
+            cur = cur->next;
+
+            if (cur && determine_token_type(cur->text) != TOKEN_WORD)
+                break;
+        }
+
+        tok->type = determine_token_type(tok->fragments->text);
+        tok->final_text = concat_fragments(tok->fragments);
+
+        printf("DEBUG tokenizing WORD: final_text='%s' first frag quote_type=%d\n",
+               tok->final_text,
+               tok->fragments ? tok->fragments->quote_type : -1);
+
+        if (!tokens)
+            tokens = tok;
+        else
+            last_token->next = tok;
+        last_token = tok;
     }
 
-    // 🔑 Nuevo paso: convertir raw_tokens a clean_tokens
-    t_token *clean_tokens = build_token_list_from_fragments(raw_tokens);
-    //print_final_token_list(clean_tokens);
-    //print_clean_tokens_with_fragments(clean_tokens);
-    // Free the raw tokens and the original fragments
-    free_token_list(raw_tokens);
     free_fragments(frags);
 
-    return clean_tokens;
+    tokens = append_token_eof(tokens);
+    //print_tokens_raw(tokens);
+    return tokens;
 }

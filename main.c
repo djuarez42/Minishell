@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/05 16:36:00 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/07 20:12:04 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,3 +209,91 @@ int main(int argc, char **argv, char **envp)
     free_envp(envp_copy);
     return (state.last_status);
 }
+
+/*int main(void)
+{
+    const char *inputs[] = {
+        "/bin/echo \"'\"'$USER'\"'\"",
+        NULL
+    };
+
+    for (int j = 0; inputs[j]; j++)
+    {
+        printf("=== INPUT: %s ===\n", inputs[j]);
+        t_token *tokens = tokenize_input(inputs[j]);
+        if (!tokens)
+        {
+            printf("Lexer returned NULL (probably unmatched quotes)\n");
+            continue;
+        }
+
+        printf("\n--- TOKENS ---\n");
+        t_token *tok = tokens;
+        while (tok)
+        {
+            printf("Token type: %d | space_before: %d | final_text: '%s'\n",
+                   tok->type, tok->has_space_before, tok->final_text ? tok->final_text : "(null)");
+
+            t_fragment *frag = tok->fragments;
+            while (frag)
+            {
+                printf("  Fragment: text='%s', quote_type=%d, space_after=%d\n",
+                       frag->text, frag->quote_type, frag->has_space_after);
+                frag = frag->next;
+            }
+
+            tok = tok->next;
+        }
+        printf("\n");
+        free_tokens(tokens);
+    }
+
+    return 0;
+}*/
+
+/*int main(void)
+{
+    char *input = "/bin/echo \"'\"\"'$USER'\"'\"";
+
+    t_token *tokens;
+    t_cmd *cmd;
+    t_exec_state state;
+
+    memset(&state, 0, sizeof(state));
+
+    printf("\n==============================\n");
+    printf("INPUT: %s\n", input);
+    printf("==============================\n");
+
+    // Tokenizar
+    tokens = tokenize_input(input);
+    if (!tokens)
+    {
+        printf("Error tokenizando la entrada\n");
+        return 1;
+    }
+
+    // Parsear tokens a comandos
+    cmd = parser_tokens(tokens, NULL, &state);
+
+    if (!cmd)
+    {
+        printf("Error parseando tokens\n");
+        return 1;
+    }
+
+    printf("\nParse completo\n");
+
+    // Imprimir argv de cada comando
+    t_cmd *cur = cmd;
+    while (cur)
+    {
+        printf("Comando:\n");
+        for (int i = 0; cur->argv && cur->argv[i]; i++)
+            printf("  argv[%d]: %s (quote=%d)\n",
+                   i, cur->argv[i], cur->argv_quote[i]);
+        cur = cur->next;
+    }
+
+    return 0;
+}*/

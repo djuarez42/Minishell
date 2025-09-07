@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/03 20:11:45 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/06 16:47:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,21 +98,44 @@ t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
 
     cmd = malloc(sizeof(t_cmd));
     if (!cmd)
-        return (NULL);
-    cmd->argv = NULL;
-    cmd->argv_quote = NULL;
+        return NULL;
+
+    cmd->argv = malloc(sizeof(char *) * MAX_ARGS);
+    cmd->argv_quote = malloc(sizeof(int) * MAX_ARGS);
+    if (!cmd->argv || !cmd->argv_quote)
+    {
+        free(cmd->argv);
+        free(cmd->argv_quote);
+        free(cmd);
+        return NULL;
+    }
+
+    for (int i = 0; i < MAX_ARGS; i++)
+    {
+        cmd->argv[i] = NULL;
+        cmd->argv_quote[i] = QUOTE_NONE;
+    }
+
     cmd->redirs = NULL;
     cmd->pipe = 0;
     cmd->next = NULL;
+
     *cur = parse_cmd_block(*cur, cmd, envp, state);
     if (!*cur)
-        return (free(cmd), NULL);
+    {
+        free(cmd->argv);
+        free(cmd->argv_quote);
+        free(cmd);
+        return NULL;
+    }
+
     if ((*cur)->type == TOKEN_PIPE)
     {
         cmd->pipe = 1;
         *cur = (*cur)->next;
     }
-    return (cmd);
+
+    return cmd;
 }
 
 char	**collect_heredoc_content(const char *delimiter, bool quoted __attribute__((unused)))

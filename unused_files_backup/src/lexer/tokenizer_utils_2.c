@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils_2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 18:46:30 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/28 20:41:52 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/06 00:46:01 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
-
-t_token_type	determine_token_type(char *str)
-{
-	if (str && str[0] == '<' && str[1] == '<' && str[2] == '\0')
-		return (TOKEN_HEREDOC);
-	else if (str && str[0] == '>' && str[1] == '>' && str[2] == '\0')
-		return (TOKEN_APPEND);
-	else if (str && str[0] == '<' && str[1] == '\0')
-		return (TOKEN_REDIRECT_IN);
-	else if (str && str[0] == '>' && str[1] == '\0')
-		return (TOKEN_REDIRECT_OUT);
-	else if (str && str[0] == '|' && str[1] == '\0')
-		return (TOKEN_PIPE);
-	else
-		return (TOKEN_WORD);
-}
 
 t_token	*build_token_list(char **tokens, t_quote_type *quotes)
 {
