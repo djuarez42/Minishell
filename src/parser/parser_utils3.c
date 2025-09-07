@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 20:06:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 00:42:31 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char *build_final_text(t_token *tok, char **envp, t_exec_state *state)
 }
 
 
-int should_expand_fragment(t_fragment *frag)
+/*int should_expand_fragment(t_fragment *frag)
 {
     int i;
 
@@ -73,4 +73,26 @@ int should_expand_fragment(t_fragment *frag)
         i++;
     }
     return (0); // no hay nada a expandir
+}*/
+int should_expand_fragment(t_fragment *frag)
+{
+    int i;
+
+    if (!frag || !frag->text)
+        return 0;
+
+    /* Nunca expandir dentro de comillas simples */
+    if (frag->quote_type == QUOTE_SINGLE)
+        return 0;
+
+    i = 0;
+    while (frag->text[i])
+    {
+        if (frag->text[i] == '$')
+            return 1; /* expandir variables */
+        if (frag->text[i] == '~' && i == 0)
+            return 1; /* tilde al inicio */
+        i++;
+    }
+    return 0; /* nada que expandir */
 }

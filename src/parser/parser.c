@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 19:58:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/07 00:45:09 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 }
 
 
-t_token *parse_arguments(t_token *cur, t_cmd *cmd,
+/*t_token *parse_arguments(t_token *cur, t_cmd *cmd,
                          char **envp, t_exec_state *state)
 {
     int argc = 0;
@@ -126,15 +126,9 @@ t_token *parse_arguments(t_token *cur, t_cmd *cmd,
             printf("DEBUG parse_arguments: fallo al procesar token '%s'\n",
                    cur->final_text ? cur->final_text : "(null)");
             free_partial_cmd(cmd, argc);
-            return (NULL);
+            return NULL;
         }
-        else
-        {
-            printf("DEBUG parse_arguments: token '%s' procesado -> argv[%d]='%s'\n",
-                   cur->final_text ? cur->final_text : "(null)",
-                   argc - 1,
-                   cmd->argv[argc - 1] ? cmd->argv[argc - 1] : "(null)");
-        }
+
         cur = cur->next;
     }
 
@@ -151,8 +145,34 @@ t_token *parse_arguments(t_token *cur, t_cmd *cmd,
     }
 
     return cur;
-}
+}*/
 
+t_token *parse_arguments(t_token *cur, t_cmd *cmd,
+                         char **envp, t_exec_state *state)
+{
+    int argc = 0;
+    t_proc_ctx ctx;
+
+    ctx.cmd = cmd;
+    ctx.argc = &argc;
+    ctx.envp = envp;
+    ctx.state = state;
+
+    while (cur && cur->type == TOKEN_WORD)
+    {
+        cmd->argv = process_token_with_quotes(cur, &ctx);
+        if (!cmd->argv)
+        {
+            free_partial_cmd(cmd, argc);
+            return NULL;
+        }
+        cur = cur->next;
+    }
+
+    cmd->argv[argc] = NULL;
+    cmd->argv_quote[argc] = QUOTE_NONE;
+    return cur;
+}
 
 char *expand_fragment(const char *text, t_quote_type quote,
                       char **envp, t_exec_state *state)
