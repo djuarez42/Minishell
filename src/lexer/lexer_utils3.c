@@ -19,6 +19,8 @@ void free_fragments(t_fragment *frag)
     {
         tmp = frag->next;
         free(frag->text);
+        if (frag->expanded_text) // Check if expanded_text is NULL before freeing
+            free(frag->expanded_text);
         free(frag);
         frag = tmp;
     }
@@ -33,6 +35,7 @@ void	free_token_list(t_token *tokens)
         tmp = tokens->next;
         if (tokens->fragments)
             free_fragments(tokens->fragments);
+        free(tokens->final_text);  // Free the final_text field to prevent memory leak
         free(tokens);
         tokens = tmp;
     }

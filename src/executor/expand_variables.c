@@ -87,6 +87,7 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
         {
             piece = ft_strdup("$");
             tmp = str_append(tmp, piece);
+            // str_append now frees tmp internally even on failure
             free(piece);
             i += 2;
         }
@@ -102,12 +103,14 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
                 i++;
             }
             tmp = str_append(tmp, piece);
+            // str_append now frees tmp internally even on failure
             free(piece);
         }
         else
         {
             piece = ft_strdupc(input[i]);
             tmp = str_append(tmp, piece);
+            // str_append now frees tmp internally even on failure
             free(piece);
             i++;
         }

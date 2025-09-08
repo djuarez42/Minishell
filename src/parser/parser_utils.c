@@ -58,6 +58,13 @@ void	free_cmds(t_cmd *cmd)
 		}
 		if (cmd->argv_quote)
 			free(cmd->argv_quote);
+		if (cmd->argv_final_text)
+		{
+			i = 0;
+			while (cmd->argv_final_text[i])
+				free(cmd->argv_final_text[i++]);
+			free(cmd->argv_final_text);
+		}
 		free_redirs(cmd->redirs);
 		free(cmd);
 		cmd = tmp;

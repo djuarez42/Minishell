@@ -67,7 +67,10 @@ char	*str_append(char *base, const char *add)
 		len += ft_strlen(add);
 	new = malloc(len + 1);
 	if (!new)
+	{
+		free(base);  // Free base on allocation failure to prevent memory leak
 		return (NULL);
+	}
 	new[0] = '\0';
 	if (base)
 		ft_strlcat(new, base, len + 1);

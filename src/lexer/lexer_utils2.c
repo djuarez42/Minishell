@@ -22,6 +22,7 @@ t_fragment *new_fragment(const char *start, size_t len, t_quote_type qtype, bool
     frag->text[len] = '\0';
     frag->quote_type = qtype;
     frag->has_space_after = space_after;
+    frag->expanded_text = NULL; // Initialize expanded_text to NULL
     frag->next = NULL;
 
     return frag;
