@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:22:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 18:45:48 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,21 +178,24 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
     if (!tok)
         return ctx->cmd->argv;
 
-    // 1️⃣ Expandir fragments
+    // 1️⃣ Expand fragments - converts $VARS and handles quotes
     expand_fragments(tok, ctx->envp, ctx->state);
 
-    // 2️⃣ Construir final_text
+    // 2️⃣ Build final_text - concatenates all fragments WITHOUT spaces between them
+    // This ensures '"'$USER'"' becomes "ekakhmad" and not " ekakhmad "
     free(tok->final_text);
     tok->final_text = concat_final_text(tok);
 
-    // 3️⃣ Guardar en argv_final_text (una posición por token)
+    // 3️⃣ Store in argv_final_text (one entry per token)
+    // This is used for external commands and echo to preserve correct quoting
     if (ctx->cmd->argv_final_text)
     {
         ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text);
         (*ctx->argc_final_text)++;
     }
 
-    // 4️⃣ Construir argv real (una posición por fragment)
+    // 4️⃣ Build regular argv (one entry per fragment)
+    // This is kept for compatibility but may add unwanted spaces between fragments
     frag = tok->fragments;
     while (frag)
     {

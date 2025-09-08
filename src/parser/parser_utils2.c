@@ -25,12 +25,35 @@ t_redir *create_redir(t_token *cur)
 		return (NULL);
 
 	redir->type = cur->type;
+	redir->expanded = 0;  /* Initialize the expanded flag to 0 */
+	redir->next = NULL;   /* Initialize next pointer to NULL */
 	
 	frag = cur->next->fragments;
 	redir->quoted = frag->quote_type != QUOTE_NONE;
-	redir->file = ft_strdup(frag->text);
-	if (!redir->file)
-		return (free(redir), NULL);
+	
+	/* Initialize file to NULL first */
+	redir->file = NULL;
+	
+	/* Check if frag->text exists before trying to strdup */
+	if (frag && frag->text)
+	{
+		redir->file = ft_strdup(frag->text);
+		if (!redir->file)
+		{
+			free(redir);
+			return (NULL);
+		}
+	}
+	else
+	{
+		/* Empty string if no text */
+		redir->file = ft_strdup("");
+		if (!redir->file)
+		{
+			free(redir);
+			return (NULL);
+		}
+	}
 
 	// For heredoc, collect content during parsing
 	if (redir->type == TOKEN_HEREDOC)

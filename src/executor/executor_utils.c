@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 16:41:53 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 18:45:48 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,23 @@ int	handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *s
 
 int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 {
-	if (!cmd || !cmd->argv || !cmd->argv[0])
+	/* 
+	 * Use argv_final_text instead of argv for external commands
+	 * This ensures that quoted fragments are treated as a single argument
+	 * without adding spaces between them
+	 */
+	if (!cmd || !cmd->argv_final_text || !cmd->argv_final_text[0])
 	{
 		fprintf(stderr, "minishell: syntax error near unexpected token `|'\n");
 		return (2);
 	}
-	exec_path = find_executable(cmd->argv[0], envp);
+	exec_path = find_executable(cmd->argv_final_text[0], envp);
 	if (!exec_path)
 	{
-		fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
+		fprintf(stderr, "minishell: %s: command not found\n", cmd->argv_final_text[0]);
 		return (127);
 	}
-	return (execute_execve(exec_path, cmd->argv, envp));
+	return (execute_execve(exec_path, cmd->argv_final_text, envp));
 }
 
 char	*str_append(char *base, const char *add)

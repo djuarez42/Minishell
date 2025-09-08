@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:21:01 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 18:45:48 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 
 char *concat_final_text(t_token *tok)
 {
+    /*
+     * This function concatenates all expanded fragments into a single string
+     * without adding spaces between them. This preserves the original quoting
+     * and ensures that fragments like '"'$USER'"' become "ekakhmad" instead of
+     * " ekakhmad " with spaces. The resulting string is used in argv_final_text.
+     */
     t_fragment *frag = tok->fragments;
     char *final_text = ft_strdup("");
     char *tmp;

@@ -24,6 +24,7 @@ typedef struct s_redir
     char                *file;
     int                 type;
     bool                quoted;
+    int                 expanded;  /* Flag to track if this redirection's file has been expanded */
     char                **heredoc_content;
     struct s_redir      *next;
 }   t_redir;
