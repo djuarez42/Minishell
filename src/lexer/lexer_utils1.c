@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:32:46 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,49 @@ char	*remove_quotes(char *str)
 {
 	int		len;
 	char	*result;
+	int		i, j;
+	bool	in_quotes;
+	char	quote_type;
 
+	if (!str)
+		return NULL;
+		
 	len = ft_strlen(str);
-	// Only remove double quotes, preserve single quotes
-	if (len > 1 && str[0] == '"' && str[len - 1] == '"')
-		result = ft_substr(str, 1, len - 2);
-	else
-		result = ft_strdup(str);
-	return (result);
+	
+	// Simple case: quotes at beginning and end
+	if (len > 1 && ((str[0] == '"' && str[len - 1] == '"') || 
+	                 (str[0] == '\'' && str[len - 1] == '\'')))
+		return ft_substr(str, 1, len - 2);
+	
+	// More complex case: quotes in the middle of the string
+	result = malloc(len + 1); // At most, we'll need the original length
+	if (!result)
+		return NULL;
+	
+	i = 0;
+	j = 0;
+	in_quotes = false;
+	quote_type = '\0';
+	
+	while (str[i])
+	{
+		if ((str[i] == '"' || str[i] == '\'') && (!in_quotes || quote_type == str[i]))
+		{
+			in_quotes = !in_quotes;
+			if (in_quotes)
+				quote_type = str[i];
+			else
+				quote_type = '\0';
+			i++; // Skip the quote character
+		}
+		else
+		{
+			result[j++] = str[i++];
+		}
+	}
+	
+	result[j] = '\0';
+	return result;
 }
 
 bool	are_quotes_closed(const char *input)

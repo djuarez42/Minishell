@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/02 23:13:06 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,12 +144,28 @@ int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
 	memset(&args, 0, sizeof(args));
 	while (redir)
 	{
+		// Skip redirections with NULL file when necessary
 		if (redir->type == TOKEN_REDIRECT_OUT)
-			handle_redirections_out(redir->file, &err);
+		{
+			if (redir->file)
+				handle_redirections_out(redir->file, &err);
+			else
+				err = 1; // Error for missing file
+		}
 		else if (redir->type == TOKEN_REDIRECT_IN)
-			handle_redirections_in(redir->file, &err);
+		{
+			if (redir->file)
+				handle_redirections_in(redir->file, &err);
+			else
+				err = 1; // Error for missing file
+		}
 		else if (redir->type == TOKEN_APPEND)
-			handle_redirections_append(redir->file, &err);
+		{
+			if (redir->file)
+				handle_redirections_append(redir->file, &err);
+			else
+				err = 1; // Error for missing file
+		}
 		else if (redir->type == TOKEN_HEREDOC)
 		{
 			args.state = state;
@@ -159,10 +175,16 @@ int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
 				res = handle_redirections_heredoc_with_content(redir->heredoc_content, 
 					redir->quoted, envp, state, &args);
 			}
-			else
+			else if (redir->file)
 			{
 				res = handle_redirections_heredoc(redir->file, redir->quoted, envp, &args);
 			}
+			else
+			{
+				err = 1; // Error for missing file/content
+				res = 0;
+			}
+			
 			if (res == 130)
 				return (130);
 			if (res != 0)

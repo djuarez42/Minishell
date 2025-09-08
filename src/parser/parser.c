@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:20:31 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,20 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 	if (!cur->next || cur->next->type != TOKEN_WORD)
 		return (NULL);
 
+	// Create a new redirection node
 	new_redir = create_redir(cur);
 	if (!new_redir)
-		return (NULL);
+	{
+		// Error creating redirection, but we'll continue parsing
+		// This ensures we don't stop the whole parsing process for one failed redirection
+		return (cur->next->next);
+	}
 
+	// Add the redirection to the command's redirection list
 	if (!cmd->redirs)
+	{
 		cmd->redirs = new_redir;
+	}
 	else
 	{
 		last = cmd->redirs;
@@ -98,6 +106,8 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 			last = last->next;
 		last->next = new_redir;
 	}
+	
+	// Move past the redirection token and its argument
 	return (cur->next->next);
 }
 

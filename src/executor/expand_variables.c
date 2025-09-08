@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/08 18:45:48 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,36 @@ static char *ft_strdupc(char c)
     str[0] = c;
     str[1] = '\0';
     return (str);
+}
+
+/*
+ * Helper function to try to append a string safely.
+ * Takes ownership of both base and piece, and guarantees
+ * they are properly freed on error or success.
+ */
+static char *try_append(char *base, char *piece)
+{
+    char *result;
+    
+    if (!piece)
+    {
+        // If piece is NULL, something went wrong - free base and return NULL
+        free(base);
+        return NULL;
+    }
+    
+    // If base is NULL but piece isn't, just return piece (don't free it)
+    if (!base)
+        return piece;
+        
+    // Append the string
+    result = str_append(base, piece);
+    
+    // Free the piece since it's been copied and str_append makes a new copy
+    free(piece);
+    
+    // Return the result (str_append already freed base)
+    return result;
 }
 
 // Helper function to specifically handle $"string" pattern
@@ -67,6 +97,16 @@ static int is_dollar_string(const char *input, int pos)
     return (input[pos] == '$' && input[pos + 1] && input[pos + 1] == '"');
 }
 
+// Helper function to check for $'string' ANSI-C quoting pattern
+static int is_ansi_c_quote(const char *input, int pos)
+{
+    if (!input || !input[pos])
+        return 0;
+    
+    // $ seguido de '
+    return (input[pos] == '$' && input[pos + 1] && input[pos + 1] == '\'');
+}
+
 char *expand_variables(const char *input, char **envp, t_exec_state *state,
                        t_quote_type quote)
 {
@@ -80,21 +120,59 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
         return (ft_strdup(""));
 
     i = 0;
-    tmp = NULL;
+    tmp = ft_strdup("");
+    if (!tmp)
+        return (NULL);
+        
     while (input[i])
     {
         if (input[i] == '\\' && input[i + 1] == '$')
         {
-            piece = ft_strdup("$");
-            tmp = str_append(tmp, piece);
-            // str_append now frees tmp internally even on failure
-            free(piece);
+            tmp = try_append(tmp, ft_strdup("$"));
+            if (!tmp)
+                return NULL;
             i += 2;
         }
         else if (input[i] == '$')
         {
             if (is_dollar_string(input, i))
                 piece = handle_dollar_string(input, &i);
+            else if (is_ansi_c_quote(input, i) && quote != QUOTE_SINGLE)
+            {
+                // Handle ANSI-C quoting
+                piece = ft_strdup("$");
+                i++; // Skip $
+                tmp = try_append(tmp, piece);
+                if (!tmp)
+                    return NULL;
+                    
+                // Add the ' character
+                piece = ft_strdup("'");
+                i++; // Skip '
+                
+                // Find closing quote
+                int start = i;
+                while (input[i] && input[i] != '\'')
+                    i++;
+                    
+                // Add content between quotes
+                char *content = ft_substr(input, start, i - start);
+                tmp = try_append(tmp, content);
+                if (!tmp)
+                    return NULL;
+                
+                // Add closing quote if found
+                if (input[i] == '\'')
+                {
+                    piece = ft_strdup("'");
+                    i++; // Skip '
+                    tmp = try_append(tmp, piece);
+                    if (!tmp)
+                        return NULL;
+                }
+                
+                continue;
+            }
             else if (quote == QUOTE_DOUBLE || quote == QUOTE_NONE)
                 piece = handle_dollar_quotes_fix(input, &i, envp, state);
             else
@@ -102,16 +180,16 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
                 piece = ft_strdup("$");
                 i++;
             }
-            tmp = str_append(tmp, piece);
-            // str_append now frees tmp internally even on failure
-            free(piece);
+            
+            tmp = try_append(tmp, piece);
+            if (!tmp)
+                return NULL;
         }
         else
         {
-            piece = ft_strdupc(input[i]);
-            tmp = str_append(tmp, piece);
-            // str_append now frees tmp internally even on failure
-            free(piece);
+            tmp = try_append(tmp, ft_strdupc(input[i]));
+            if (!tmp)
+                return NULL;
             i++;
         }
     }

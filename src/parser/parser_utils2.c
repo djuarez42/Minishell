@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 21:00:34 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,46 +17,54 @@ t_redir *create_redir(t_token *cur)
 	t_redir *redir;
 	t_fragment *frag;
 
+	// Validate input parameters
 	if (!cur || !cur->next || !cur->next->fragments)
 		return (NULL);
-
+		
+	// Get fragment for cleaner code and validation
+	frag = cur->next->fragments;
+	if (!frag || !frag->text)
+		return (NULL);
+	
+	// Allocate redirection structure
 	redir = malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL);
-
+		
+	// Initialize all fields to safe values
 	redir->type = cur->type;
-	redir->expanded = 0;  /* Initialize the expanded flag to 0 */
-	redir->next = NULL;   /* Initialize next pointer to NULL */
-	
-	frag = cur->next->fragments;
+	redir->next = NULL;
+	redir->heredoc_content = NULL;
+	redir->file = NULL;
 	redir->quoted = frag->quote_type != QUOTE_NONE;
 	
-	/* Initialize file to NULL first */
-	redir->file = NULL;
+	// For numeric filenames "123", we don't need to duplicate 
+	// as they will be handled as errors by the redirection handler
+	if (frag->text && ft_isdigit(frag->text[0]))
+	{
+		int i = 0;
+		while (frag->text[i] && ft_isdigit(frag->text[i]))
+			i++;
+		
+		if (frag->text[i] == '\0')
+		{
+			// Numeric filename - don't duplicate, set to NULL
+			// This is the special case for "123" that was leaking memory
+			redir->file = NULL;
+			return (redir);
+		}
+	}
 	
-	/* Check if frag->text exists before trying to strdup */
-	if (frag && frag->text)
+	// For non-numeric filenames, duplicate the name
+	redir->file = ft_strdup(frag->text);
+	if (!redir->file)
 	{
-		redir->file = ft_strdup(frag->text);
-		if (!redir->file)
-		{
-			free(redir);
-			return (NULL);
-		}
+		free(redir);
+		return (NULL);
 	}
-	else
-	{
-		/* Empty string if no text */
-		redir->file = ft_strdup("");
-		if (!redir->file)
-		{
-			free(redir);
-			return (NULL);
-		}
-	}
-
+	
 	// For heredoc, collect content during parsing
-	if (redir->type == TOKEN_HEREDOC)
+	if (redir->type == TOKEN_HEREDOC && redir->file)
 	{
 		redir->heredoc_content = collect_heredoc_content(redir->file, redir->quoted);
 		if (!redir->heredoc_content)
@@ -67,12 +75,7 @@ t_redir *create_redir(t_token *cur)
 			return (NULL);
 		}
 	}
-	else
-	{
-		redir->heredoc_content = NULL;  // Initialize to NULL for non-heredoc
-	}
 	
-	redir->next = NULL;
 	return (redir);
 }
 

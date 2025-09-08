@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/08 18:45:48 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,17 +76,36 @@ void	free_redirs(t_redir *redir)
 	t_redir	*tmp;
 	int		i;
 
+	if (!redir)
+		return;
+		
 	while (redir)
 	{
+		// Save next pointer before freeing
 		tmp = redir->next;
-		free(redir->file);
+		
+		// Free the filename if it exists
+		if (redir->file)
+		{
+			free(redir->file);
+			redir->file = NULL;
+		}
+		
+		// Free heredoc content if it exists
 		if (redir->heredoc_content)
 		{
 			i = 0;
 			while (redir->heredoc_content[i])
-				free(redir->heredoc_content[i++]);
+			{
+				free(redir->heredoc_content[i]);
+				redir->heredoc_content[i] = NULL;
+				i++;
+			}
 			free(redir->heredoc_content);
+			redir->heredoc_content = NULL;
 		}
+		
+		// Free the redirection structure itself
 		free(redir);
 		redir = tmp;
 	}

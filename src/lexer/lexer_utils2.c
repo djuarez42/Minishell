@@ -51,8 +51,26 @@ t_fragment *parse_mixed_fragments(const char *text)
         if (!text[i])
             break;
 
+        // Detectar $ seguido de ' (ANSI-C quoting)
+        if (text[i] == '$' && text[i + 1] == '\'')
+        {
+            int start = i;
+            i += 2; // saltar $'
+            while (text[i] && text[i] != '\'')
+            {
+                if (text[i] == '\\' && text[i + 1])
+                    i += 2;
+                else
+                    i++;
+            }
+            if (text[i] == '\'') i++; // saltar la comilla final
+            int len = i - start;
+            bool space_after = text[i] && ft_isspace((unsigned char)text[i]);
+            append_fragment(&fragments, new_fragment(&text[start], len, QUOTE_DOLLAR, space_after));
+            continue;
+        }
         // Detectar $ seguido de " (Dollar-quote)
-        if (text[i] == '$' && text[i + 1] == '"')
+        else if (text[i] == '$' && text[i + 1] == '"')
         {
             i += 2; // saltar $"
             int start = i;

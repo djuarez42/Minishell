@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_quotes_fix.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/30 18:43:18 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,29 @@ char *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_st
     {
         *i = start;  // Skip just the $ but keep the quote
         return (ft_strdup(""));  // Return empty string, the quote will be processed normally
+    }
+    // Handle $'string' syntax - ANSI-C quoting
+    else if (input[start] == '\'')
+    {
+        // Preserve the entire $'...' sequence for later processing in bi_echo
+        // We'll return it as is and handle it during echo builtin execution
+        int end = start + 1;
+        while (input[end] && input[end] != '\'')
+            end++;
+            
+        if (input[end] == '\'') // Found closing quote
+        {
+            // Create a string that includes $' and the closing '
+            char *ansi_c_str = ft_substr(input, *i, end - *i + 1);
+            *i = end + 1; // Skip past the closing quote
+            
+            return ansi_c_str;
+        }
+        else // No closing quote found
+        {
+            *i = start;
+            return (ft_strdup("$"));
+        }
     }
     // Special character handling - important for $? inside quotes
     else if (input[start] == '?')
@@ -81,6 +104,11 @@ char *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_st
     res = expand_env_var(name, envp);
     free(name);
     *i = start + len;
+    
+    // Make sure we always return a valid string, even if the variable isn't found
+    if (!res)
+        return (ft_strdup(""));
+        
     return (res);
 }
 

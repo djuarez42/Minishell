@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:28:20 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 21:54:53 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ typedef struct s_redir
     char                *file;
     int                 type;
     bool                quoted;
-    int                 expanded;  /* Flag to track if this redirection's file has been expanded */
     char                **heredoc_content;
     struct s_redir      *next;
 }   t_redir;

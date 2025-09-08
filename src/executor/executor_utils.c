@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/08 18:45:48 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ int	handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *s
 	redir = redirs;
 	while (redir)
 	{
-		redir->file = remove_quotes(redir->file);
+		// Skip NULL file pointers - these are for numeric file descriptors
+		if (redir->file)
+			redir->file = remove_quotes(redir->file);
 		redir = redir->next;
 	}
 	res = handle_redirections(redirs, envp, state);
@@ -65,22 +67,33 @@ char	*str_append(char *base, const char *add)
 	char	*new;
 	size_t	len;
 
+	if (!add && !base)
+		return (NULL);
+	if (!add)
+		return (base);
+	
 	len = 0;
 	if (base)
 		len += ft_strlen(base);
 	if (add)
 		len += ft_strlen(add);
+	
 	new = malloc(len + 1);
 	if (!new)
 	{
-		free(base);  // Free base on allocation failure to prevent memory leak
+		if (base)
+			free(base);
 		return (NULL);
 	}
+	
 	new[0] = '\0';
 	if (base)
+	{
 		ft_strlcat(new, base, len + 1);
+		free(base);  // Always free base after it's copied
+	}
 	if (add)
 		ft_strlcat(new, add, len + 1);
-	free(base);
+	
 	return (new);
 }

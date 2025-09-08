@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo_pwd_env.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/07 22:38:58 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int bi_echo(t_cmd *cmd)
 
     if (cmd->argv_final_text && cmd->argv_final_text[0])
     {
-
         // manejar flags -n
         while (cmd->argv_final_text[i] && is_n_flag(cmd->argv_final_text[i]))
         {
@@ -67,7 +66,10 @@ int	bi_pwd(void)
 		perror("pwd");
 		return (1);
 	}
+	
+	// Print the current working directory
 	ft_putendl_fd(cwd, STDOUT_FILENO);
+	
 	free(cwd);
 	return (0);
 }
