@@ -42,6 +42,68 @@ static int	validate_name_or_error(const char *arg)
 	return (0);
 }
 
+static void print_sorted_env(char **envp)
+{
+    int i, j;
+    int count = 0;
+    char *temp;
+    char **env_copy;
+
+    // Count environment variables
+    while (envp[count])
+        count++;
+
+    // Create a copy of the environment
+    env_copy = (char **)malloc(sizeof(char *) * (count + 1));
+    if (!env_copy)
+        return;
+    
+    // Copy environment variables
+    for (i = 0; i < count; i++)
+        env_copy[i] = ft_strdup(envp[i]);
+    env_copy[count] = NULL;
+    
+    // Sort environment variables (bubble sort)
+    for (i = 0; i < count - 1; i++)
+    {
+        for (j = 0; j < count - i - 1; j++)
+        {
+            if (ft_strcmp(env_copy[j], env_copy[j + 1]) > 0)
+            {
+                temp = env_copy[j];
+                env_copy[j] = env_copy[j + 1];
+                env_copy[j + 1] = temp;
+            }
+        }
+    }
+    
+    // Print sorted environment variables with declare -x format
+    for (i = 0; i < count; i++)
+    {
+        char *equals = ft_strchr(env_copy[i], '=');
+        if (equals)
+        {
+            // Print in format: declare -x NAME="VALUE"
+            ft_putstr_fd("declare -x ", STDOUT_FILENO);
+            write(STDOUT_FILENO, env_copy[i], equals - env_copy[i]);
+            ft_putstr_fd("=\"", STDOUT_FILENO);
+            ft_putstr_fd(equals + 1, STDOUT_FILENO);
+            ft_putendl_fd("\"", STDOUT_FILENO);
+        }
+        else
+        {
+            // Print in format: declare -x NAME
+            ft_putstr_fd("declare -x ", STDOUT_FILENO);
+            ft_putendl_fd(env_copy[i], STDOUT_FILENO);
+        }
+    }
+    
+    // Free allocated memory
+    for (i = 0; i < count; i++)
+        free(env_copy[i]);
+    free(env_copy);
+}
+
 int	bi_export(char **argv, char ***penvp)
 {
 	int	i;
@@ -49,6 +111,8 @@ int	bi_export(char **argv, char ***penvp)
 
 	if (!argv[1])
 	{
+		print_sorted_env(*penvp);
+		return (0);
 	}
 	status = 0;
 	i = 1;
