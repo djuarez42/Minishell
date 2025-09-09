@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_redir *create_redir(t_token *cur)
+t_redir *create_redir(t_token *cur, char **envp, t_exec_state *state)
 {
 	t_redir *redir;
 	t_fragment *frag;
@@ -66,7 +66,7 @@ t_redir *create_redir(t_token *cur)
 	// For heredoc, collect content during parsing
 	if (redir->type == TOKEN_HEREDOC && redir->file)
 	{
-		redir->heredoc_content = collect_heredoc_content(redir->file, redir->quoted);
+		redir->heredoc_content = collect_heredoc_content(redir->file, redir->quoted, envp, state);
 		if (!redir->heredoc_content)
 		{
 			// If heredoc collection fails (EOF), clean up and return NULL
@@ -74,6 +74,13 @@ t_redir *create_redir(t_token *cur)
 			free(redir);
 			return (NULL);
 		}
+	}
+	// Always ensure heredoc_content is set, even if empty
+	if (redir->type == TOKEN_HEREDOC && !redir->heredoc_content)
+	{
+		redir->heredoc_content = malloc(sizeof(char *));
+		if (redir->heredoc_content)
+			redir->heredoc_content[0] = NULL;
 	}
 	
 	return (redir);
@@ -168,7 +175,7 @@ t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
     return cmd;
 }
 
-char	**collect_heredoc_content(const char *delimiter, bool quoted __attribute__((unused)))
+char	**collect_heredoc_content(const char *delimiter, bool quoted, char **envp, t_exec_state *state)
 {
 	char	**lines;
 	char	*line;
@@ -246,7 +253,16 @@ char	**collect_heredoc_content(const char *delimiter, bool quoted __attribute__(
 			lines = new_lines;
 		}
 		
-		lines[count++] = line;
+		if (!quoted) {
+			char *expanded = expand_variables(line, envp, state, 0);
+			free(line);
+			line = expanded;
+		}
+		if (line)
+			lines[count++] = ft_strdup(line);
+		else
+			lines[count++] = NULL;
+		free(line);
 	}
 	
 	lines[count] = NULL;  // Null terminate the array

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_quotes_special.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:45:22 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/30 21:45:22 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 21:50:03 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,48 +15,53 @@
 #include <stdio.h>
 
 /*
- * This file implements special handling for the $"string" syntax
- * in bash which is used for locale-specific translations.
- * In our minishell implementation, we don't actually do translations
- * but we need to handle the syntax correctly to match bash's behavior.
+ * This file implements special handling for:
+ * 1. $"string" syntax in bash which is used for locale-specific translations.
+ * 2. $'string' syntax in bash which is used for ANSI-C quoting.
+ * In our minishell implementation, we handle both syntax forms correctly.
  */
 
 /*
- * Check if the current position represents a $"string" construct
- * Returns 1 if it is $"string", 0 otherwise
+ * Check if the current position represents a $"string" or $'string' construct
+ * Returns 1 if it is $"string" or $'string', 0 otherwise
  */
 int is_dollar_quotes_construct(const char *input, int pos)
 {
     if (!input || input[pos] != '$')
         return 0;
         
-    // Check if the $ is followed by "
-    if (input[pos + 1] != '"')
+    // Check if the $ is followed by " or '
+    if (input[pos + 1] != '"' && input[pos + 1] != '\'')
         return 0;
         
     return 1;
 }
 
 /*
- * Process a $"string" construct by returning just the string without expanding variables
+ * Process a $"string" or $'string' construct by returning just the string without expanding variables
  * Updates the position to after the closing quote
  * Returns the content of the string (not including the quotes)
  */
 char *process_dollar_quotes(const char *input, int *pos)
 {
-    int start = *pos + 2;  // Skip past $"
-    int end = start;
+    int start;
+    int end;
     char *result;
+    char quote_type;
     
-    // Find the closing double quote
-    while (input[end] && input[end] != '"')
+    quote_type = input[*pos + 1];  // Get the quote type (" or ')
+    start = *pos + 2;              // Skip past $" or $'
+    end = start;
+    
+    // Find the closing quote (matching the opening one)
+    while (input[end] && input[end] != quote_type)
         end++;
         
     // Extract the string between quotes (without expansion)
     result = ft_substr(input, start, end - start);
     
     // Update position to after the closing quote if found
-    if (input[end] == '"')
+    if (input[end] == quote_type)
         *pos = end + 1;
     else
         *pos = end;

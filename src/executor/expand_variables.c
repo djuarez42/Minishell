@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 20:11:32 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 21:50:03 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,37 +146,28 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
                 piece = handle_dollar_string(input, &i);
             else if (is_ansi_c_quote(input, i) && quote != QUOTE_SINGLE)
             {
-                // Handle ANSI-C quoting
-                piece = ft_strdup("$");
-                i++; // Skip $
-                tmp = try_append(tmp, piece);
-                if (!tmp)
-                    return NULL;
-                    
-                // Add the ' character
-                piece = ft_strdup("'");
-                i++; // Skip '
+                // Handle ANSI-C quoting - properly implement $'...' to output literal string
+                // Skip $ and '
+                i += 2;
                 
                 // Find closing quote
                 int start = i;
                 while (input[i] && input[i] != '\'')
                     i++;
-                    
-                // Add content between quotes
+                
+                // Extract content between quotes
                 char *content = ft_substr(input, start, i - start);
+                if (!content)
+                    return NULL;
+                
+                // Skip closing quote if found
+                if (input[i] == '\'')
+                    i++;
+                    
+                // Add the extracted content (without $' and ')
                 tmp = try_append(tmp, content);
                 if (!tmp)
                     return NULL;
-                
-                // Add closing quote if found
-                if (input[i] == '\'')
-                {
-                    piece = ft_strdup("'");
-                    i++; // Skip '
-                    tmp = try_append(tmp, piece);
-                    if (!tmp)
-                        return NULL;
-                }
                 
                 continue;
             }

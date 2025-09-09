@@ -57,7 +57,7 @@ t_token *parse_arguments(t_token *cur, t_cmd *cmd,
             char **envp, t_exec_state *state);
 t_token *parse_cmd_block(t_token *cur, t_cmd *cmd, char **envp, t_exec_state *state);
 t_token *parse_redirections(t_token *cur, t_cmd *cmd);
-t_redir *create_redir(t_token *cur);
+t_redir *create_redir(t_token *cur, char **envp, t_exec_state *state);
 
 void    print_redirs(t_redir *redir);
 void    print_cmd_list(t_cmd *cmd_list);
@@ -69,7 +69,7 @@ char    **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx);
 
 t_cmd   *create_cmd_node(t_token **cur, char **envp, t_exec_state *state);
 void    add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd);
-char    **collect_heredoc_content(const char *delimiter, bool quoted);
+char    **collect_heredoc_content(const char *delimiter, bool quoted, char **envp, t_exec_state *state);
 
 /* Aux de expansión en parser */
 void    expand_fragments(t_token *tok, char **envp, t_exec_state *state);

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 22:06:34 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 		return (NULL);
 
 	// Create a new redirection node
-	new_redir = create_redir(cur);
+    new_redir = create_redir(cur, cmd->argv, NULL); // Pass envp and state if available
 	if (!new_redir)
 	{
 		// Error creating redirection, but we'll continue parsing

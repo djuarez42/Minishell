@@ -6,11 +6,12 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 21:50:03 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "executor.h"
 
 /*
  * Fix for the issue with $? inside double quotes
@@ -44,19 +45,24 @@ char *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_st
     // Handle $'string' syntax - ANSI-C quoting
     else if (input[start] == '\'')
     {
-        // Preserve the entire $'...' sequence for later processing in bi_echo
-        // We'll return it as is and handle it during echo builtin execution
+        // In ANSI-C quoting, we should return the literal contents without variable expansion
+        // but we should process escape sequences like \n, \t, etc.
         int end = start + 1;
         while (input[end] && input[end] != '\'')
             end++;
             
         if (input[end] == '\'') // Found closing quote
         {
-            // Create a string that includes $' and the closing '
-            char *ansi_c_str = ft_substr(input, *i, end - *i + 1);
+            // Extract just the content between the quotes (without $' and ')
+            char *content = ft_substr(input, start + 1, end - (start + 1));
             *i = end + 1; // Skip past the closing quote
             
-            return ansi_c_str;
+            if (!content)
+                return (NULL);
+                
+            // In a full implementation, we would process escape sequences here
+            // but for now, just return the literal string
+            return content;
         }
         else // No closing quote found
         {
