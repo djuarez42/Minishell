@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/08 18:45:48 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 20:11:57 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@ char *concat_final_text(t_token *tok)
 
         frag = frag->next;
     }
-    return (final_text);
+
+    return final_text;
 }
+
 
 int should_expand_fragment(t_fragment *frag)
 {

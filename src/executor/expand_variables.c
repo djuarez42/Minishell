@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 20:11:32 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,13 +126,20 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
         
     while (input[i])
     {
+        /* Caso especial: \$ → conservar la barra */
         if (input[i] == '\\' && input[i + 1] == '$')
         {
-            tmp = try_append(tmp, ft_strdup("$"));
-            if (!tmp)
+            piece = ft_strdup("\\$");
+            if (!piece)
+            {
+                free(tmp);
                 return NULL;
+            }
+            tmp = str_append(tmp, piece);
+            free(piece);
             i += 2;
         }
+        /* Variables normales */
         else if (input[i] == '$')
         {
             if (is_dollar_string(input, i))
@@ -185,6 +192,7 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
             if (!tmp)
                 return NULL;
         }
+        /* Caracteres normales */
         else
         {
             tmp = try_append(tmp, ft_strdupc(input[i]));
@@ -193,6 +201,6 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
             i++;
         }
     }
-    return (tmp);
+    return tmp;
 }
 
