@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:22:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 19:47:34 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
         (*ctx->argc_final_text)++;
     }
 
-    // 4️⃣ Construir argv real (una posición por fragment)
+    // 4️⃣ Construir argv real: cada fragmento = un argv
     frag = tok->fragments;
     while (frag)
     {

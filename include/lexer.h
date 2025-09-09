@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:27:42 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 15:55:18 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,11 +118,11 @@ t_fragment		*extract_dollar_quote(const char *text, int *i);
 t_fragment 		*parse_mixed_fragments(const char *text);
 int 			should_expand_fragment(t_fragment *frag);
 
-
-// Additional function prototypes for lexer_utils5.c
 t_fragment      *duplicate_fragment(t_fragment *frag);
 t_token         *create_token_from_fragments(t_fragment *frag, bool space_before);
 void            assign_token_types(t_token *head);
+t_fragment		*handle_backslashes(const char *text, int *i);
+
 
 // Debug functions
 void			print_fragments(t_fragment *fragments);

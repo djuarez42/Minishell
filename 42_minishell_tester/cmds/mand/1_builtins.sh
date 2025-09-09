@@ -311,10 +311,7 @@ pwd
 cd $OLDPWD/something
 pwd
 
-pwd
-cd ~
-cd - ananas dot jpeg
-pwd
+
 
 # might need to change the directory by yourself, that supposed to be valid =)
 pwd
