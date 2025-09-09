@@ -77,24 +77,40 @@ static void print_sorted_env(char **envp)
         }
     }
     
-    // Print sorted environment variables with declare -x format
+    int is_tty = isatty(STDOUT_FILENO);
     for (i = 0; i < count; i++)
     {
         char *equals = ft_strchr(env_copy[i], '=');
         if (equals)
         {
-            // Print in format: declare -x NAME="VALUE"
-            ft_putstr_fd("declare -x ", STDOUT_FILENO);
-            write(STDOUT_FILENO, env_copy[i], equals - env_copy[i]);
-            ft_putstr_fd("=\"", STDOUT_FILENO);
-            ft_putstr_fd(equals + 1, STDOUT_FILENO);
-            ft_putendl_fd("\"", STDOUT_FILENO);
+            if (is_tty)
+            {
+                // Print in format: declare -x NAME="VALUE"
+                ft_putstr_fd("declare -x ", STDOUT_FILENO);
+                write(STDOUT_FILENO, env_copy[i], equals - env_copy[i]);
+                ft_putstr_fd("=\"", STDOUT_FILENO);
+                ft_putstr_fd(equals + 1, STDOUT_FILENO);
+                ft_putendl_fd("\"", STDOUT_FILENO);
+            }
+            else
+            {
+                // Print in format: NAME=VALUE
+                ft_putendl_fd(env_copy[i], STDOUT_FILENO);
+            }
         }
         else
         {
-            // Print in format: declare -x NAME
-            ft_putstr_fd("declare -x ", STDOUT_FILENO);
-            ft_putendl_fd(env_copy[i], STDOUT_FILENO);
+            if (is_tty)
+            {
+                // Print in format: declare -x NAME
+                ft_putstr_fd("declare -x ", STDOUT_FILENO);
+                ft_putendl_fd(env_copy[i], STDOUT_FILENO);
+            }
+            else
+            {
+                // Print just NAME
+                ft_putendl_fd(env_copy[i], STDOUT_FILENO);
+            }
         }
     }
     
