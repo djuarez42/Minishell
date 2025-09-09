@@ -6,16 +6,12 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 14:45:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/02 21:33:24 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 21:04:07 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Expands variables in a command structure in-place
- * Returns 0 on success, -1 on failure
- */
 int	expand_cmd_inplace(t_cmd *cmd, char **envp, t_exec_state *state)
 {
 	int		i;

@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables_utils2.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/30 16:26:54 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 20:25:51 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*expand_tilde_prefix(const char *s, char **envp)
+//expand_lide_prefix no longer in use 
+/*static char	*expand_tilde_prefix(const char *s, char **envp)
 {
 	const char	*home;
 	char		*suffix;
@@ -31,7 +32,7 @@ static char	*expand_tilde_prefix(const char *s, char **envp)
 	res = ft_strjoin(home, suffix);
 	free(suffix);
 	return (res);
-}
+}*/
 
 char	*remove_all_quotes(const char *s)
 {
@@ -58,9 +59,6 @@ char	*remove_all_quotes(const char *s)
 	return (out);
 }
 
-/*
-** Create a string with the specified number of backslashes
-*/
 char	*create_backslash_string(int count)
 {
 	char	*result;
@@ -81,10 +79,6 @@ char	*create_backslash_string(int count)
 	return (result);
 }
 
-/*
-** Count consecutive backslashes before a dollar sign and determine expansion behavior
-** Returns: number of backslashes to output (half of total), and whether to expand variable
-*/
 void	handle_backslash_dollar_parity(const char *input, int *i, 
 											int *backslashes_out, bool *should_expand)
 {
@@ -246,7 +240,8 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 	return (new_tmp);
 }
 
-int	expand_argv(char **argv, t_quote_type *argv_quote,
+//expand_argv no longer in use 
+/*int	expand_argv(char **argv, t_quote_type *argv_quote,
 		char **envp, t_exec_state *state)
 {
 	size_t	j;
@@ -289,7 +284,7 @@ int	expand_argv(char **argv, t_quote_type *argv_quote,
 		j++;
 	}
 	return (0);
-}
+}*/
 
 int	expand_redirs(t_redir *redir, char **envp, t_exec_state *state)
 {

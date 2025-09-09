@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 18:42:28 by ekakhmad          #+#    #+#             */
-/*   Updated: 2023/08/31 19:30:45 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 21:06:36 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-/**
- * Process all redirections for a command in a child process
- */
 int	setup_redirections(t_redir *redirs, char **envp, t_exec_state *state)
 {
 	t_fd_state	*fd_state;
@@ -106,9 +103,7 @@ int	setup_redirections(t_redir *redirs, char **envp, t_exec_state *state)
 	return (0);
 }
 
-/**
- * Process all redirections for a command in the parent process (for builtins)
- */
+
 int	setup_redirections_parent(t_redir *redirs, char **envp, 
 		t_exec_state *state, t_fd_state **fd_state)
 {

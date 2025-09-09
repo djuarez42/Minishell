@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:20:31 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 20:46:34 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,26 +192,9 @@ char *expand_fragment(const char *text, t_quote_type quote,
     if (quote == QUOTE_SINGLE)
         return (ft_strdup(text));
 
-    // 2. Tilde (~) al inicio
-    if (text[0] == '~' && (quote == QUOTE_NONE || quote == QUOTE_DOUBLE))
-    {
-        char *home = getenv("HOME");
-        if (home)
-        {
-            if (text[1] == '\0')
-                return (ft_strdup(home));
-            else
-            {
-                char *suffix = ft_strdup(text + 1);
-                if (!suffix)
-                    return (NULL);
-                char *res = str_append(ft_strdup(home), suffix);
-                free(suffix);
-                return (res);
-            }
-        }
-        return (ft_strdup("~")); // si no hay $HOME
-    }
+    // 2. Tilde (~) al inicio (sólo se expande si es válido)
+    if (text[0] == '~' && quote == QUOTE_NONE)
+        return (expand_tilde_bash(text, envp));
 
     // 3. Variables ($VAR, $?, etc.)
     expanded = expand_variables(text, envp, state, quote);
@@ -238,3 +221,36 @@ void expand_fragments(t_token *tok, char **envp, t_exec_state *state)
     }
 }
 
+char	*expand_tilde_bash(const char *text, char **envp)
+{
+	const char	*home;
+	char		*suffix;
+	char		*res;
+
+	if (!text || text[0] != '~')
+		return (ft_strdup(text));
+
+	/*
+	** Casos válidos para expansión de ~ en Bash:
+	**   ~        -> $HOME
+	**   ~/algo   -> $HOME/algo
+	**
+	** Casos NO válidos (se dejan literales):
+	**   ~usuario -> sin soporte en Minishell
+	**   ~42      -> se deja como "~42"
+	*/
+	if (text[1] && text[1] != '/')
+		return (ft_strdup(text));
+
+	home = env_get_value(envp, "HOME");
+	if (!home)
+		home = "";
+
+	suffix = ft_strdup(text + 1);
+	if (!suffix)
+		return (NULL);
+
+	res = ft_strjoin(home, suffix);
+	free(suffix);
+	return (res);
+}

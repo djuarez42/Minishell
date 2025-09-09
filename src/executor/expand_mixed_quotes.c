@@ -3,21 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   expand_mixed_quotes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 21:00:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/27 21:00:00 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 21:03:49 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "lexer.h"
 
-/*
- * This function handles expansion for strings with mixed quote types
- * like ""'$USER'"" where single-quoted parts should not expand variables
- */
-char	*expand_mixed_quotes(const char *input, char **envp, t_exec_state *state)
+
+//function no longer in use 
+/*char	*expand_mixed_quotes(const char *input, char **envp, t_exec_state *state)
 {
 	int		i;
 	char	*result;
@@ -131,3 +129,4 @@ char	*expand_mixed_quotes(const char *input, char **envp, t_exec_state *state)
 	
 	return (result);
 }
+*/

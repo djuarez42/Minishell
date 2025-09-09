@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:28:20 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 20:33:36 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ char    **collect_heredoc_content(const char *delimiter, bool quoted);
 /* Aux de expansión en parser */
 void    expand_fragments(t_token *tok, char **envp, t_exec_state *state);
 char    *expand_fragment(const char *text, t_quote_type quote, char **envp, t_exec_state *state);
+char	*expand_tilde_bash(const char *text, char **envp);
 //char    *build_final_text(t_token *tok, char **envp, t_exec_state *state);
 int      should_expand_fragment(t_fragment *frag);
 char    *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state);
