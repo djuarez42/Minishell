@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 20:46:34 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 23:07:55 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,51 +101,6 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 	return (cur->next->next);
 }
 
-
-/*t_token *parse_arguments(t_token *cur, t_cmd *cmd,
-                         char **envp, t_exec_state *state)
-{
-    int argc = 0;
-    t_proc_ctx ctx;
-
-    ctx.cmd = cmd;
-    ctx.argc = &argc;
-    ctx.envp = envp;
-    ctx.state = state;
-
-    while (cur && cur->type == TOKEN_WORD)
-    {
-        printf("\n=== parse_arguments ===\n");
-        printf("Procesando token final_text='%s'\n",
-               cur->final_text ? cur->final_text : "(null)");
-
-        cmd->argv = process_token_with_quotes(cur, &ctx);
-
-        if (!cmd->argv)
-        {
-            printf("DEBUG parse_arguments: fallo al procesar token '%s'\n",
-                   cur->final_text ? cur->final_text : "(null)");
-            free_partial_cmd(cmd, argc);
-            return NULL;
-        }
-
-        cur = cur->next;
-    }
-
-    cmd->argv[argc] = NULL;
-    cmd->argv_quote[argc] = QUOTE_NONE;
-
-    printf("=== parse_arguments end ===\n");
-    for (int i = 0; i < argc; i++)
-    {
-        printf("argv[%d] = '%s' (quote=%d)\n",
-               i,
-               cmd->argv[i] ? cmd->argv[i] : "(null)",
-               cmd->argv_quote[i]);
-    }
-
-    return cur;
-}*/
 
 t_token *parse_arguments(t_token *cur, t_cmd *cmd,
                          char **envp, t_exec_state *state)

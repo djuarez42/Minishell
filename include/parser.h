@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 20:33:36 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 22:47:30 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_redir
     bool                quoted;
     char                **heredoc_content;
     struct s_redir      *next;
+    t_fragment          *fragments;
 }   t_redir;
 
 typedef struct s_cmd

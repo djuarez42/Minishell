@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/02 23:13:06 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 21:38:51 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,19 +82,25 @@ int	handle_redirections_heredoc(const char *delimiter, bool quoted,
 	int	fd;
 	int	res;
 
-	fd = open_heredoc_file(args);
-	if (fd == -1)
-		return (1);
-	args->fd = fd;
 	args->delimiter = delimiter;
 	args->quoted = quoted;
 	args->envp = envp;
+	args->heredoc_path = NULL;
+
+	fd = open_heredoc_file(args);
+	if (fd == -1)
+		return (1);
+
+	args->fd = fd;
+
 	res = write_heredoc_lines(args);
 	close(fd);
+
 	if (res == 130)
 		return (130);
+
 	redirect_stdin_heredoc(args->heredoc_path);
-	return (0);
+	return 0;
 }
 
 int	handle_redirections_heredoc_with_content(char **heredoc_content, bool quoted,

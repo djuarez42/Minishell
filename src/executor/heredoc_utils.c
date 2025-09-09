@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:15 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/30 21:47:36 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 23:04:22 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,58 +72,52 @@ int	open_heredoc_file(t_heredoc_args *args)
 	return (fd);
 }
 
-int	write_heredoc_lines(t_heredoc_args *args)
+int write_heredoc_lines(t_heredoc_args *args)
 {
-	char	*line;
-	char	*expanded_line;
-	int		result = 0;
-	void	(*original_sigint)(int);
-	void	(*original_sigquit)(int);
+    char *line;
+    char *expanded_line;
+    int result = 0;
+    void (*original_sigint)(int);
+    void (*original_sigquit)(int);
 
-	// Save original signal handlers
-	original_sigint = signal(SIGINT, SIG_DFL);
-	original_sigquit = signal(SIGQUIT, SIG_IGN);
+    original_sigint = signal(SIGINT, SIG_DFL);
+    original_sigquit = signal(SIGQUIT, SIG_IGN);
+    while (1)
+    {
+        line = readline("> ");
+        if (!line)
+        {
+            result = 130;
+            break;
+        }
 
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-		{
-			result = 130; // SIGINT
-			break;
-		}
-		
-		/* Match exactly with the delimiter string */
-		if ((ft_strncmp(line, args->delimiter,
-					ft_strlen(args->delimiter)) == 0
-				&& line[ft_strlen(args->delimiter)] == '\0'))
-		{
-			free(line);
-			break;
-		}
-		
-		/* Handle variable expansion based on quotes */
-		if (!args->quoted)
-			expanded_line = expand_variables(line, args->envp, args->state,
-					QUOTE_NONE);
-		else
-			expanded_line = ft_strdup(line);
-		
-		if (expanded_line)
-		{
-			write(args->fd, expanded_line, ft_strlen(expanded_line));
-			write(args->fd, "\n", 1);
-			free(expanded_line);
-		}
-		free(line);
-	}
 
-	// Restore original signal handlers
-	signal(SIGINT, original_sigint);
-	signal(SIGQUIT, original_sigquit);
-	
-	return (result);
+        if ((ft_strncmp(line, args->delimiter, ft_strlen(args->delimiter)) == 0 &&
+             line[ft_strlen(args->delimiter)] == '\0'))
+        {
+            free(line);
+            break;
+        }
+
+        if (!args->quoted)
+            expanded_line = expand_variables(line, args->envp, args->state, QUOTE_NONE);
+        else
+            expanded_line = ft_strdup(line);
+
+        if (expanded_line)
+        {
+            write(args->fd, expanded_line, ft_strlen(expanded_line));
+            write(args->fd, "\n", 1);
+            free(expanded_line);
+        }
+        free(line);
+    }
+
+    signal(SIGINT, original_sigint);
+    signal(SIGQUIT, original_sigquit);
+    return result;
 }
+
 
 void	redirect_stdin_heredoc(const char *filepath)
 {

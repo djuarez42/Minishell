@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 19:45:05 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 22:44:05 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ t_fragment *parse_mixed_fragments(const char *text)
         }
     }
 
-    // print_fragments(fragments);
+    //print_fragments(fragments);
     return fragments;
 }
 

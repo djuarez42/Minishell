@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 21:00:34 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 22:51:33 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,43 +14,48 @@
 
 t_redir *create_redir(t_token *cur)
 {
-	t_redir *redir;
-	t_fragment *frag;
+    t_redir *redir;
+    t_fragment *frag;
 
-	if (!cur || !cur->next || !cur->next->fragments)
-		return (NULL);
+    if (!cur || !cur->next || !cur->next->fragments)
+        return (NULL);
 
-	redir = malloc(sizeof(t_redir));
-	if (!redir)
-		return (NULL);
+    redir = malloc(sizeof(t_redir));
+    if (!redir)
+        return (NULL);
 
-	redir->type = cur->type;
-	
-	frag = cur->next->fragments;
-	redir->quoted = frag->quote_type != QUOTE_NONE;
-	redir->file = ft_strdup(frag->text);
-	if (!redir->file)
-		return (free(redir), NULL);
+    redir->type = cur->type;
+    
+    // Guardar fragments completos para acceder a quote_type y demás
+    redir->fragments = cur->next->fragments;
 
-	// For heredoc, collect content during parsing
-	if (redir->type == TOKEN_HEREDOC)
-	{
-		redir->heredoc_content = collect_heredoc_content(redir->file, redir->quoted);
-		if (!redir->heredoc_content)
-		{
-			// If heredoc collection fails (EOF), clean up and return NULL
-			free(redir->file);
-			free(redir);
-			return (NULL);
-		}
-	}
-	else
-	{
-		redir->heredoc_content = NULL;  // Initialize to NULL for non-heredoc
-	}
-	
-	redir->next = NULL;
-	return (redir);
+    // Detectar si el heredoc estaba entre comillas
+    frag = redir->fragments;
+    redir->quoted = frag->quote_type != QUOTE_NONE;
+
+    // Guardar el texto plano para file
+    redir->file = ft_strdup(frag->text);
+    if (!redir->file)
+        return (free(redir), NULL);
+
+    // Para heredoc
+    if (redir->type == TOKEN_HEREDOC)
+    {
+        redir->heredoc_content = collect_heredoc_content(redir->file, redir->quoted);
+        if (!redir->heredoc_content)
+        {
+            free(redir->file);
+            free(redir);
+            return (NULL);
+        }
+    }
+    else
+    {
+        redir->heredoc_content = NULL;
+    }
+
+    redir->next = NULL;
+    return (redir);
 }
 
 bool	is_quoted(const char *str)

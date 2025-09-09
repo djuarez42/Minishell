@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:32:46 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 22:13:01 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,17 @@ char	*remove_quotes(char *str)
 	int		len;
 	char	*result;
 
+	if (!str)
+		return (NULL);
+
 	len = ft_strlen(str);
-	// Only remove double quotes, preserve single quotes
+
+	// Elimina solo comillas dobles externas
 	if (len > 1 && str[0] == '"' && str[len - 1] == '"')
 		result = ft_substr(str, 1, len - 2);
 	else
 		result = ft_strdup(str);
+
 	return (result);
 }
 

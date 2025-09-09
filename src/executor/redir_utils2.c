@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/02 23:08:57 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 21:36:35 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,57 +67,47 @@ int	write_heredoc_lines(t_heredoc_args *args)
 {
 	char	*line;
 	char	*expanded_line;
-	int		is_interactive;
+	int		result = 0;
+	void	(*original_sigint)(int);
+	void	(*original_sigquit)(int);
 
-	is_interactive = isatty(STDIN_FILENO);
+	original_sigint = signal(SIGINT, SIG_DFL);
+	original_sigquit = signal(SIGQUIT, SIG_IGN);
+
 	while (1)
 	{
-		if (is_interactive)
-		{
-			line = readline("> ");
-		}
-		else
-		{
-			// For non-interactive mode, read directly from stdin
-			char *buffer = NULL;
-			size_t len = 0;
-			ssize_t read_len = getline(&buffer, &len, stdin);
-			if (read_len == -1)
-			{
-				line = NULL;
-			}
-			else
-			{
-				// Remove trailing newline if present
-				if (read_len > 0 && buffer[read_len - 1] == '\n')
-					buffer[read_len - 1] = '\0';
-				line = ft_strdup(buffer);
-				free(buffer);
-			}
-		}
-		
+		line = readline("> ");
 		if (!line)
 		{
-			return (130);
+			result = 130;
+			break;
 		}
+
 		if ((ft_strncmp(line, args->delimiter,
 					ft_strlen(args->delimiter)) == 0
 				&& line[ft_strlen(args->delimiter)] == '\0'))
 		{
 			free(line);
-			break ;
+			break;
 		}
+
 		if (!args->quoted)
-			expanded_line = expand_variables(line, args->envp, args->state,
-					QUOTE_NONE);
+			expanded_line = expand_variables(line, args->envp, args->state, QUOTE_NONE);
 		else
 			expanded_line = ft_strdup(line);
-		write(args->fd, expanded_line, ft_strlen(expanded_line));
-		write(args->fd, "\n", 1);
-		free(expanded_line);
+
+		if (expanded_line)
+		{
+			write(args->fd, expanded_line, ft_strlen(expanded_line));
+			write(args->fd, "\n", 1);
+			free(expanded_line);
+		}
 		free(line);
 	}
-	return (0);
+
+	signal(SIGINT, original_sigint);
+	signal(SIGQUIT, original_sigquit);
+	return result;
 }
 
 void	redirect_stdin_heredoc(const char *filepath)
