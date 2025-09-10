@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 23:03:49 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/10 18:49:38 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,6 @@ void	free_split(char **split)
 		free(split[i++]);
 	free(split);
 }
-
-/*int	handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state)
-{
-	t_redir	*redir;
-	int		res;
-
-	redir = redirs;
-	while (redir)
-	{
-		redir->file = remove_quotes(redir->file);
-		redir = redir->next;
-	}
-	res = handle_redirections(redirs, envp, state);
-	return (res);
-}*/
 
 int handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state)
 {
