@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 22:47:30 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/11 19:06:55 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int     init_cmd_args(t_cmd *cmd);
 
 char    **process_token(t_token *tok, char **argv, int *argc, char **envp);
 char    **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx);
+void    free_str_array(char **arr);
 
 t_cmd   *create_cmd_node(t_token **cur, char **envp, t_exec_state *state);
 void    add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd);
