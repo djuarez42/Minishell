@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 23:07:55 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/11 16:56:16 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,26 +138,21 @@ t_token *parse_arguments(t_token *cur, t_cmd *cmd,
 char *expand_fragment(const char *text, t_quote_type quote,
                       char **envp, t_exec_state *state)
 {
-    char *expanded;
-
     if (!text)
-        return (ft_strdup(""));
+        return ft_strdup("");
 
-    // 1. Comillas simples → literal
     if (quote == QUOTE_SINGLE)
-        return (ft_strdup(text));
+        return ft_strdup(text);
 
-    // 2. Tilde (~) al inicio (sólo se expande si es válido)
+    if (quote == QUOTE_DOLLAR)
+        return expand_ansi_c_string(text); // tu función ya existente
+
     if (text[0] == '~' && quote == QUOTE_NONE)
-        return (expand_tilde_bash(text, envp));
+        return expand_tilde_bash(text, envp);
 
-    // 3. Variables ($VAR, $?, etc.)
-    expanded = expand_variables(text, envp, state, quote);
-    if (!expanded)
-        return (NULL);
-
-    return (expanded);
+    return expand_variables(text, envp, state, quote);
 }
+
 
 void expand_fragments(t_token *tok, char **envp, t_exec_state *state)
 {

@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 22:35:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/11 17:02:23 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,8 @@ char    *build_heredoc_delimiter(const char *text);
 int     is_dollar_string_pattern(const char *input, int pos);
 char    *process_dollar_string(const char *input, int *pos);
 void    print_error_file(const char *context);
+char    *interpret_ansi_c_escapes(const char *str);
+char    *expand_ansi_c_string(const char *input);
+int     is_dollar_string(const char *input, int pos);
 
 #endif

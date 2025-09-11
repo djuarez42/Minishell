@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/10 18:48:27 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/11 16:58:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,23 +59,33 @@ t_fragment *parse_mixed_fragments(const char *text)
             }
         }
 
-        /* Comillas dobles después de $ */
-        if (text[i] == '$' && text[i + 1] == '"')
+        /* $'...' o $"..." */
+        if (is_dollar_string(text, i))
         {
-            i += 2;
+            char quote = text[i + 1]; // puede ser ' o "
+            i += 2; // saltamos $' o $"
             int start = i;
-            while (text[i] && text[i] != '"')
+
+            while (text[i] && text[i] != quote)
             {
-                if (text[i] == '\\' && text[i + 1])
-                    i += 2;
+                if (quote == '"' && text[i] == '\\' && text[i + 1])
+                    i += 2; // escapamos dentro de $"
                 else
                     i++;
             }
+
             int len = i - start;
             bool space_after = text[i + 1] && ft_isspace((unsigned char)text[i + 1]);
-            append_fragment(&fragments, new_fragment(&text[start], (size_t)len, QUOTE_DOUBLE, space_after));
-            if (text[i] == '"')
-                i++; 
+
+            if (quote == '\'')
+                append_fragment(&fragments,
+                    new_fragment(&text[start], (size_t)len, QUOTE_DOLLAR, space_after));
+            else
+                append_fragment(&fragments,
+                    new_fragment(&text[start], (size_t)len, QUOTE_DOUBLE, space_after));
+
+            if (text[i] == quote)
+                i++; // saltamos el cierre de ' o "
             continue;
         }
 
