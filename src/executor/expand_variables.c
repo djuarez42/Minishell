@@ -6,12 +6,19 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 21:17:00 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:26:10 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+#include <stdbool.h>
+
+// Checks for $' at position i
+static bool is_ansi_c_quote(const char *input, int i)
+{
+    return (input[i] == '$' && input[i + 1] == '\'');
+}
 // Helper function to create a string from a single character
 static char *ft_strdupc(char c)
 {

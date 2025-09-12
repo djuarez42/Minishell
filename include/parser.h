@@ -57,7 +57,7 @@ t_cmd   *parser_tokens(t_token *tokens, char **envp, t_exec_state *state);
 t_token *parse_arguments(t_token *cur, t_cmd *cmd,
             char **envp, t_exec_state *state);
 t_token *parse_cmd_block(t_token *cur, t_cmd *cmd, char **envp, t_exec_state *state);
-t_token *parse_redirections(t_token *cur, t_cmd *cmd);
+t_token *parse_redirections(t_token *cur, t_cmd *cmd, char **envp, t_exec_state *state);
 t_redir *create_redir(t_token *cur, char **envp, t_exec_state *state);
 
 void    print_redirs(t_redir *redir);

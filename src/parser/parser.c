@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 21:17:32 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 23:06:27 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 /* forward declare to avoid header ordering issues */
 void	free_partial_cmd(t_cmd *cmd, int argc);
+// Use the global environment pointer defined in main.c
+extern char **g_envp;
 
 t_cmd *parser_tokens(t_token *tokens, char **envp, t_exec_state *state)
 {
@@ -26,9 +28,17 @@ t_cmd *parser_tokens(t_token *tokens, char **envp, t_exec_state *state)
     last = NULL;
     cur = tokens;
 
+    /* ensure global env pointer is initialized for parser helpers */
+    g_envp = envp;
+
     if (cur && cur->type == TOKEN_PIPE)
     {
         ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+        return (NULL);
+    }
+    if (cur && cur->type == TOKEN_HEREDOC)
+    {
+        ft_putstr_fd("minishell: syntax error near unexpected token `<<'\n", 2);
         return (NULL);
     }
 
@@ -60,7 +70,7 @@ t_token *parse_cmd_block(t_token *cur, t_cmd *cmd,
             || cur->type == TOKEN_APPEND
             || cur->type == TOKEN_HEREDOC))
     {
-        cur = parse_redirections(cur, cmd);
+        cur = parse_redirections(cur, cmd, envp, state);
         if (!cur)
         {
             free_partial_cmd(cmd, -1);
@@ -75,7 +85,7 @@ t_token *parse_cmd_block(t_token *cur, t_cmd *cmd,
 }
 
 
-t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
+t_token	*parse_redirections(t_token *cur, t_cmd *cmd, char **envp, t_exec_state *state)
 {
 	t_redir	*new_redir;
 	t_redir	*last;
@@ -86,7 +96,9 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 		return (NULL);
 
 	// Create a new redirection node
-    new_redir = create_redir(cur, cmd->argv, NULL); // Pass envp and state if available
+    // new_redir = create_redir(cur, cmd->argv, NULL); // INCORRECT: passed argv as envp
+
+    new_redir = create_redir(cur, envp, state); // pass provided envp and state
 	if (!new_redir)
 	{
 		// Error creating redirection, but we'll continue parsing

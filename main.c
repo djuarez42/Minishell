@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 17:21:05 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/12 22:16:56 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 #include "executor.h"
 #include "signals.h"
 #include <unistd.h> // for isatty()
+
+/* Global environment pointer used across parser/helpers */
+char **g_envp = NULL;
 
 /*int main(void)
 {
@@ -131,6 +134,8 @@ int main(int argc, char **argv, char **envp)
     envp_copy = new_envp(envp);
     if (!envp_copy)
         return (1);
+    g_envp = envp_copy;
+    // Environment copied into envp_copy
 
     state.last_status = 0;
     is_interactive = isatty(STDIN_FILENO);

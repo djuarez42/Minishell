@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 21:17:11 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 22:20:57 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,18 +118,17 @@ int	handle_redirections_heredoc_with_content(char **heredoc_content, bool quoted
 	i = 0;
 	while (heredoc_content[i])
 	{
-		printf("heredoc debug: '%s'\n", heredoc_content[i]);
 		if (!quoted)
 			expanded_line = expand_variables(heredoc_content[i], envp, state, QUOTE_NONE);
 		else
 			expanded_line = ft_strdup(heredoc_content[i]);
-        
+	    
 		if (!expanded_line)
 		{
 			close(fd);
 			return (1);
 		}
-        
+	    
 		write(fd, expanded_line, ft_strlen(expanded_line));
 		write(fd, "\n", 1);
 		free(expanded_line);

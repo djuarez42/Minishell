@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/09 21:50:03 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 22:20:57 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,15 +106,12 @@ char *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_st
     name = ft_substr(input, start, len);
     if (!name)
         return (NULL);
-    
     res = expand_env_var(name, envp);
     free(name);
     *i = start + len;
-    
     // Make sure we always return a valid string, even if the variable isn't found
     if (!res)
         return (ft_strdup(""));
-        
     return (res);
 }
 
