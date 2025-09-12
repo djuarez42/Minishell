@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 21:17:39 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 00:14:24 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,89 +39,6 @@ void	free_partial_cmd(t_cmd *cmd, int argc)
 		free(cmd->argv_quote);
 		cmd->argv_quote = NULL;
 	}
-}
-
-void	free_cmds(t_cmd *cmd)
-{
-	t_cmd	*tmp;
-	int		i;
-
-	while (cmd)
-	{
-		tmp = cmd->next;
-		if (cmd->argv)
-		{
-			i = 0;
-			while (cmd->argv[i])
-				free(cmd->argv[i++]);
-			free(cmd->argv);
-		}
-		if (cmd->argv_quote)
-			free(cmd->argv_quote);
-		if (cmd->argv_final_text)
-		{
-			i = 0;
-			while (cmd->argv_final_text[i])
-				free(cmd->argv_final_text[i++]);
-			free(cmd->argv_final_text);
-		}
-		free_redirs(cmd->redirs);
-		free(cmd);
-		cmd = tmp;
-	}
-}
-
-void	free_redirs(t_redir *redir)
-{
-	t_redir	*tmp;
-	int		i;
-
-	if (!redir)
-		return;
-		
-	while (redir)
-	{
-		// Save next pointer before freeing
-		tmp = redir->next;
-		
-		// Free the filename if it exists
-		if (redir->file)
-		{
-			free(redir->file);
-			redir->file = NULL;
-		}
-		
-		// Free heredoc content if it exists
-		if (redir->heredoc_content)
-		{
-			i = 0;
-			while (redir->heredoc_content[i])
-			{
-				free(redir->heredoc_content[i]);
-				redir->heredoc_content[i] = NULL;
-				i++;
-			}
-			free(redir->heredoc_content);
-			redir->heredoc_content = NULL;
-		}
-		
-		// Free the redirection structure itself
-		free(redir);
-		redir = tmp;
-	}
-}
-
-int	init_cmd_args(t_cmd *cmd)
-{
-	cmd->argv = malloc(sizeof(char *) * MAX_ARGS);
-	cmd->argv_quote = malloc(sizeof(t_quote_type) * MAX_ARGS);
-	if (!cmd->argv || !cmd->argv_quote)
-	{
-		free(cmd->argv);
-		free(cmd->argv_quote);
-		return (0);
-	}
-	return (1);
 }
 
 char **process_token(t_token *tok, char **argv, int *argc, char **envp)
@@ -202,22 +119,179 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
     free(tok->final_text);
     tok->final_text = concat_final_text(tok);
 
-    // 3️⃣ Guardar en argv_final_text (para depuración u otros usos internos)
-    if (ctx->cmd->argv_final_text)
-    {
-        ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text);
-        (*ctx->argc_final_text)++;
-    }
+	/* If there are no quoted fragments in this token and the final_text
+	 * contains unexpanded '$', expand the whole final_text at once. This
+	 * fixes cases where parse_mixed_fragments produced separate fragments
+	 * like '$' and 'NAME' causing per-fragment expansion to miss variables. */
+	{
+		bool any_quoted = false;
+		t_fragment *ff = tok->fragments;
+		while (ff)
+		{
+			if (ff->quote_type != QUOTE_NONE)
+			{
+				any_quoted = true;
+				break;
+			}
+			ff = ff->next;
+		}
+		if (!any_quoted && ft_strchr(tok->final_text, '$'))
+		{
+			char *expanded_all = expand_variables(tok->final_text, ctx->envp, ctx->state, QUOTE_NONE);
+			if (expanded_all)
+			{
+				free(tok->final_text);
+				tok->final_text = expanded_all;
+			}
+		}
+	}
 
-    // 4️⃣ Guardar en argv (👈 aquí cambiamos: ahora va SOLO el final_text)
-    if (tok->final_text && *tok->final_text)
-    {
-        ctx->cmd->argv[*ctx->argc_argv] = ft_strdup(tok->final_text);
-        ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE; // ya es expandido
-        (*ctx->argc_argv)++;
-    }
+	/* 3️⃣ NOTE: we must not append the raw tok->final_text to argv_final_text
+	 * before performing word-splitting. argv_final_text must match the
+	 * post-splitting argv that will be executed; appending early would leave
+	 * an incorrect entry (e.g. "/bin/echo 42") as argv_final_text[0]. */
+
+	// 4️⃣ Guardar en argv
+	if (tok->final_text && *tok->final_text)
+	{
+		/* Determine if we should perform shell word-splitting (IFS) on this
+		 * token. Splitting happens when the final_text contains IFS whitespace
+		 * and the token included unquoted fragments that could have produced
+		 * those spaces. We must NOT split if this is an assignment whose value
+		 * part was quoted in the source (e.g. name="a b"). */
+		bool has_unquoted_fragment = false;
+		bool is_assignment_with_quoted_value = false;
+		t_fragment *f = tok->fragments;
+		bool found_eq = false;
+
+		while (f)
+		{
+			if (f->quote_type == QUOTE_NONE)
+				has_unquoted_fragment = true;
+			if (!found_eq)
+			{
+				char *eq = ft_strchr(f->text, '=');
+				if (eq)
+				{
+					found_eq = true;
+					/* If there are characters after '=' in this fragment,
+					 * their quote type is f->quote_type. Otherwise we must
+					 * inspect subsequent fragments. */
+					if (*(eq + 1) != '\0')
+					{
+						if (f->quote_type != QUOTE_NONE)
+							is_assignment_with_quoted_value = true;
+					}
+					else
+					{
+						t_fragment *nf = f->next;
+						if (nf && nf->quote_type != QUOTE_NONE)
+							is_assignment_with_quoted_value = true;
+					}
+				}
+			}
+			f = f->next;
+		}
+
+		bool contains_ifs = false;
+		for (char *p = tok->final_text; *p; ++p)
+			if (*p == ' ' || *p == '\t' || *p == '\n') { contains_ifs = true; break; }
+
+	if (contains_ifs && has_unquoted_fragment && !is_assignment_with_quoted_value)
+		{
+			/* Perform simple IFS splitting on whitespace (space, tab, newline).
+			 * Leading/trailing and repeated IFS whitespace are skipped. */
+			const char *s = tok->final_text;
+			int len = ft_strlen(s);
+			int i = 0;
+
+			while (i < len)
+			{
+				/* skip IFS */
+				while (i < len && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n'))
+					i++;
+				if (i >= len) break;
+				int start = i;
+				while (i < len && !(s[i] == ' ' || s[i] == '\t' || s[i] == '\n'))
+					i++;
+				int field_len = i - start;
+				if (field_len > 0)
+				{
+					char *field = malloc((size_t)field_len + 1);
+					if (!field)
+						return ctx->cmd->argv; // best-effort keep current state
+					ft_strlcpy(field, &s[start], (size_t)field_len + 1);
+
+					(void)field; /* field used above; debug removed */
+
+					/* append to argv_final_text */
+					if (ctx->cmd->argv_final_text)
+					{
+						ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(field);
+						(*ctx->argc_final_text)++;
+					}
+
+					ctx->cmd->argv[*ctx->argc_argv] = field;
+					ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE;
+					(*ctx->argc_argv)++;
+				}
+			}
+		}
+		else
+		{
+			ctx->cmd->argv[*ctx->argc_argv] = ft_strdup(tok->final_text);
+			if (ctx->cmd->argv_final_text)
+			{
+				ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text);
+				(*ctx->argc_final_text)++;
+			}
+			ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE; // ya es expandido
+			(*ctx->argc_argv)++;
+		}
+	}
 
     return ctx->cmd->argv;
+}
+
+/**
+ * Modified parse_arguments-style helper that consumes WORD tokens and appends
+ * to cmd->argv using persistent argc counters provided by the caller.
+ * This function mirrors the previous behavior but allows being called
+ * multiple times so arguments accumulate across redirections.
+ */
+t_token *parse_arguments(t_token *cur, t_cmd *cmd,
+						 char **envp, t_exec_state *state,
+						 int *p_argc_argv, int *p_argc_final_text)
+{
+	t_proc_ctx ctx;
+
+	if (!p_argc_argv || !p_argc_final_text)
+		return NULL;
+
+	ctx.cmd = cmd;
+	ctx.argc_argv = p_argc_argv;
+	ctx.argc_final_text = p_argc_final_text;
+	ctx.envp = envp;
+	ctx.state = state;
+
+	while (cur && cur->type == TOKEN_WORD)
+	{
+		cmd->argv = process_token_with_quotes(cur, &ctx);
+		if (!cmd->argv)
+		{
+			free_partial_cmd(cmd, *p_argc_argv);
+			return NULL;
+		}
+		cur = cur->next;
+	}
+
+	/* Ensure terminators are set by the caller eventually */
+	cmd->argv[*p_argc_argv] = NULL;
+	cmd->argv_quote[*p_argc_argv] = QUOTE_NONE;
+	if (cmd->argv_final_text)
+		cmd->argv_final_text[*p_argc_final_text] = NULL;
+
+	return cur;
 }
 
 void free_str_array(char **arr)
@@ -231,4 +305,37 @@ void free_str_array(char **arr)
         i++;
     }
     free(arr);
+}
+
+void free_redirs(t_redir *redir)
+{
+	t_redir *next;
+
+	while (redir)
+	{
+		next = redir->next;
+		if (redir->file)
+			free(redir->file);
+		if (redir->heredoc_content)
+			free_str_array(redir->heredoc_content);
+		free(redir);
+		redir = next;
+	}
+}
+
+void free_cmds(t_cmd *cmd)
+{
+	t_cmd *next;
+
+	while (cmd)
+	{
+		next = cmd->next;
+		if (cmd->redirs)
+			free_redirs(cmd->redirs);
+		if (cmd->argv_final_text)
+			free_str_array(cmd->argv_final_text);
+		free_partial_cmd(cmd, -1);
+		free(cmd);
+		cmd = next;
+	}
 }

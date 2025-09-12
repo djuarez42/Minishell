@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 23:06:27 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 00:14:24 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,6 @@ t_cmd *parser_tokens(t_token *tokens, char **envp, t_exec_state *state)
         ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
         return (NULL);
     }
-    if (cur && cur->type == TOKEN_HEREDOC)
-    {
-        ft_putstr_fd("minishell: syntax error near unexpected token `<<'\n", 2);
-        return (NULL);
-    }
 
     while (cur && cur->type != TOKEN_EOF)
     {
@@ -62,7 +57,9 @@ t_cmd *parser_tokens(t_token *tokens, char **envp, t_exec_state *state)
 t_token *parse_cmd_block(t_token *cur, t_cmd *cmd,
                          char **envp, t_exec_state *state)
 {
-    cur = parse_arguments(cur, cmd, envp, state);
+    int argc_argv = 0;
+    int argc_final_text = 0;
+    cur = parse_arguments(cur, cmd, envp, state, &argc_argv, &argc_final_text);
     if (!cur)
         return (NULL);
     while (cur && (cur->type == TOKEN_REDIRECT_OUT
@@ -78,8 +75,24 @@ t_token *parse_cmd_block(t_token *cur, t_cmd *cmd,
             cmd->redirs = NULL;
             return (NULL);
         }
+        /* After handling a redirection, allow following WORD tokens to be
+         * parsed as further arguments for the same command. Call
+         * parse_arguments again when a WORD appears. This fixes cases like:
+         *   /bin/echo 42 > tmp_redir_out 42
+         * where the trailing `42` should be an argument, not an attempted
+         * new command. */
         if (cur && cur->type == TOKEN_WORD)
-            break;
+        {
+            cur = parse_arguments(cur, cmd, envp, state, &argc_argv, &argc_final_text);
+            if (!cur)
+            {
+                free_partial_cmd(cmd, -1);
+                free_redirs(cmd->redirs);
+                cmd->redirs = NULL;
+                return (NULL);
+            }
+            /* continue loop to handle any further redirections */
+        }
     }
     return (cur);
 }
@@ -124,38 +137,7 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd, char **envp, t_exec_state 
 }
 
 
-t_token *parse_arguments(t_token *cur, t_cmd *cmd,
-                         char **envp, t_exec_state *state)
-{
-    int argc_argv = 0;
-    int argc_final_text = 0;
-    t_proc_ctx ctx;
-
-    ctx.cmd = cmd;
-    ctx.argc_argv = &argc_argv;
-    ctx.argc_final_text = &argc_final_text;
-    ctx.envp = envp;
-    ctx.state = state;
-
-    while (cur && cur->type == TOKEN_WORD)
-    {
-        cmd->argv = process_token_with_quotes(cur, &ctx);
-        if (!cmd->argv)
-        {
-            free_partial_cmd(cmd, argc_argv);
-            return NULL;
-        }
-        cur = cur->next;
-    }
-
-    // 🔹 Poner NULL terminators
-    cmd->argv[argc_argv] = NULL;
-    cmd->argv_quote[argc_argv] = QUOTE_NONE;
-    if (cmd->argv_final_text)
-        cmd->argv_final_text[argc_final_text] = NULL;
-
-    return cur;
-}
+/* parse_arguments moved to parser_utils.c to allow persistent argc counters */
 
 char *expand_fragment(const char *text, t_quote_type quote,
                       char **envp, t_exec_state *state)

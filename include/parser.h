@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 21:15:56 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 23:29:56 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int     add_argument(t_cmd *cmd, char *value, t_quote_type quote, int *argc);
 
 t_cmd   *parser_tokens(t_token *tokens, char **envp, t_exec_state *state);
 t_token *parse_arguments(t_token *cur, t_cmd *cmd,
-            char **envp, t_exec_state *state);
+            char **envp, t_exec_state *state, int *p_argc_argv, int *p_argc_final_text);
 t_token *parse_cmd_block(t_token *cur, t_cmd *cmd, char **envp, t_exec_state *state);
 t_token *parse_redirections(t_token *cur, t_cmd *cmd, char **envp, t_exec_state *state);
 t_redir *create_redir(t_token *cur, char **envp, t_exec_state *state);

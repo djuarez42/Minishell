@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 16:58:35 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 00:14:24 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,11 @@ char	*find_executable(char *cmd, char **envp)
 		return (ft_strdup(cmd));
 	path_env = env_get_value(envp, "PATH");
 	if (!path_env)
-		return (NULL);
+	{
+		/* Provide a reasonable default PATH if none is set so absolute
+		 * commands and common utilities still resolve. */
+		path_env = "/bin:/usr/bin";
+	}
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);

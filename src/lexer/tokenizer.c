@@ -35,7 +35,14 @@ t_token *tokenize_input(const char *input)
         if (!cur)
             break;
 
-        t_token_type op_type = determine_token_type(cur->text);
+        /* If the fragment is inside quotes, it must be treated as a WORD
+         * even if its text looks like an operator (e.g. '|' inside quotes). */
+        t_token_type op_type;
+        if (cur->quote_type == QUOTE_NONE)
+            op_type = determine_token_type(cur->text);
+        else
+            op_type = TOKEN_WORD;
+
         if (op_type != TOKEN_WORD)
         {
             t_token *tok = create_token(op_type, space_before);
@@ -60,7 +67,7 @@ t_token *tokenize_input(const char *input)
         t_token *tok = create_token(TOKEN_WORD, space_before);
         space_before = false;
 
-        while (cur)
+            while (cur)
         {
             t_fragment *frag_copy = new_fragment(cur->text, strlen(cur->text),
                                                  cur->quote_type, cur->has_space_after);
@@ -74,11 +81,18 @@ t_token *tokenize_input(const char *input)
             }
             cur = cur->next;
 
-            if (cur && determine_token_type(cur->text) != TOKEN_WORD)
+            /* Stop if the next fragment is an unquoted operator. Quoted
+             * fragments that look like operators should not break the word. */
+            if (cur && (cur->quote_type == QUOTE_NONE && determine_token_type(cur->text) != TOKEN_WORD))
                 break;
         }
 
-        tok->type = determine_token_type(tok->fragments->text);
+        /* The token type is an operator only when the first fragment is
+         * unquoted and its text matches an operator; otherwise it's a WORD. */
+        if (tok->fragments->quote_type == QUOTE_NONE)
+            tok->type = determine_token_type(tok->fragments->text);
+        else
+            tok->type = TOKEN_WORD;
         tok->final_text = concat_fragments(tok->fragments);
 
         if (!tokens)
@@ -89,7 +103,6 @@ t_token *tokenize_input(const char *input)
     }
 
     free_fragments(frags);
-    //print_tokens_raw(tokens);
     tokens = append_token_eof(tokens);
     return tokens;
 }

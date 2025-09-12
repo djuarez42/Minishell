@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 21:23:30 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 00:14:24 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,8 @@ t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
         cmd->pipe = 1;
         *cur = (*cur)->next;
     }
+
+	// debug prints removed
 
     return cmd;
 }
