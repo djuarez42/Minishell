@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/10 18:47:46 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/12 21:13:24 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,13 +121,16 @@ t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
         return NULL;
 
     cmd->argv = malloc(sizeof(char *) * MAX_ARGS);
-    cmd->argv_quote = malloc(sizeof(int) * MAX_ARGS);
-    cmd->argv_final_text = malloc(sizeof(char *) * MAX_ARGS); // reservar también
-    if (!cmd->argv || !cmd->argv_quote || !cmd->argv_final_text)
+    cmd->argv_quote = malloc(sizeof(t_quote_type) * MAX_ARGS);
+    cmd->argv_final_text = malloc(sizeof(char *) * MAX_ARGS);
+    cmd->argv_first_word = malloc(sizeof(bool) * MAX_ARGS); // 🔹 nueva
+
+    if (!cmd->argv || !cmd->argv_quote || !cmd->argv_final_text || !cmd->argv_first_word)
     {
         free(cmd->argv);
         free(cmd->argv_quote);
         free(cmd->argv_final_text);
+        free(cmd->argv_first_word); // 🔹 liberar también
         free(cmd);
         return NULL;
     }
@@ -136,7 +139,8 @@ t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
     {
         cmd->argv[i] = NULL;
         cmd->argv_quote[i] = QUOTE_NONE;
-        cmd->argv_final_text[i] = NULL; // inicializar
+        cmd->argv_final_text[i] = NULL;
+        cmd->argv_first_word[i] = false; // 🔹 inicializar
     }
 
     cmd->redirs = NULL;
@@ -149,6 +153,7 @@ t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
         free(cmd->argv);
         free(cmd->argv_quote);
         free(cmd->argv_final_text);
+        free(cmd->argv_first_word);
         free(cmd);
         return NULL;
     }

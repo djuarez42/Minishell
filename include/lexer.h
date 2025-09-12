@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 15:55:18 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/12 23:29:56 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_fragment
 	char				*expanded_text;
 	t_quote_type		quote_type;
 	bool				has_space_after;
+	bool				is_variable;
 	struct s_fragment	*next;
 } t_fragment;
 

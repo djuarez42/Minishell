@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 16:37:28 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/13 00:21:31 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ typedef struct s_cmd
     char            **argv;
     t_quote_type    *argv_quote;
     char            **argv_final_text;
+    bool            argv_space[MAX_ARGS];
+    bool            *argv_first_word;
     t_redir         *redirs;
     int             pipe;
     struct s_cmd    *next;
@@ -82,7 +84,7 @@ int      should_expand_fragment(t_fragment *frag);
 char    *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state);
 char    *concat_final_text(t_token *tok);
 char    **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx);
-char    **split_for_argv(const char *text, int quote_type);
+char    **build_words_from_token(t_token *tok, int *out_count);
 char    **ft_split_spaces(const char *s);
 
 

@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/12 16:49:26 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/13 00:23:44 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,36 +28,27 @@ static int	is_n_flag(const char *s)
 	return (s[i] == '\0');
 }
 
-int	bi_echo(t_cmd *cmd)
+int bi_echo(t_cmd *cmd)
 {
-	int	i;
-	int	n_flag;
+    int i = 1;
+    int n_flag = 0;
 
-	i = 1;
-	n_flag = 0;
+    while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
+    {
+        n_flag = 1; i++;
+    }
 
-	// manejar flags -n (puede haber varios: -n, -nnn, etc.)
-	while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
-	{
-		n_flag = 1;
-		i++;
-	}
-
-	// imprimir argumentos desde argv (no argv_final_text)
-	while (cmd->argv[i])
-	{
-		write(STDOUT_FILENO, cmd->argv[i], ft_strlen(cmd->argv[i]));
-		if (cmd->argv[i + 1])
-			write(STDOUT_FILENO, " ", 1);
-		i++;
-	}
-
-	if (!n_flag)
-		write(STDOUT_FILENO, "\n", 1);
-
-	return (0);
+    while (cmd->argv[i])
+    {
+        write(STDOUT_FILENO, cmd->argv[i], ft_strlen(cmd->argv[i]));
+        if (cmd->argv[i + 1])
+            write(STDOUT_FILENO, " ", 1);
+        i++;
+    }
+    if (!n_flag)
+        write(STDOUT_FILENO, "\n", 1);
+    return 0;
 }
-
 int	bi_pwd(void)
 {
 	char	*cwd;

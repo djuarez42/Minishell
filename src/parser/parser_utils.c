@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 16:54:09 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/13 00:27:40 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,64 +164,7 @@ char *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state)
     return result;
 }
 
-char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
-{
-    t_fragment *frag;
-    int is_assignment = 0;
 
-    if (!tok)
-        return ctx->cmd->argv;
-
-    // 1️⃣ Expandir fragments
-    expand_fragments(tok, ctx->envp, ctx->state);
-
-    // 2️⃣ Construir final_text
-    free(tok->final_text);
-    tok->final_text = concat_final_text(tok);
-
-    // 3️⃣ Guardar final_text en argv_final_text
-    if (ctx->cmd->argv_final_text)
-    {
-        ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text);
-        (*ctx->argc_final_text)++;
-    }
-
-    // 4️⃣ Detectar si es assignment (mirando solo el primer fragment con '=')
-    frag = tok->fragments;
-    if (frag && ft_strchr(frag->text, '='))
-        is_assignment = 1;
-
-    // 5️⃣ Construir argv
-    if (is_assignment)
-    {
-        // Concatenar todos los fragments del token en un solo argv
-        ctx->cmd->argv[*ctx->argc_argv] = ft_strdup(tok->final_text);
-        ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE;
-        (*ctx->argc_argv)++;
-    }
-    else
-    {
-        // Fragmentos normales: aplicar split según quotes
-        frag = tok->fragments;
-        while (frag)
-        {
-            if (frag->expanded_text)
-            {
-                char **words = split_for_argv(frag->expanded_text, frag->quote_type);
-                for (int i = 0; words && words[i]; i++)
-                {
-                    ctx->cmd->argv[*ctx->argc_argv] = ft_strdup(words[i]);
-                    ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
-                    (*ctx->argc_argv)++;
-                }
-                free_str_array(words);
-            }
-            frag = frag->next;
-        }
-    }
-
-    return ctx->cmd->argv;
-}
 
 void free_str_array(char **arr)
 {
@@ -236,25 +179,213 @@ void free_str_array(char **arr)
     free(arr);
 }
 
-char **split_for_argv(const char *text, int quote_type)
+char **build_words_from_token(t_token *tok, int *out_count)
 {
-    if (quote_type != QUOTE_NONE)
+    t_fragment *frag;
+    size_t total_len = 0;
+    size_t pos = 0;
+    char *S;
+    unsigned char *splittable; /* 0/1 per char */
+    char **words = NULL;
+    int count = 0;
+    size_t i;
+
+    if (!tok || !out_count)
+        return NULL;
+
+    /* 1) calcular longitud total */
+    frag = tok->fragments;
+    while (frag)
     {
-        // fragment con quotes: se conserva como está
-        char **res = malloc(sizeof(char *) * 2);
-        if (!res)
-            return NULL;
-        res[0] = ft_strdup(text);
-        res[1] = NULL;
-        return res;
+        if (frag->expanded_text)
+            total_len += ft_strlen(frag->expanded_text);
+        frag = frag->next;
+    }
+
+    if (total_len == 0)
+    {
+        *out_count = 0;
+        return NULL;
+    }
+
+    S = malloc(total_len + 1);
+    splittable = malloc(total_len);
+    if (!S || !splittable)
+    {
+        free(S);
+        free(splittable);
+        *out_count = 0;
+        return NULL;
+    }
+
+    /* 2) rellenar S y splittable mask */
+    frag = tok->fragments;
+    pos = 0;
+    while (frag)
+    {
+        if (frag->expanded_text)
+        {
+            size_t flen = ft_strlen(frag->expanded_text);
+            /* un carácter es "splittable" (su espacio puede separar)
+               cuando procede de un fragment: quote_type == QUOTE_NONE
+               y el fragment original era una variable (heurística: frag->text[0] == '$')
+               -> esto reproduce el comportamiento de word-splitting. */
+            int frag_splittable = 0;
+            if (frag->quote_type == QUOTE_NONE && frag->text && frag->text[0] == '$')
+                frag_splittable = 1;
+
+            for (i = 0; i < flen; i++)
+            {
+                S[pos] = frag->expanded_text[i];
+                splittable[pos] = frag_splittable ? 1 : 0;
+                pos++;
+            }
+        }
+        frag = frag->next;
+    }
+    S[pos] = '\0';
+
+    /* DEBUG: mostrar el token concatenado y la máscara (opcional) */
+   // printf("[DBG] build_words: token='%s'\n", S);
+
+    /* 3) contar palabras: consideramos separador únicamente
+       cuando ft_isspace(S[i]) && splittable[i] == 1 */
+    i = 0;
+    while (i < pos)
+    {
+        /* skip leading splittable spaces */
+        while (i < pos && ft_isspace((unsigned char)S[i]) && splittable[i])
+            i++;
+        if (i >= pos)
+            break;
+        count++;
+        /* advance until next splittable-space */
+        while (i < pos && !(ft_isspace((unsigned char)S[i]) && splittable[i]))
+            i++;
+    }
+
+    if (count == 0)
+    {
+        /* no hay "palabras" (todo vacío o sólo separadores) */
+        free(S);
+        free(splittable);
+        *out_count = 0;
+        return NULL;
+    }
+
+    words = malloc(sizeof(char *) * (count + 1));
+    if (!words)
+    {
+        free(S);
+        free(splittable);
+        *out_count = 0;
+        return NULL;
+    }
+
+    /* 4) extraer substrings */
+    i = 0;
+    int wi = 0;
+    while (i < pos && wi < count)
+    {
+        /* skip leading splittable spaces */
+        while (i < pos && ft_isspace((unsigned char)S[i]) && splittable[i])
+            i++;
+        if (i >= pos)
+            break;
+        size_t start = i;
+        while (i < pos && !(ft_isspace((unsigned char)S[i]) && splittable[i]))
+            i++;
+        size_t wlen = i - start;
+        words[wi] = ft_strndup(&S[start], wlen);
+        //printf("[DBG] build_words: WORD[%d] = '%s'\n", wi, words[wi] ? words[wi] : "(null)");
+        wi++;
+    }
+    words[wi] = NULL;
+
+    free(S);
+    free(splittable);
+
+    *out_count = count;
+    return words;
+}
+
+
+/* ------------------------------------------------------------------
+   Versión nueva de process_token_with_quotes (lista para pegar).
+   - usa build_words_from_token para reconstruir argv del token.
+   - preserva argv_final_text como antes.
+   - detecta assignment (si primer fragment contiene '=') y NO aplica split.
+   - DEBUG detallado.
+   ------------------------------------------------------------------ */
+char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
+{
+    t_fragment *frag;
+    int is_assignment = 0;
+    int idx;
+
+    if (!tok || !ctx || !ctx->cmd)
+        return NULL;
+
+    idx = *ctx->argc_argv;
+
+    /* 1) expandir fragments (igual que siempre) */
+    expand_fragments(tok, ctx->envp, ctx->state);
+
+    /* 2) construir final_text */
+    free(tok->final_text);
+    tok->final_text = concat_final_text(tok);
+    //printf("[DBG] PROCESS_TOKEN: token='%s'\n", tok->final_text ? tok->final_text : "(null)");
+
+    /* 3) guardar final_text (para builtins que lo necesiten) */
+    if (ctx->cmd->argv_final_text)
+    {
+        ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text ? tok->final_text : "");
+        (*ctx->argc_final_text)++;
+    }
+
+    /* 4) detectar assignment: si primer fragment contiene '=' */
+    frag = tok->fragments;
+    if (frag && ft_strchr(frag->text ? frag->text : "", '='))
+        is_assignment = 1;
+
+    /* 5) construir argv */
+    if (is_assignment)
+    {
+        /* token entero como una sola entrada (assignment) */
+        ctx->cmd->argv[idx] = ft_strdup(tok->final_text ? tok->final_text : "");
+        ctx->cmd->argv_quote[idx] = QUOTE_NONE;
+        //printf("[DBG] ASSIGNMENT argv[%d] = '%s'\n", idx, ctx->cmd->argv[idx]);
+        idx++;
     }
     else
     {
-        // fragment no-quoted: aplicamos word splitting
-        return ft_split_spaces(text);
-    }
-}
+        /* Metodo robusto: construir palabras a partir de TODOS los fragments
+           con máscara para que sólo los espacios provenientes de expansiones
+           no-quoted actúen como separadores. */
+        int nwords = 0;
+        char **words = build_words_from_token(tok, &nwords);
 
+        if (words)
+        {
+            for (int w = 0; w < nwords; w++)
+            {
+                ctx->cmd->argv[idx] = ft_strdup(words[w]);
+                ctx->cmd->argv_quote[idx] = QUOTE_NONE; /* simplificado */
+               // printf("[DBG] ADD argv[%d] = '%s'\n", idx, ctx->cmd->argv[idx]);
+                idx++;
+            }
+            free_str_array(words);
+        }
+        else
+        {
+            /* Si build devolvió NULL puede ser porque token vacío: no añadimos nada */
+            /* nothing */
+        }
+    }
+
+    *ctx->argc_argv = idx;
+    return ctx->cmd->argv;
+}
 
 char **ft_split_spaces(const char *s)
 {
@@ -268,7 +399,6 @@ char **ft_split_spaces(const char *s)
     if (!s)
         return NULL;
 
-    // contar palabras
     while (*p)
     {
         if (!isspace((unsigned char)*p))
@@ -288,7 +418,6 @@ char **ft_split_spaces(const char *s)
     if (!res)
         return NULL;
 
-    // copiar palabras
     w = 0;
     while (*s)
     {
