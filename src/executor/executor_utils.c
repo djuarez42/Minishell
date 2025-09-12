@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:16:27 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,50 @@ void	free_split(char **split)
 	free(split);
 }
 
-int	handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state)
+int handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state)
 {
-	t_redir	*redir;
-	int		res;
+    t_redir *redir;
+    int res;
 
-	redir = redirs;
-	while (redir)
-	{
-		// Skip NULL file pointers - these are for numeric file descriptors
-		if (redir->file)
-			redir->file = remove_quotes(redir->file);
-		redir = redir->next;
-	}
-	res = handle_redirections(redirs, envp, state);
-	return (res);
+    redir = redirs;
+    while (redir)
+    {
+        if (redir->type == TOKEN_HEREDOC)
+        {
+            // Decidir si expandir usando los fragments
+            t_fragment *frag = redir->fragments;
+            bool is_quoted = false;
+            while (frag)
+            {
+                if (frag->quote_type == QUOTE_SINGLE || frag->quote_type == QUOTE_DOUBLE)
+                {
+                    is_quoted = true;
+                    break;
+                }
+                frag = frag->next;
+            }
+            redir->quoted = is_quoted;
+
+            // Reconstruir delimiter
+            char *built_delim = build_heredoc_delimiter(redir->file);
+            if (!built_delim)
+                return (1);
+            free(redir->file);
+            redir->file = built_delim;
+
+        }
+        else
+        {
+            char *tmp = remove_quotes(redir->file);
+            free(redir->file);
+            redir->file = tmp;
+        }
+        redir = redir->next;
+    }
+    res = handle_redirections(redirs, envp, state);
+    return res;
 }
+
 
 int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 {
@@ -96,4 +124,26 @@ char	*str_append(char *base, const char *add)
 		ft_strlcat(new, add, len + 1);
 	
 	return (new);
+}
+
+char *build_heredoc_delimiter(const char *text)
+{
+	t_fragment *fragments;
+	char *delimiter;
+	t_token dummy_tok;
+
+	if (!text)
+		return ft_strdup("");
+	// Parsear texto en fragments
+	fragments = parse_mixed_fragments(text);
+	if (!fragments)
+		return ft_strdup(text);
+	// Usamos un token dummy para reutilizar concat_final_text
+	dummy_tok.fragments = fragments;
+	delimiter = concat_final_text(&dummy_tok);
+
+	// Liberar fragments temporales
+	free_fragments(fragments);
+
+	return delimiter;
 }

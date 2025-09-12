@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 16:45:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/07 22:33:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/09 22:12:47 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,20 +58,6 @@ char	*handle_quoted_part(const char *input, int *i, char *tmp,
 	free(segment);
 	*i += len;
 	return (tmp);
-}
-
-char	*remove_quotes(char *str)
-{
-	int		len;
-	char	*result;
-
-	len = ft_strlen(str);
-	// Only remove double quotes, preserve single quotes
-	if (len > 1 && str[0] == '"' && str[len - 1] == '"')
-		result = ft_substr(str, 1, len - 2);
-	else
-		result = ft_strdup(str);
-	return (result);
 }
 
 bool	are_quotes_closed(const char *input)

@@ -6,7 +6,7 @@
 #    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/08 21:54:31 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/09/12 21:20:40 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,6 @@ SRC = main.c \
 		src/executor/expand_variables_utils.c \
 		src/executor/expand_variables_utils2.c \
 		src/executor/expand_variables.c \
-		src/executor/expand_mixed_quotes.c \
 		src/executor/preprocess_dollar_quotes.c \
 		src/executor/dollar_string_fix.c \
 		src/executor/dollar_quotes_fix.c \

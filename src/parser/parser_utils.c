@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 20:12:09 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:17:39 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,39 +192,43 @@ char *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state)
 
 char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
 {
-    t_fragment *frag;
-
     if (!tok)
         return ctx->cmd->argv;
 
-    // 1️⃣ Expand fragments - converts $VARS and handles quotes
+    // 1️⃣ Expandir fragments (se siguen expandiendo como antes)
     expand_fragments(tok, ctx->envp, ctx->state);
 
-    // 2️⃣ Build final_text - concatenates all fragments WITHOUT spaces between them
-    // This ensures '"'$USER'"' becomes "ekakhmad" and not " ekakhmad "
+    // 2️⃣ Construir final_text a partir de los fragments
     free(tok->final_text);
     tok->final_text = concat_final_text(tok);
 
-    // 3️⃣ Store in argv_final_text (one entry per token)
-    // This is used for external commands and echo to preserve correct quoting
+    // 3️⃣ Guardar en argv_final_text (para depuración u otros usos internos)
     if (ctx->cmd->argv_final_text)
     {
         ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text);
         (*ctx->argc_final_text)++;
     }
 
-    // 4️⃣ Construir argv real: cada fragmento = un argv
-    frag = tok->fragments;
-    while (frag)
+    // 4️⃣ Guardar en argv (👈 aquí cambiamos: ahora va SOLO el final_text)
+    if (tok->final_text && *tok->final_text)
     {
-        if (frag->expanded_text)
-        {
-            ctx->cmd->argv[*ctx->argc_argv] = ft_strdup(frag->expanded_text);
-            ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
-            (*ctx->argc_argv)++;
-        }
-        frag = frag->next;
+        ctx->cmd->argv[*ctx->argc_argv] = ft_strdup(tok->final_text);
+        ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE; // ya es expandido
+        (*ctx->argc_argv)++;
     }
 
     return ctx->cmd->argv;
+}
+
+void free_str_array(char **arr)
+{
+    int i = 0;
+    if (!arr)
+        return;
+    while (arr[i])
+    {
+        free(arr[i]);
+        i++;
+    }
+    free(arr);
 }

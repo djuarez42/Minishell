@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/08 21:54:53 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:15:56 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_redir
     bool                quoted;
     char                **heredoc_content;
     struct s_redir      *next;
+    t_fragment          *fragments;
 }   t_redir;
 
 typedef struct s_cmd
@@ -66,6 +67,7 @@ int     init_cmd_args(t_cmd *cmd);
 
 char    **process_token(t_token *tok, char **argv, int *argc, char **envp);
 char    **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx);
+void    free_str_array(char **arr);
 
 t_cmd   *create_cmd_node(t_token **cur, char **envp, t_exec_state *state);
 void    add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd);
@@ -74,6 +76,7 @@ char    **collect_heredoc_content(const char *delimiter, bool quoted, char **env
 /* Aux de expansión en parser */
 void    expand_fragments(t_token *tok, char **envp, t_exec_state *state);
 char    *expand_fragment(const char *text, t_quote_type quote, char **envp, t_exec_state *state);
+char	*expand_tilde_bash(const char *text, char **envp);
 //char    *build_final_text(t_token *tok, char **envp, t_exec_state *state);
 int      should_expand_fragment(t_fragment *frag);
 char    *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state);

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:17:44 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,77 +14,64 @@
 
 t_redir *create_redir(t_token *cur, char **envp, t_exec_state *state)
 {
-	t_redir *redir;
-	t_fragment *frag;
+    t_redir *redir;
+    t_fragment *frag;
 
-	// Validate input parameters
-	if (!cur || !cur->next || !cur->next->fragments)
-		return (NULL);
-		
-	// Get fragment for cleaner code and validation
-	frag = cur->next->fragments;
-	if (!frag || !frag->text)
-		return (NULL);
-	
-	// Allocate redirection structure
-	redir = malloc(sizeof(t_redir));
-	if (!redir)
-		return (NULL);
-		
-	// Initialize all fields to safe values
-	redir->type = cur->type;
-	redir->next = NULL;
-	redir->heredoc_content = NULL;
-	redir->file = NULL;
-	redir->quoted = frag->quote_type != QUOTE_NONE;
-	
-	// For numeric filenames "123", we don't need to duplicate 
-	// as they will be handled as errors by the redirection handler
-	if (frag->text && ft_isdigit(frag->text[0]))
-	{
-		int i = 0;
-		while (frag->text[i] && ft_isdigit(frag->text[i]))
-			i++;
-		
-		if (frag->text[i] == '\0')
-		{
-			// Numeric filename - don't duplicate, set to NULL
-			// This is the special case for "123" that was leaking memory
-			redir->file = NULL;
-			return (redir);
-		}
-	}
-	
-	// For non-numeric filenames, duplicate the name
-	redir->file = ft_strdup(frag->text);
-	if (!redir->file)
-	{
-		free(redir);
-		return (NULL);
-	}
-	
-	// For heredoc, collect content during parsing
-	if (redir->type == TOKEN_HEREDOC && redir->file)
-	{
-		redir->heredoc_content = collect_heredoc_content(redir->file, redir->quoted, envp, state);
-		if (!redir->heredoc_content)
-		{
-			// If heredoc collection fails (EOF), clean up and return NULL
-			free(redir->file);
-			free(redir);
-			return (NULL);
-		}
-	}
-	// Always ensure heredoc_content is set, even if empty
-	if (redir->type == TOKEN_HEREDOC && !redir->heredoc_content)
-	{
-		redir->heredoc_content = malloc(sizeof(char *));
-		if (redir->heredoc_content)
-			redir->heredoc_content[0] = NULL;
-	}
-	
-	return (redir);
+    if (!cur || !cur->next || !cur->next->fragments)
+        return (NULL);
+
+    redir = malloc(sizeof(t_redir));
+    if (!redir)
+        return (NULL);
+
+    redir->type = cur->type;
+
+    // Guardar fragments completos para acceder a quote_type y demás
+    redir->fragments = cur->next->fragments;
+
+    // Detectar si el heredoc estaba entre comillas
+    frag = redir->fragments;
+    redir->quoted = false;
+    while (frag)
+    {
+        if (frag->quote_type == QUOTE_SINGLE || frag->quote_type == QUOTE_DOUBLE)
+        {
+            redir->quoted = true;
+            break;
+        }
+        frag = frag->next;
+    }
+
+    // Reconstruir el file / delimiter usando todos los fragments del token
+    {
+        t_token dummy_tok;
+        dummy_tok.fragments = cur->next->fragments;
+        redir->file = concat_final_text(&dummy_tok);
+        if (!redir->file)
+        {
+            free(redir);
+            return (NULL);
+        }
+    }
+
+    // Para heredoc, opcionalmente recolectar contenido
+    if (redir->type == TOKEN_HEREDOC)
+    {
+        redir->heredoc_content = collect_heredoc_content(redir->file, redir->quoted);
+        if (!redir->heredoc_content)
+        {
+            free(redir->file);
+            free(redir);
+            return (NULL);
+        }
+    }
+    else
+        redir->heredoc_content = NULL;
+
+    redir->next = NULL;
+    return (redir);
 }
+
 
 bool	is_quoted(const char *str)
 {

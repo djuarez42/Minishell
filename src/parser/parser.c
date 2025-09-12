@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 22:06:34 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:17:32 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,51 +112,6 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
 }
 
 
-/*t_token *parse_arguments(t_token *cur, t_cmd *cmd,
-                         char **envp, t_exec_state *state)
-{
-    int argc = 0;
-    t_proc_ctx ctx;
-
-    ctx.cmd = cmd;
-    ctx.argc = &argc;
-    ctx.envp = envp;
-    ctx.state = state;
-
-    while (cur && cur->type == TOKEN_WORD)
-    {
-        printf("\n=== parse_arguments ===\n");
-        printf("Procesando token final_text='%s'\n",
-               cur->final_text ? cur->final_text : "(null)");
-
-        cmd->argv = process_token_with_quotes(cur, &ctx);
-
-        if (!cmd->argv)
-        {
-            printf("DEBUG parse_arguments: fallo al procesar token '%s'\n",
-                   cur->final_text ? cur->final_text : "(null)");
-            free_partial_cmd(cmd, argc);
-            return NULL;
-        }
-
-        cur = cur->next;
-    }
-
-    cmd->argv[argc] = NULL;
-    cmd->argv_quote[argc] = QUOTE_NONE;
-
-    printf("=== parse_arguments end ===\n");
-    for (int i = 0; i < argc; i++)
-    {
-        printf("argv[%d] = '%s' (quote=%d)\n",
-               i,
-               cmd->argv[i] ? cmd->argv[i] : "(null)",
-               cmd->argv_quote[i]);
-    }
-
-    return cur;
-}*/
-
 t_token *parse_arguments(t_token *cur, t_cmd *cmd,
                          char **envp, t_exec_state *state)
 {
@@ -193,43 +148,21 @@ t_token *parse_arguments(t_token *cur, t_cmd *cmd,
 char *expand_fragment(const char *text, t_quote_type quote,
                       char **envp, t_exec_state *state)
 {
-    char *expanded;
-
     if (!text)
-        return (ft_strdup(""));
+        return ft_strdup("");
 
-    // 1. Comillas simples → literal
     if (quote == QUOTE_SINGLE)
-        return (ft_strdup(text));
+        return ft_strdup(text);
 
-    // 2. Tilde (~) al inicio
-    if (text[0] == '~' && (quote == QUOTE_NONE || quote == QUOTE_DOUBLE))
-    {
-        char *home = getenv("HOME");
-        if (home)
-        {
-            if (text[1] == '\0')
-                return (ft_strdup(home));
-            else
-            {
-                char *suffix = ft_strdup(text + 1);
-                if (!suffix)
-                    return (NULL);
-                char *res = str_append(ft_strdup(home), suffix);
-                free(suffix);
-                return (res);
-            }
-        }
-        return (ft_strdup("~")); // si no hay $HOME
-    }
+    if (quote == QUOTE_DOLLAR)
+        return expand_ansi_c_string(text); // tu función ya existente
 
-    // 3. Variables ($VAR, $?, etc.)
-    expanded = expand_variables(text, envp, state, quote);
-    if (!expanded)
-        return (NULL);
+    if (text[0] == '~' && quote == QUOTE_NONE)
+        return expand_tilde_bash(text, envp);
 
-    return (expanded);
+    return expand_variables(text, envp, state, quote);
 }
+
 
 void expand_fragments(t_token *tok, char **envp, t_exec_state *state)
 {
@@ -248,3 +181,36 @@ void expand_fragments(t_token *tok, char **envp, t_exec_state *state)
     }
 }
 
+char	*expand_tilde_bash(const char *text, char **envp)
+{
+	const char	*home;
+	char		*suffix;
+	char		*res;
+
+	if (!text || text[0] != '~')
+		return (ft_strdup(text));
+
+	/*
+	** Casos válidos para expansión de ~ en Bash:
+	**   ~        -> $HOME
+	**   ~/algo   -> $HOME/algo
+	**
+	** Casos NO válidos (se dejan literales):
+	**   ~usuario -> sin soporte en Minishell
+	**   ~42      -> se deja como "~42"
+	*/
+	if (text[1] && text[1] != '/')
+		return (ft_strdup(text));
+
+	home = env_get_value(envp, "HOME");
+	if (!home)
+		home = "";
+
+	suffix = ft_strdup(text + 1);
+	if (!suffix)
+		return (NULL);
+
+	res = ft_strjoin(home, suffix);
+	free(suffix);
+	return (res);
+}

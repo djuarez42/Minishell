@@ -6,32 +6,11 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 22:06:34 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:17:05 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*expand_tilde_prefix(const char *s, char **envp)
-{
-	const char	*home;
-	char		*suffix;
-	char		*res;
-
-	if (!s || s[0] != '~')
-		return (ft_strdup(s));
-	if (s[1] && s[1] != '/')
-		return (ft_strdup(s));
-	home = env_get_value(envp, "HOME");
-	if (!home)
-		home = "";
-	suffix = ft_strdup(s + 1);
-	if (!suffix)
-		return (NULL);
-	res = ft_strjoin(home, suffix);
-	free(suffix);
-	return (res);
-}
 
 char	*remove_all_quotes(const char *s)
 {
@@ -58,9 +37,6 @@ char	*remove_all_quotes(const char *s)
 	return (out);
 }
 
-/*
-** Create a string with the specified number of backslashes
-*/
 char	*create_backslash_string(int count)
 {
 	char	*result;
@@ -81,10 +57,6 @@ char	*create_backslash_string(int count)
 	return (result);
 }
 
-/*
-** Count consecutive backslashes before a dollar sign and determine expansion behavior
-** Returns: number of backslashes to output (half of total), and whether to expand variable
-*/
 void	handle_backslash_dollar_parity(const char *input, int *i, 
 											int *backslashes_out, bool *should_expand)
 {
@@ -244,51 +216,6 @@ char	*extract_plain_text(const char *input, int *i, char *tmp)
 	}
 	free(segment);
 	return (new_tmp);
-}
-
-int	expand_argv(char **argv, t_quote_type *argv_quote,
-		char **envp, t_exec_state *state)
-{
-	size_t	j;
-	char	*expanded;
-	t_quote_type quote_type;
-
-	j = 0;
-	while (argv && argv[j])
-	{
-		// For complex quotes, we need to use the quote type from argv_quote
-		quote_type = argv_quote ? argv_quote[j] : QUOTE_NONE;
-		
-		// Skip expansion only for pure single-quoted strings
-		if (quote_type == QUOTE_SINGLE)
-		{
-			j++;
-			continue;
-		}
-		
-		// Handle $"string" syntax (locale translation in Bash)
-		// In our implementation, we escape $ inside these quotes to prevent expansion
-		char *preprocessed = preprocess_dollar_quotes(argv[j]);
-		if (!preprocessed)
-			return (-1);
-		
-		// Then apply tilde expansion (for non-single-quoted tokens)
-		char *tilde_expanded = expand_tilde_prefix(preprocessed, envp);
-		free(preprocessed);
-		if (!tilde_expanded)
-			return (-1);
-		
-		// Finally apply variable expansion
-		expanded = expand_variables(tilde_expanded, envp, state, quote_type);
-		free(tilde_expanded);
-		
-		if (!expanded)
-			return (-1);
-		free(argv[j]);
-		argv[j] = expanded;
-		j++;
-	}
-	return (0);
 }
 
 int	expand_redirs(t_redir *redir, char **envp, t_exec_state *state)

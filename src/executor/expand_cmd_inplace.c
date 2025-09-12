@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 14:45:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/08 21:31:38 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:16:35 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,13 +100,6 @@ static int expand_redirections(t_cmd *cmd, char **envp, t_exec_state *state)
 	return (0);
 }
 
-/*
- * Expands variables in a command structure in-place
- * Returns 0 on success, -1 on failure
- * 
- * This function ensures all allocated memory is properly tracked and freed
- * in case of errors during command or pipe execution.
- */
 int	expand_cmd_inplace(t_cmd *cmd, char **envp, t_exec_state *state)
 {
 	int		i;

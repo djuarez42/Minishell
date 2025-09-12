@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 18:27:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/23 15:39:24 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/09 21:41:54 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <string.h>
 # include <errno.h>
 # include <fcntl.h>
+# include <signal.h>
 # include <stdbool.h>
 
 //Librerias para el proyecto minishell
