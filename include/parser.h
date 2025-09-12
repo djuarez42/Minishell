@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/11 19:06:55 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/12 16:37:28 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,9 @@ int      should_expand_fragment(t_fragment *frag);
 char    *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state);
 char    *concat_final_text(t_token *tok);
 char    **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx);
+char    **split_for_argv(const char *text, int quote_type);
+char    **ft_split_spaces(const char *s);
+
 
 #endif
+

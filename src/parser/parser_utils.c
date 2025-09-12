@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/11 19:16:33 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/12 16:54:09 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,29 +166,58 @@ char *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state)
 
 char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
 {
+    t_fragment *frag;
+    int is_assignment = 0;
+
     if (!tok)
         return ctx->cmd->argv;
 
-    // 1️⃣ Expandir fragments (se siguen expandiendo como antes)
+    // 1️⃣ Expandir fragments
     expand_fragments(tok, ctx->envp, ctx->state);
 
-    // 2️⃣ Construir final_text a partir de los fragments
+    // 2️⃣ Construir final_text
     free(tok->final_text);
     tok->final_text = concat_final_text(tok);
 
-    // 3️⃣ Guardar en argv_final_text (para depuración u otros usos internos)
+    // 3️⃣ Guardar final_text en argv_final_text
     if (ctx->cmd->argv_final_text)
     {
         ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text);
         (*ctx->argc_final_text)++;
     }
 
-    // 4️⃣ Guardar en argv (👈 aquí cambiamos: ahora va SOLO el final_text)
-    if (tok->final_text && *tok->final_text)
+    // 4️⃣ Detectar si es assignment (mirando solo el primer fragment con '=')
+    frag = tok->fragments;
+    if (frag && ft_strchr(frag->text, '='))
+        is_assignment = 1;
+
+    // 5️⃣ Construir argv
+    if (is_assignment)
     {
+        // Concatenar todos los fragments del token en un solo argv
         ctx->cmd->argv[*ctx->argc_argv] = ft_strdup(tok->final_text);
-        ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE; // ya es expandido
+        ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE;
         (*ctx->argc_argv)++;
+    }
+    else
+    {
+        // Fragmentos normales: aplicar split según quotes
+        frag = tok->fragments;
+        while (frag)
+        {
+            if (frag->expanded_text)
+            {
+                char **words = split_for_argv(frag->expanded_text, frag->quote_type);
+                for (int i = 0; words && words[i]; i++)
+                {
+                    ctx->cmd->argv[*ctx->argc_argv] = ft_strdup(words[i]);
+                    ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
+                    (*ctx->argc_argv)++;
+                }
+                free_str_array(words);
+            }
+            frag = frag->next;
+        }
     }
 
     return ctx->cmd->argv;
@@ -205,4 +234,76 @@ void free_str_array(char **arr)
         i++;
     }
     free(arr);
+}
+
+char **split_for_argv(const char *text, int quote_type)
+{
+    if (quote_type != QUOTE_NONE)
+    {
+        // fragment con quotes: se conserva como está
+        char **res = malloc(sizeof(char *) * 2);
+        if (!res)
+            return NULL;
+        res[0] = ft_strdup(text);
+        res[1] = NULL;
+        return res;
+    }
+    else
+    {
+        // fragment no-quoted: aplicamos word splitting
+        return ft_split_spaces(text);
+    }
+}
+
+
+char **ft_split_spaces(const char *s)
+{
+    int count = 0;
+    int in_word = 0;
+    const char *p = s;
+    char **res;
+    int w;
+    int len;
+
+    if (!s)
+        return NULL;
+
+    // contar palabras
+    while (*p)
+    {
+        if (!isspace((unsigned char)*p))
+        {
+            if (!in_word)
+            {
+                count++;
+                in_word = 1;
+            }
+        }
+        else
+            in_word = 0;
+        p++;
+    }
+
+    res = malloc(sizeof(char *) * (count + 1));
+    if (!res)
+        return NULL;
+
+    // copiar palabras
+    w = 0;
+    while (*s)
+    {
+        while (*s && isspace((unsigned char)*s))
+            s++;
+        if (!*s)
+            break;
+
+        len = 0;
+        while (s[len] && !isspace((unsigned char)s[len]))
+            len++;
+
+        res[w++] = ft_strndup(s, len);
+        s += len;
+    }
+    res[w] = NULL;
+    return res;
 }
