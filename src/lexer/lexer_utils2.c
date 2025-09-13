@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 21:17:24 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 14:26:15 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,9 @@ t_fragment *handle_backslashes(const char *text, int *i)
         }
         else
         {
-            /* N impar: devolvemos backslashes + '$' literal */
+            /* N impar: devolvemos backslashes + '$' literal
+             * Mark as QUOTE_SINGLE so this fragment won't be expanded later
+             * (the dollar is meant to be taken literally). */
             int buflen = keep + 1;
             char *buf = malloc((size_t)buflen + 1);
             if (!buf)
@@ -262,7 +264,7 @@ t_fragment *handle_backslashes(const char *text, int *i)
             (*i)++; /* consumir el '$' */
 
             bool space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
-            t_fragment *f = new_fragment(buf, buflen, QUOTE_NONE, space_after);
+            t_fragment *f = new_fragment(buf, buflen, QUOTE_SINGLE, space_after);
             free(buf);
             return f;
         }

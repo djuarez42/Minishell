@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 00:14:24 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 14:26:15 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
 	if (contains_ifs && has_unquoted_fragment && !is_assignment_with_quoted_value)
 		{
 			/* Perform simple IFS splitting on whitespace (space, tab, newline).
-			 * Leading/trailing and repeated IFS whitespace are skipped. */
+		 	* Leading/trailing and repeated IFS whitespace are skipped. */
 			const char *s = tok->final_text;
 			int len = ft_strlen(s);
 			int i = 0;

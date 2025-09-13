@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 20:11:57 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 14:26:15 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ char *concat_final_text(t_token *tok)
         else
             tmp = ft_strdup(frag->text);
 
-        new_result = str_append(final_text, tmp);
-        free(tmp);
-        final_text = new_result;
+    new_result = str_append(final_text, tmp);
+    free(tmp);
+    final_text = new_result;
 
         frag = frag->next;
     }
