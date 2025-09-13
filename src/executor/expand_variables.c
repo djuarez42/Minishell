@@ -39,27 +39,42 @@ static char *ft_strdupc(char c)
  */
 static char *try_append(char *base, char *piece)
 {
-    char *result;
-    
+    char *new_str;
+    size_t len_base = 0;
+    size_t len_piece = 0;
+
     if (!piece)
     {
-        // If piece is NULL, something went wrong - free base and return NULL
         free(base);
         return NULL;
     }
-    
-    // If base is NULL but piece isn't, just return piece (don't free it)
+
     if (!base)
-        return piece;
-        
-    // Append the string
-    result = str_append(base, piece);
-    
-    // Free the piece since it's been copied and str_append makes a new copy
+        return piece; /* ownership transferred to caller */
+
+    if (base)
+        len_base = ft_strlen(base);
+    if (piece)
+        len_piece = ft_strlen(piece);
+
+    new_str = malloc(len_base + len_piece + 1);
+    if (!new_str)
+    {
+        free(piece);
+        free(base);
+        return NULL;
+    }
+
+    /* Copy base and piece into new buffer */
+    new_str[0] = '\0';
+    if (base)
+        ft_strlcat(new_str, base, len_base + len_piece + 1);
+    if (piece)
+        ft_strlcat(new_str, piece, len_base + len_piece + 1);
+
+    free(base);
     free(piece);
-    
-    // Return the result (str_append already freed base)
-    return result;
+    return new_str;
 }
 
 // Helper function to specifically handle $"string" pattern
@@ -125,15 +140,16 @@ char *expand_variables(const char *input, char **envp, t_exec_state *state,
         /* Caso especial: \$ → conservar la barra */
         if (input[i] == '\\' && input[i + 1] == '$')
         {
-            piece = ft_strdup("\\$");
-            if (!piece)
-            {
-                free(tmp);
-                return NULL;
-            }
-            tmp = str_append(tmp, piece);
-            free(piece);
-            i += 2;
+                piece = ft_strdup("\\$");
+                if (!piece)
+                {
+                    free(tmp);
+                    return NULL;
+                }
+                tmp = try_append(tmp, piece);
+                if (!tmp)
+                    return NULL;
+                i += 2;
         }
         /* Variables normales */
         else if (input[i] == '$')

@@ -31,6 +31,16 @@ void	free_partial_cmd(t_cmd *cmd, int argc)
 				i++;
 			}
 		}
+		else
+		{
+			/* argc < 0 signals: free all entries until NULL */
+			i = 0;
+			while (cmd->argv[i])
+			{
+				free(cmd->argv[i]);
+				i++;
+			}
+		}
 		free(cmd->argv);
 		cmd->argv = NULL;
 	}

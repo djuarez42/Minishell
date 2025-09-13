@@ -73,14 +73,21 @@ char **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx)
 
     while (frag)
     {
-        if (frag->expanded_text && frag->expanded_text[0] != '\0')
+        /* Keep empty strings if they originated from quoted fragments
+         * (e.g., '' or ""). Unquoted empty expansions (from unset vars)
+         * should still be skipped here; that behavior is handled higher
+         * in the parser/expansion pipeline. */
+        if (frag->expanded_text)
         {
-            tmp = ft_strdup(frag->expanded_text);
-            if (tmp)
+            if (frag->expanded_text[0] != '\0' || frag->quote_type != QUOTE_NONE)
             {
-                ctx->cmd->argv[*ctx->argc_argv] = tmp;
-                ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
-                (*ctx->argc_argv)++;
+                tmp = ft_strdup(frag->expanded_text);
+                if (tmp)
+                {
+                    ctx->cmd->argv[*ctx->argc_argv] = tmp;
+                    ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
+                    (*ctx->argc_argv)++;
+                }
             }
         }
         frag = frag->next;
