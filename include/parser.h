@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 16:47:48 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/13 18:55:38 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ char    **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx);
 char    **build_words_from_token(t_token *tok, int *out_count);
 char    **ft_split_spaces(const char *s);
 t_quote_type detect_combined_quote(t_fragment *frags);
+t_token *expand_token_to_tokens(t_token *tok, char **envp, t_exec_state *state);
 
 #endif
 

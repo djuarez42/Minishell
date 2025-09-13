@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 16:53:53 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/13 18:23:42 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,12 +200,6 @@ char **build_words_from_token(t_token *tok, int *out_count)
         frag = frag->next;
     }
 
-    if (total_len == 0)
-    {
-        *out_count = 0;
-        return NULL;
-    }
-
     S = malloc(total_len + 1);
     splittable = malloc(total_len);
     if (!S || !splittable)
@@ -224,10 +218,6 @@ char **build_words_from_token(t_token *tok, int *out_count)
         if (frag->expanded_text)
         {
             size_t flen = ft_strlen(frag->expanded_text);
-            // un carácter es "splittable" (su espacio puede separar)
-              // cuando procede de un fragment: quote_type == QUOTE_NONE
-               //y el fragment original era una variable (heurística: frag->text[0] == '$')
-               //-> esto reproduce el comportamiento de word-splitting.
             int frag_splittable = 0;
             if (frag->quote_type == QUOTE_NONE && frag->text && frag->text[0] == '$')
                 frag_splittable = 1;
@@ -243,28 +233,58 @@ char **build_words_from_token(t_token *tok, int *out_count)
     }
     S[pos] = '\0';
 
-    // DEBUG: mostrar el token concatenado y la máscara (opcional)
-   // printf("[DBG] build_words: token='%s'\n", S);
-
-    // 3) contar palabras: consideramos separador únicamente
-       //cuando ft_isspace(S[i]) && splittable[i] == 1 
+    // 3) contar palabras
     i = 0;
     while (i < pos)
     {
-        // skip leading splittable spaces 
         while (i < pos && ft_isspace((unsigned char)S[i]) && splittable[i])
             i++;
         if (i >= pos)
             break;
         count++;
-        // advance until next splittable-space 
         while (i < pos && !(ft_isspace((unsigned char)S[i]) && splittable[i]))
             i++;
     }
 
+    // NUEVO: si count == 0 pero hay fragments quoted, generar palabra vacía
     if (count == 0)
     {
-        // no hay "palabras" (todo vacío o sólo separadores) 
+        int frag_count = 0;
+        frag = tok->fragments;
+        while (frag)
+        {
+            if (frag->quote_type == QUOTE_SINGLE || frag->quote_type == QUOTE_DOUBLE)
+                frag_count++;
+            frag = frag->next;
+        }
+        if (frag_count > 0)
+        {
+            words = malloc(sizeof(char *) * (frag_count + 1));
+            if (!words)
+            {
+                free(S);
+                free(splittable);
+                *out_count = 0;
+                return NULL;
+            }
+            frag = tok->fragments;
+            int wi = 0;
+            while (frag)
+            {
+                if (frag->quote_type == QUOTE_SINGLE || frag->quote_type == QUOTE_DOUBLE)
+                {
+                    words[wi] = ft_strdup("");
+                    wi++;
+                }
+                frag = frag->next;
+            }
+            words[frag_count] = NULL;
+            *out_count = frag_count;
+            free(S);
+            free(splittable);
+            return words;
+        }
+        // si no hay fragments quoted, seguimos devolviendo NULL
         free(S);
         free(splittable);
         *out_count = 0;
@@ -280,12 +300,11 @@ char **build_words_from_token(t_token *tok, int *out_count)
         return NULL;
     }
 
-    // 4) extraer substrings 
+    // 4) extraer substrings
     i = 0;
     int wi = 0;
     while (i < pos && wi < count)
     {
-        // skip leading splittable spaces 
         while (i < pos && ft_isspace((unsigned char)S[i]) && splittable[i])
             i++;
         if (i >= pos)
@@ -295,7 +314,6 @@ char **build_words_from_token(t_token *tok, int *out_count)
             i++;
         size_t wlen = i - start;
         words[wi] = ft_strndup(&S[start], wlen);
-        //printf("[DBG] build_words: WORD[%d] = '%s'\n", wi, words[wi] ? words[wi] : "(null)");
         wi++;
     }
     words[wi] = NULL;
