@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 16:50:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 01:28:23 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int				is_quote(char c);
 int				is_operator(char c);
 int				operator_len(const char *s);
 int				is_blank(const char *s);
-t_token_type	determine_token_type(char *str);
+t_token_type 	determine_token_type(char *str, t_quote_type quote);
 t_token			*append_token_eof(t_token *head);
 const char		*token_type_str(t_token_type type);
 char			*remove_quotes(char *str);

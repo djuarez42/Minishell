@@ -35,7 +35,7 @@ t_token *tokenize_input(const char *input)
         if (!cur)
             break;
 
-        t_token_type op_type = determine_token_type(cur->text);
+        t_token_type op_type = determine_token_type(cur->text, cur->quote_type);
         if (op_type != TOKEN_WORD)
         {
             t_token *tok = create_token(op_type, space_before);
@@ -74,12 +74,11 @@ t_token *tokenize_input(const char *input)
             }
             cur = cur->next;
 
-            if (cur && determine_token_type(cur->text) != TOKEN_WORD && cur->quote_type == QUOTE_NONE)
+            if (cur && determine_token_type(cur->text, cur->quote_type) != TOKEN_WORD)
                 break;
-        
         }
 
-        tok->type = determine_token_type(tok->fragments->text);
+        tok->type = determine_token_type(tok->fragments->text, tok->fragments->quote_type);
         tok->final_text = concat_fragments(tok->fragments);
 
         if (!tokens)

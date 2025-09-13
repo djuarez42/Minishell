@@ -29,7 +29,7 @@ echo 42 | echo no | echo smth | grep no
 
 echo 42 | echo no | echo smth | grep smth
 
-/bin/env | grep "_="
+clea/bin/env | grep "_="
 
 /bin/env | grep "SHLVL"
 
