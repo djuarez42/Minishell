@@ -34,6 +34,8 @@ t_cmd *parser_tokens(t_token *tokens, char **envp, t_exec_state *state)
     if (cur && cur->type == TOKEN_PIPE)
     {
         ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+        extern int g_exit_code;
+        g_exit_code = 2;
         return (NULL);
     }
 
@@ -73,14 +75,9 @@ t_token *parse_cmd_block(t_token *cur, t_cmd *cmd,
             free_partial_cmd(cmd, -1);
             free_redirs(cmd->redirs);
             cmd->redirs = NULL;
+            // Stop parsing further commands after syntax error
             return (NULL);
         }
-        /* After handling a redirection, allow following WORD tokens to be
-         * parsed as further arguments for the same command. Call
-         * parse_arguments again when a WORD appears. This fixes cases like:
-         *   /bin/echo 42 > tmp_redir_out 42
-         * where the trailing `42` should be an argument, not an attempted
-         * new command. */
         if (cur && cur->type == TOKEN_WORD)
         {
             cur = parse_arguments(cur, cmd, envp, state, &argc_argv, &argc_final_text);
@@ -89,9 +86,9 @@ t_token *parse_cmd_block(t_token *cur, t_cmd *cmd,
                 free_partial_cmd(cmd, -1);
                 free_redirs(cmd->redirs);
                 cmd->redirs = NULL;
+                // Stop parsing further commands after syntax error
                 return (NULL);
             }
-            /* continue loop to handle any further redirections */
         }
     }
     return (cur);
@@ -103,10 +100,23 @@ t_token	*parse_redirections(t_token *cur, t_cmd *cmd, char **envp, t_exec_state 
 	t_redir	*new_redir;
 	t_redir	*last;
 
-	if (!cur)
-		return (NULL);
-	if (!cur->next || cur->next->type != TOKEN_WORD)
-		return (NULL);
+    if (!cur)
+        return (NULL);
+    if (!cur->next || cur->next->type != TOKEN_WORD)
+    {
+        // Detect which redirection type and print appropriate error
+        extern int g_exit_code;
+        if (cur->type == TOKEN_REDIRECT_OUT)
+            ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
+        else if (cur->type == TOKEN_REDIRECT_IN)
+            ft_putstr_fd("minishell: syntax error near unexpected token '<'\n", 2);
+        else if (cur->type == TOKEN_APPEND)
+            ft_putstr_fd("minishell: syntax error near unexpected token '>>'\n", 2);
+        else if (cur->type == TOKEN_HEREDOC)
+            ft_putstr_fd("minishell: syntax error near unexpected token '<<'\n", 2);
+        g_exit_code = 2;
+        return (NULL);
+    }
 
 	// Create a new redirection node
     // new_redir = create_redir(cur, cmd->argv, NULL); // INCORRECT: passed argv as envp

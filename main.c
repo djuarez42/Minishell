@@ -15,6 +15,8 @@
 #include "signals.h"
 #include <unistd.h> // for isatty()
 
+int g_exit_code = 0;
+
 /* Global environment pointer used across parser/helpers */
 char **g_envp = NULL;
 
@@ -183,6 +185,7 @@ int main(int argc, char **argv, char **envp)
         {
             free_token_list(tokens);
             free(input);
+            state.last_status = g_exit_code;
             continue;
         }
 

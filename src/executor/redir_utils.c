@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 23:29:49 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 17:20:14 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,20 @@ void handle_redirections_out(const char *filename, int *error)
 {
     int fd;
 
-    fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd == -1)
-    {
-        print_error_file(filename);
-        *error = 1;
-        return ;
-    }
+	if (!filename || filename[0] == '\0') {
+		fprintf(stderr, "minishell: syntax error near unexpected token `>'\n");
+		extern int g_exit_code;
+		g_exit_code = 2;
+		*error = 1;
+		return;
+	}
+	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		print_error_file(filename);
+		*error = 1;
+		return ;
+	}
     if (dup2(fd, STDOUT_FILENO) == -1)
     {
         print_error_file("dup2");
@@ -38,13 +45,20 @@ void handle_redirections_in(const char *filename, int *error)
 {
     int fd;
 
-    fd = open(filename, O_RDONLY);
-    if (fd == -1)
-    {
-        print_error_file(filename);
-        *error = 1;
-        return ;
-    }
+	if (!filename || filename[0] == '\0') {
+		fprintf(stderr, "minishell: syntax error near unexpected token '<'\n");
+		extern int g_exit_code;
+		g_exit_code = 2;
+		*error = 1;
+		return;
+	}
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		print_error_file(filename);
+		*error = 1;
+		return ;
+	}
     if (dup2(fd, STDIN_FILENO) == -1)
     {
         print_error_file("dup2");
@@ -59,13 +73,20 @@ void handle_redirections_append(const char *filename, int *error)
 {
     int fd;
 
-    fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-    if (fd == -1)
-    {
-        print_error_file(filename);
-        *error = 1;
-        return ;
-    }
+	if (!filename || filename[0] == '\0') {
+		fprintf(stderr, "minishell: syntax error near unexpected token '>>'\n");
+		extern int g_exit_code;
+		g_exit_code = 2;
+		*error = 1;
+		return;
+	}
+	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd == -1)
+	{
+		print_error_file(filename);
+		*error = 1;
+		return ;
+	}
     if (dup2(fd, STDOUT_FILENO) == -1)
     {
         print_error_file("dup2");

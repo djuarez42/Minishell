@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_validate.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 19:00:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/30 14:50:31 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 17:20:14 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int validate_redirection_token(const char *str)
             if (str[i] != '\0' && str[i] != first_char && (str[i] == '>' || str[i] == '<'))
             {
                 fprintf(stderr, "minishell: syntax error near unexpected token `%c'\n", str[i]);
+                g_exit_code = 258;
                 return (0);
             }
             i++;
@@ -130,6 +131,7 @@ int validate_redirection_token(const char *str)
         if (i > 2)
         {
             fprintf(stderr, "minishell: syntax error near unexpected token `%c'\n", first_char);
+            g_exit_code = 258;
             return (0);
         }
         
@@ -137,6 +139,7 @@ int validate_redirection_token(const char *str)
         if (i == 2 && str[0] != str[1])
         {
             fprintf(stderr, "minishell: syntax error near unexpected token `%c'\n", str[1]);
+            g_exit_code = 258;
             return (0);
         }
     }
