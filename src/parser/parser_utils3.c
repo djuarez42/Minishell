@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 14:26:15 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 15:52:50 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,14 @@ char **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx)
                     ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
                     (*ctx->argc_argv)++;
                 }
+            }
+            else if (frag->quote_type != QUOTE_NONE)
+            {
+                /* Add empty quoted argument */
+                tmp = ft_strdup("");
+                ctx->cmd->argv[*ctx->argc_argv] = tmp;
+                ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
+                (*ctx->argc_argv)++;
             }
         }
         frag = frag->next;

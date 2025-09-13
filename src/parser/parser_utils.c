@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 14:26:15 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 15:52:50 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,62 +162,60 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
 	 * an incorrect entry (e.g. "/bin/echo 42") as argv_final_text[0]. */
 
 	// 4️⃣ Guardar en argv
+	bool has_quoted_fragment = false;
+	t_fragment *f = tok->fragments;
+	while (f)
+	{
+		if (f->quote_type != QUOTE_NONE)
+		{
+			has_quoted_fragment = true;
+			break;
+		}
+		f = f->next;
+	}
+
 	if (tok->final_text && *tok->final_text)
 	{
-		/* Determine if we should perform shell word-splitting (IFS) on this
-		 * token. Splitting happens when the final_text contains IFS whitespace
-		 * and the token included unquoted fragments that could have produced
-		 * those spaces. We must NOT split if this is an assignment whose value
-		 * part was quoted in the source (e.g. name="a b"). */
+		// (existing logic unchanged)
 		bool has_unquoted_fragment = false;
 		bool is_assignment_with_quoted_value = false;
-		t_fragment *f = tok->fragments;
+		t_fragment *f2 = tok->fragments;
 		bool found_eq = false;
-
-		while (f)
+		while (f2)
 		{
-			if (f->quote_type == QUOTE_NONE)
+			if (f2->quote_type == QUOTE_NONE)
 				has_unquoted_fragment = true;
 			if (!found_eq)
 			{
-				char *eq = ft_strchr(f->text, '=');
+				char *eq = ft_strchr(f2->text, '=');
 				if (eq)
 				{
 					found_eq = true;
-					/* If there are characters after '=' in this fragment,
-					 * their quote type is f->quote_type. Otherwise we must
-					 * inspect subsequent fragments. */
 					if (*(eq + 1) != '\0')
 					{
-						if (f->quote_type != QUOTE_NONE)
+						if (f2->quote_type != QUOTE_NONE)
 							is_assignment_with_quoted_value = true;
 					}
 					else
 					{
-						t_fragment *nf = f->next;
+						t_fragment *nf = f2->next;
 						if (nf && nf->quote_type != QUOTE_NONE)
 							is_assignment_with_quoted_value = true;
 					}
 				}
 			}
-			f = f->next;
+			f2 = f2->next;
 		}
-
 		bool contains_ifs = false;
 		for (char *p = tok->final_text; *p; ++p)
 			if (*p == ' ' || *p == '\t' || *p == '\n') { contains_ifs = true; break; }
-
-	if (contains_ifs && has_unquoted_fragment && !is_assignment_with_quoted_value)
+		if (contains_ifs && has_unquoted_fragment && !is_assignment_with_quoted_value)
 		{
-			/* Perform simple IFS splitting on whitespace (space, tab, newline).
-		 	* Leading/trailing and repeated IFS whitespace are skipped. */
 			const char *s = tok->final_text;
 			int len = ft_strlen(s);
 			int i = 0;
-
 			while (i < len)
 			{
-				/* skip IFS */
 				while (i < len && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n'))
 					i++;
 				if (i >= len) break;
@@ -229,18 +227,13 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
 				{
 					char *field = malloc((size_t)field_len + 1);
 					if (!field)
-						return ctx->cmd->argv; // best-effort keep current state
+						return ctx->cmd->argv;
 					ft_strlcpy(field, &s[start], (size_t)field_len + 1);
-
-					(void)field; /* field used above; debug removed */
-
-					/* append to argv_final_text */
 					if (ctx->cmd->argv_final_text)
 					{
 						ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(field);
 						(*ctx->argc_final_text)++;
 					}
-
 					ctx->cmd->argv[*ctx->argc_argv] = field;
 					ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE;
 					(*ctx->argc_argv)++;
@@ -255,9 +248,21 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
 				ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text);
 				(*ctx->argc_final_text)++;
 			}
-			ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE; // ya es expandido
+			ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE;
 			(*ctx->argc_argv)++;
 		}
+	}
+	else if (has_quoted_fragment)
+	{
+		// Add empty quoted argument to argv_final_text
+		ctx->cmd->argv[*ctx->argc_argv] = ft_strdup("");
+		if (ctx->cmd->argv_final_text)
+		{
+			ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup("");
+			(*ctx->argc_final_text)++;
+		}
+		ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE;
+		(*ctx->argc_argv)++;
 	}
 
     return ctx->cmd->argv;
