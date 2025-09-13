@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/31 16:58:35 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 18:02:12 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,95 +213,73 @@ static int	wait_pipeline(pid_t *pids, size_t n)
 	return (final_status);
 }
 
-static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *state)
+static int run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *state)
 {
-	int			(*pipes)[2];
-	size_t		n_pipes;
-	pid_t		*pids;
-	size_t		i;
-	t_cmd		*cur;
-	int			res;
-	int			code;
+    int (*pipes)[2] = NULL;
+    size_t n_pipes = (n_cmds > 1) ? n_cmds - 1 : 0;
+    pid_t *pids;
+    size_t i;
+    t_cmd *cur;
+    int res, code;
 
-	pipes = NULL;
-	n_pipes = (n_cmds > 1) ? (n_cmds - 1) : 0;
-	if (create_pipes(&pipes, n_pipes) == -1)
-		return (perror("pipe"), 1);
+    if (create_pipes(&pipes, n_pipes) == -1)
+        return (perror("pipe"), 1);
 
-	pids = (pid_t *)malloc(sizeof(pid_t) * n_cmds);
-	if (!pids)
-	{
-		if (pipes)
-			close_all_pipes(pipes, n_pipes);
-		free(pipes);
-		return (1);
-	}
+    pids = malloc(sizeof(pid_t) * n_cmds);
+    if (!pids)
+    {
+        if (pipes) close_all_pipes(pipes, n_pipes);
+        free(pipes);
+        return 1;
+    }
 
-	cur = start;
-	while (cur)
-	{
-		if (expand_cmd_inplace(cur, envp, state) == -1)
-		{
-			if (pipes)
-				close_all_pipes(pipes, n_pipes);
-			free(pipes);
-			free(pids);
-			return (1);
-		}
-		cur = cur->next;
-	}
+    // Ya no hacemos expand_cmd_inplace, argv ya está expandido por parser
 
-	i = 0;
-	cur = start;
-	while (i < n_cmds && cur)
-	{
-		pids[i] = fork();
-		if (pids[i] == -1)
-		{
-			perror("fork");
-			if (pipes)
-				close_all_pipes(pipes, n_pipes);
-			while (i > 0)
-				waitpid(pids[--i], NULL, 0);
-			free(pipes);
-			free(pids);
-			return (1);
-		}
+    i = 0;
+    cur = start;
+    while (i < n_cmds && cur)
+    {
+        pids[i] = fork();
+        if (pids[i] == -1)
+        {
+            perror("fork");
+            if (pipes) close_all_pipes(pipes, n_pipes);
+            while (i > 0)
+                waitpid(pids[--i], NULL, 0);
+            free(pipes);
+            free(pids);
+            return 1;
+        }
 
-		if (pids[i] == 0)
-		{
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
+        if (pids[i] == 0)
+        {
+            signal(SIGINT, SIG_DFL);
+            signal(SIGQUIT, SIG_DFL);
+            wire_child_pipes(i, n_cmds, pipes);
+            if (pipes) close_all_pipes(pipes, n_pipes);
 
-			fd_diag_log("executor:child:before-wire");
-			wire_child_pipes(i, n_cmds, pipes);
-			if (pipes)
-				close_all_pipes(pipes, n_pipes);
-			/* TEMP DBG */ // write(STDERR_FILENO, "[DBG] child before redirs\n", 24);
-			t_exec_state child_state = *state; // Copy state for child
-			res = handle_redirections_and_quotes(cur->redirs, envp, &child_state);
-			if (res == 130)
-				exit (130);
-			else if (res == 1)
-				exit (1);
-			/* TEMP DBG */ // write(STDOUT_FILENO, "[DBG] child stdout token\n", 25);
-			if (!cur->argv || !cur->argv[0])
-				exit(2);
-			if (is_builtin(cur->argv[0]))
-				exit(run_builtin_in_child(cur, &envp));
-			/* DIAG */ { int fd = open("./ms_diag.log", O_WRONLY|O_CREAT|O_APPEND, 0644); if (fd!=-1){ write(fd, "CHILD BEFORE EXECVE\n", 20); close(fd);} }
-			code = execute_command(NULL, cur, envp);
-			exit(code);
-		}
-		i++;
-		cur = cur->next;
-	}
-	if (pipes)
-		close_all_pipes(pipes, n_pipes);
-	free(pipes);
-	i = wait_pipeline(pids, n_cmds);
-	free(pids);
-	return (i);
+            t_exec_state child_state = *state;
+            res = handle_redirections_and_quotes(cur->redirs, envp, &child_state);
+            if (res == 130) exit(130);
+            else if (res == 1) exit(1);
+
+            if (!cur->argv || !cur->argv[0]) exit(2);
+
+            if (is_builtin(cur->argv[0]))
+                exit(run_builtin_in_child(cur, &envp));
+
+            code = execute_command(NULL, cur, envp);
+            exit(code);
+        }
+        i++;
+        cur = cur->next;
+    }
+
+    if (pipes) close_all_pipes(pipes, n_pipes);
+    free(pipes);
+    i = wait_pipeline(pids, n_cmds);
+    free(pids);
+    return i;
 }
 
 /* ----------------------------- Entry point ------------------------------ */
