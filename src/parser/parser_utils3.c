@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 19:47:50 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/13 14:38:35 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,25 @@ int should_expand_fragment(t_fragment *frag)
     if (frag->quote_type == QUOTE_SINGLE)
         return 0;
 
-    i = 0;
-    while (frag->text[i])
+    /* Casos especiales: comillas dobles y texto sin variables */
+    if (frag->quote_type == QUOTE_DOUBLE || frag->quote_type == QUOTE_NONE)
     {
-        if (frag->text[i] == '$')
-            return 1; /* expandir variables */
-        if (frag->text[i] == '~' && i == 0)
-            return 1; /* tilde al inicio */
-        i++;
+        i = 0;
+        while (frag->text[i])
+        {
+            if (frag->text[i] == '$')
+                return 1; /* expandir variables */
+            if (frag->text[i] == '~' && i == 0 && frag->quote_type == QUOTE_NONE)
+                return 1; /* tilde solo si no hay comillas */
+            i++;
+        }
+        return 0; /* nada que expandir, literal */
     }
-    return 0; /* nada que expandir */
+
+    if (frag->quote_type == QUOTE_DOLLAR)
+        return 1; /* $'ansi' siempre se interpreta */
+
+    return 0;
 }
 
 char **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx)

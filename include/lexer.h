@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 23:29:56 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/13 16:50:03 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ char			*strip_comments(const char *input);
 int 			check_unmatched_quotes(const char *input);
 t_fragment		*extract_dollar_quote(const char *text, int *i);
 t_fragment 		*parse_mixed_fragments(const char *text);
-int 			should_expand_fragment(t_fragment *frag);
 
 t_fragment      *duplicate_fragment(t_fragment *frag);
 t_token         *create_token_from_fragments(t_fragment *frag, bool space_before);
