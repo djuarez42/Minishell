@@ -6,7 +6,7 @@
 #    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/12 21:20:40 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/09/13 19:47:52 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,37 +36,37 @@ endif
 LIBS = $(READLINE_LIBS)
 INCLUDES += $(READLINE_INC)
 
-SRC = main.c \
-		src/lexer/tokenizer.c \
-		src/lexer/lexer_utils1.c \
-		src/lexer/lexer_utils2.c \
-		src/lexer/lexer_utils3.c \
-		src/lexer/lexer_utils4.c \
-		src/lexer/lexer_utils5.c \
-		src/parser/parser.c \
-		src/parser/parser_utils.c \
-		src/parser/parser_utils2.c \
-		src/parser/parser_utils3.c \
-		src/parser/parser_print_utils.c \
-		src/executor/executor.c \
-		src/executor/executor_utils.c \
-		src/executor/env_utils.c \
-		src/executor/redir_utils.c \
-		src/executor/redir_utils2.c \
-		src/executor/expand_variables_utils.c \
-		src/executor/expand_variables_utils2.c \
-		src/executor/expand_variables.c \
-		src/executor/preprocess_dollar_quotes.c \
-		src/executor/dollar_string_fix.c \
-		src/executor/dollar_quotes_fix.c \
-		src/executor/expand_cmd_inplace.c \
-		src/builtins/builtins.c \
-		src/builtins/builtin_echo_pwd_env.c \
-		src/builtins/builtin_cd.c \
-		src/builtins/builtin_export.c \
-		src/builtins/builtin_unset_exit.c \
-		src/signals/signals.c 
-		
+
+SRC = \
+	main.c \
+	src/lexer/tokenizer.c \
+	src/lexer/lexer_utils1.c \
+	src/lexer/lexer_utils2.c \
+	src/lexer/lexer_utils3.c \
+	src/lexer/lexer_utils4.c \
+	src/lexer/lexer_utils5.c \
+	src/parser/parser.c \
+	src/parser/parser_utils.c \
+	src/parser/parser_utils2.c \
+	src/parser/parser_utils3.c \
+	src/parser/parser_print_utils.c \
+	src/executor/executor.c \
+	src/executor/executor_utils.c \
+	src/executor/env_utils.c \
+	src/executor/redir_utils.c \
+	src/executor/redir_utils2.c \
+	src/executor/expand_variables_utils.c \
+	src/executor/expand_variables_utils2.c \
+	src/executor/expand_variables.c \
+	src/executor/preprocess_dollar_quotes.c \
+	src/executor/dollar_string_fix.c \
+	src/executor/dollar_quotes_fix.c \
+	src/builtins/builtins.c \
+	src/builtins/builtin_echo_pwd_env.c \
+	src/builtins/builtin_cd.c \
+	src/builtins/builtin_export.c \
+	src/builtins/builtin_unset_exit.c \
+	src/signals/signals.c
 
 OBJ = $(SRC:.c=.o)
 

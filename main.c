@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 23:29:52 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 19:47:52 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,10 @@ int main(int argc, char **argv, char **envp)
             {
                 cur = cmds;
                 fail = 0;
+                /* Pre-execution expansion disabled: let executor handle expansions
+                   to avoid double-processing in parser. If executor still requires
+                   expansions here, re-enable this block. */
+                /*
                 while (cur && !fail)
                 {
                     if (expand_cmd_inplace(cur, envp_copy, &state) == -1)
@@ -120,6 +124,7 @@ int main(int argc, char **argv, char **envp)
                     }
                     cur = cur->next;
                 }
+                */
                 if (!fail)
                     executor(cmds, &envp_copy, &state);
                 free_cmds(cmds);
@@ -189,6 +194,8 @@ int main(int argc, char **argv, char **envp)
             continue;
         }
 
+        /* Pre-execution expansion disabled in interactive mode as well. */
+        /*
         cur = cmds;
         while (cur)
         {
@@ -199,6 +206,7 @@ int main(int argc, char **argv, char **envp)
             }
             cur = cur->next;
         }
+        */
 
         if (!fail)
             executor(cmds, &envp_copy, &state);

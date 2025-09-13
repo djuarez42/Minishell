@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/11 17:02:23 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/13 19:47:52 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ char    *handle_dollar(const char *input, int *i, char **envp, t_exec_state *sta
 char    *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_state *state);
 int     expand_argv(char **argv, t_quote_type *argv_quote, char **envp, t_exec_state *state);
 int     expand_redirs(t_redir *redir, char **envp, t_exec_state *state);
-int     expand_cmd_inplace(t_cmd *cur, char **envp, t_exec_state *state);
 char    *expand_variables(const char *input, char **envp, t_exec_state *state, t_quote_type quote);
 char    *expand_mixed_quotes(const char *input, char **envp, t_exec_state *state);
 char    *process_mixed_quotes_argv(char *arg, t_quote_type quote_type, char **envp, t_exec_state *state);

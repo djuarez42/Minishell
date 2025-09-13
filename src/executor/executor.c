@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 00:14:24 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 19:47:52 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,10 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 		return (1);
 	}
 
+	/* Pre-fork expansion disabled: prefer letting each child or later stages
+	   handle variable/tilde/backslash expansions to avoid double expansion.
+	   Uncomment if executor must expand before forking. */
+	/*
 	cur = start;
 	while (cur)
 	{
@@ -254,6 +258,7 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp, t_exec_state *
 		}
 		cur = cur->next;
 	}
+	*/
 
 	i = 0;
 	cur = start;
