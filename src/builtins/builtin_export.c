@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/30 18:14:52 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/13 22:42:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,23 +42,38 @@ static int	validate_name_or_error(const char *arg)
 	return (0);
 }
 
-int	bi_export(char **argv, char ***penvp)
+static void print_exported_env(char **envp)
 {
-	int	i;
-	int	status;
-
-	if (!argv[1])
-	{
-	}
-	status = 0;
-	i = 1;
-	while (argv[i])
-	{
-		if (ft_strchr(argv[i], '='))
-			status |= assign_or_error(penvp, argv[i]);
-		else
-			status |= validate_name_or_error(argv[i]);
-		i++;
-	}
-	return (status);
+    int i = 0;
+    while (envp[i])
+    {
+        printf("declare -x %s\n", envp[i]);
+        i++;
+    }
 }
+
+int bi_export(char **argv, char ***penvp)
+{
+    int i;
+    int status;
+
+    if (!argv[1])
+    {
+        print_exported_env(*penvp);
+        return 0;
+    }
+
+    status = 0;
+    i = 1;
+    while (argv[i])
+    {
+        if (ft_strchr(argv[i], '='))
+            status |= assign_or_error(penvp, argv[i]);
+        else
+            status |= validate_name_or_error(argv[i]);
+        i++;
+    }
+    return status;
+}
+
+

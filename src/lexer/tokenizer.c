@@ -74,8 +74,9 @@ t_token *tokenize_input(const char *input)
             }
             cur = cur->next;
 
-            if (cur && determine_token_type(cur->text) != TOKEN_WORD)
+            if (cur && determine_token_type(cur->text) != TOKEN_WORD && cur->quote_type == QUOTE_NONE)
                 break;
+        
         }
 
         tok->type = determine_token_type(tok->fragments->text);

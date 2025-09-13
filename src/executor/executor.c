@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 18:02:12 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 01:04:36 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ int	execute_execve(char *exec_path, char **argv, char **envp)
 	}
 	return (0);
 }
+
+
 
 /* --------------------------- Pipeline helpers --------------------------- */
 static size_t	count_pipeline_cmds(t_cmd *start)
