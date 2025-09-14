@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 01:11:50 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:23:50 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ typedef struct s_fragment
 	struct s_fragment	*next;
 }	t_fragment;
 
-char	*concat_fragments(t_fragment *fragments);
-
 typedef struct s_token 
 {
 	t_token_type	type;
@@ -68,6 +66,7 @@ typedef struct s_token
 t_token		*create_token(t_token_type type, bool has_space_before);
 t_fragment	*new_fragment(const char *text, size_t len,
 				t_quote_type quote_type, bool has_space_after);
+char		*concat_fragments(t_fragment *fragments);
 void		append_fragment(t_fragment **list, t_fragment *new_frag);
 void		free_fragments(t_fragment *frag);
 void		free_token_list(t_token *tokens);
@@ -75,24 +74,17 @@ void		free_token_list(t_token *tokens);
 /* ------------------------ Tokenization core -------------------------- */
 t_token		*tokenize_input(const char *input);
 int			is_quote(char c);
-int			is_operator(char c);
 t_token_type	determine_token_type(char *str, t_quote_type quote);
 t_token		*append_token_eof(t_token *head);
 
 /* -------------------------- Quote helpers ---------------------------- */
 char		*remove_quotes(char *str);
-bool		are_quotes_closed(const char *input);
-char		*extract_quoted_segment(const char *input, int *len);
 int			check_unmatched_quotes(const char *input);
 t_fragment	*parse_mixed_fragments(const char *text);
 t_fragment	*handle_backslashes(const char *text, int *i);
 
 /* ------------------------- Parsing helpers --------------------------- */
 int			skip_spaces(const char *s, int i);
-char		*handle_quoted_part(const char *input, int *i, char *tmp,
-				t_quote_type *last_quote);
-char		*handle_plain_text(const char *input, int *i, char *tmp);
-
 /* ----------------------------- Debug -------------------------------- */
 void		print_fragments(t_fragment *fragments);
 void		print_tokens_raw(t_token *tokens);

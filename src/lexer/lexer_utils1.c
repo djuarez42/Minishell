@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 01:03:58 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:21:15 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 int	is_quote(char c)
 {
 	return (c == '\'' || c == '\"');
-}
-
-int	is_operator(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
 }
 
 char	*remove_quotes(char *str)
@@ -39,27 +34,6 @@ char	*remove_quotes(char *str)
 		result = ft_strdup(str);
 
 	return (result);
-}
-
-bool	are_quotes_closed(const char *input)
-{
-	int		i;
-	char	quote_char;
-
-	i = 0;
-	while (input[i])
-	{
-		if (is_quote(input[i]))
-		{
-			quote_char = input[i++];
-			while (input[i] && input[i] != quote_char)
-				i++;
-			if (!input[i])
-				return (false);
-		}
-		i++;
-	}
-	return (true);
 }
 
 int	skip_spaces(const char *input, int i)
