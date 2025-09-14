@@ -6,16 +6,11 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 01:21:15 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:31:16 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	is_quote(char c)
-{
-	return (c == '\'' || c == '\"');
-}
 
 char	*remove_quotes(char *str)
 {
@@ -34,60 +29,6 @@ char	*remove_quotes(char *str)
 		result = ft_strdup(str);
 
 	return (result);
-}
-
-int	skip_spaces(const char *input, int i)
-{
-	while (input[i] != '\0' && ft_isspace((unsigned char)input[i]))
-		i++;
-	return (i);
-}
-
-int	detect_token_type(const char *input, int i)
-{
-	if (input[i] == '|')
-		return (TOKEN_PIPE);
-	if (input[i] == '<')
-	{
-		if (input[i + 1] == '<')
-			return (TOKEN_HEREDOC);
-		return (TOKEN_REDIRECT_IN);
-	}
-	if (input[i] == '>')
-	{
-		if (input[i + 1] == '>')
-			return (TOKEN_APPEND);
-		return (TOKEN_REDIRECT_OUT);
-	}
-	return (TOKEN_WORD);
-}
-
-char	*extract_token_text(const char *input, int *i, int type)
-{
-	int start = *i;
-	int len = 0;
-
-	if (type == TOKEN_PIPE || type == TOKEN_REDIRECT_IN || type == TOKEN_REDIRECT_OUT)
-		len = 1;
-	else if (type == TOKEN_HEREDOC || type == TOKEN_APPEND)
-		len = 2;
-	else if (type == TOKEN_WORD)
-	{
-		while (input[*i] != '\0' && !ft_isspace((unsigned char)input[*i])
-			&& detect_token_type(input, *i) == TOKEN_WORD)
-		{
-			(*i)++;
-			len++;
-		}
-	}
-	if (type == TOKEN_HEREDOC || type == TOKEN_APPEND || type == TOKEN_PIPE
-		|| type == TOKEN_REDIRECT_IN || type == TOKEN_REDIRECT_OUT)
-		*i += len;
-	char *res = malloc(len + 1);
-	if (!res)
-		return NULL;
-	ft_strlcpy(res, &input[start], len + 1);
-	return res;
 }
 
 t_token *create_token(t_token_type type, bool space_before) 

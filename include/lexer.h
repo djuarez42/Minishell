@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 01:23:50 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:30:28 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void		free_token_list(t_token *tokens);
 
 /* ------------------------ Tokenization core -------------------------- */
 t_token		*tokenize_input(const char *input);
-int			is_quote(char c);
 t_token_type	determine_token_type(char *str, t_quote_type quote);
 t_token		*append_token_eof(t_token *head);
 
@@ -83,8 +82,6 @@ int			check_unmatched_quotes(const char *input);
 t_fragment	*parse_mixed_fragments(const char *text);
 t_fragment	*handle_backslashes(const char *text, int *i);
 
-/* ------------------------- Parsing helpers --------------------------- */
-int			skip_spaces(const char *s, int i);
 /* ----------------------------- Debug -------------------------------- */
 void		print_fragments(t_fragment *fragments);
 void		print_tokens_raw(t_token *tokens);
