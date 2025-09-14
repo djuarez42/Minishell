@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils_4.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 16:09:54 by djuarez           #+#    #+#             */
-/*   Updated: 2025/08/28 19:30:39 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/15 00:57:28 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,32 +60,4 @@ static int	copy_or_stop(const char *input, char *result,
 	}
 	result[i] = input[i];
 	return (1);
-}
-
-char	*strip_comments(const char *input)
-{
-	int		i;
-	int		quote_state;
-	char	open_quote;
-	char	*result;
-	int		len;
-
-	if (!input)
-		return (NULL);
-	len = ft_strlen(input);
-	result = malloc(len + 1);
-	if (!result)
-		return (NULL);
-	i = 0;
-	quote_state = 0;
-	open_quote = 0;
-	while (input[i])
-	{
-		update_quote_state(input[i], &quote_state, &open_quote);
-		if (!copy_or_stop(input, result, i, quote_state))
-			break ;
-		i++;
-	}
-	result[i] = '\0';
-	return (result);
 }

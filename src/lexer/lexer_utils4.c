@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 00:46:54 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 00:58:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,28 +107,4 @@ void assign_token_types(t_token *tokens)
 
         tokens = tokens->next;
     }
-}
-
-t_fragment *extract_dollar_quote(const char *text, int *i)
-{
-    t_fragment *frag = NULL;
-
-    if (!text || !i)
-        return NULL;
-
-    if (text[*i] == '$' && (text[*i + 1] == '"' || text[*i + 1] == '\''))
-    {
-        char quote_char = text[*i + 1];
-        int start = *i + 2;
-        int end = start;
-
-        while (text[end] && text[end] != quote_char)
-            end++;
-
-        frag = new_fragment(&text[start], end - start, QUOTE_DOLLAR, false);
-
-        *i = (text[end] == quote_char) ? end + 1 : end;
-    }
-
-    return frag;
 }

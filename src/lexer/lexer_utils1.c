@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 00:06:25 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:00:25 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,19 +127,6 @@ t_token *create_token(t_token_type type, bool space_before)
     tok->has_space_before = space_before;
     tok->final_text = NULL;
     tok->next = NULL;
-    return tok;
-}
-
-t_token *create_token_from_fragments(t_fragment *first_frag, bool space_before)
-{
-    t_token *tok = malloc(sizeof(t_token));
-    if (!tok) return NULL;
-
-    tok->type = TOKEN_WORD;
-    tok->fragments = first_frag;
-    tok->has_space_before = space_before;
-    tok->next = NULL;
-
     return tok;
 }
 

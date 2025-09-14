@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 20:26:09 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 00:59:33 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,23 +176,6 @@ char *concat_fragments(t_fragment *frag)
     }
     res[pos] = '\0';
     return res;
-}
-
-t_fragment *duplicate_fragment(t_fragment *frag)
-{
-    if (!frag) return NULL;
-
-    t_fragment *copy = malloc(sizeof(t_fragment));
-    if (!copy) return NULL;
-
-    copy->text = strdup(frag->text);
-    if (!copy->text) { free(copy); return NULL; }
-
-    copy->quote_type = frag->quote_type;
-    copy->has_space_after = frag->has_space_after;
-    copy->next = NULL;
-
-    return copy;
 }
 
 t_token *append_token_eof(t_token *head)

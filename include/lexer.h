@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 00:09:17 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:00:55 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,25 +97,8 @@ int				skip_spaces(const char *s, int i);
 char			*handle_quoted_part(const char *input, int *i, char *tmp,
 					t_quote_type *last_quote);
 char			*handle_plain_text(const char *input, int *i, char *tmp);
-void			add_token(char **tokens, int *tok_i, char **tmp);
-char			**clean_input_quotes(const char *input,
-					t_quote_type **quotes_out);
-char			**reconstruct_words(const char *input, t_quote_type *last_quote,
-					t_quote_type **quotes_out);
-int				should_add_token(const char *input, int i);
-void			check_and_add_token(char **tokens, int *tok_i, char **tmp);
-int				process_spaces_and_quotes(const char *input, int i, char **tmp,
-					t_quote_type *last_quote);
-int				init_tokens_and_quotes(char ***tokens_out,
-					t_quote_type **quotes_out);
-const char		*quote_type_str(t_quote_type q);
-char			*strip_comments(const char *input);
 int 			check_unmatched_quotes(const char *input);
-t_fragment		*extract_dollar_quote(const char *text, int *i);
 t_fragment 		*parse_mixed_fragments(const char *text);
-
-t_fragment      *duplicate_fragment(t_fragment *frag);
-t_token         *create_token_from_fragments(t_fragment *frag, bool space_before);
 void            assign_token_types(t_token *head);
 t_fragment		*handle_backslashes(const char *text, int *i);
 

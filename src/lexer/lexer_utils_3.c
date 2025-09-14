@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 16:45:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 00:12:41 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 00:54:57 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,18 +90,4 @@ char	*extract_quoted_segment(const char *input, int *len)
 	}
 	result[j] = '\0';
 	return (result);
-}
-
-int	init_tokens_and_quotes(char ***tokens_out, t_quote_type **quotes_out)
-{
-	*tokens_out = malloc(sizeof(char *) * 1024);
-	if (!*tokens_out)
-		return (0);
-	*quotes_out = malloc(sizeof(t_quote_type) * 1024);
-	if (!*quotes_out)
-	{
-		free(*tokens_out);
-		return (0);
-	}
-	return (1);
 }
