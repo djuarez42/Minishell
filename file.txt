@@ -1,6 +1,0 @@
-DEBUG dispatch_builtin: base_cmd='echo'
-DEBUG bi_echo: usando argv_final_text
-hola
-DEBUG dispatch_builtin: base_cmd='echo'
-DEBUG bi_echo: usando argv_final_text
-mundo
