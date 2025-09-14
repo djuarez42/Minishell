@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 18:27:29 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 20:27:22 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:37:27 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void free_token_list(t_token *tokens)
     }
 }
    
-
 t_token_type determine_token_type(char *str, t_quote_type quote)
 {
     if (!str)

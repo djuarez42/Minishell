@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 20:23:04 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:37:15 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,6 @@ t_fragment *parse_mixed_fragments(const char *text)
     return fragments;
 }
 
-
 void	print_fragments(t_fragment *fragments)
 {
 	int	i;
@@ -184,6 +183,7 @@ void	print_fragments(t_fragment *fragments)
 		i++;
 	}
 }
+
 void print_tokens_raw(t_token *tokens)
 {
     int i = 0;
