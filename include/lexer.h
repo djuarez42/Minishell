@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 01:00:55 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:04:06 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,10 @@ typedef struct s_token
 	struct s_token	*next;
 } t_token;
 
-// --- MISSING FUNCTION PROTOTYPES FOR TOKENIZER ---
-t_fragment *parse_fragments(const char *input);
+// --- MISSING FUNCTION PROTOTYPES FOR TOKE
 t_token *create_token(t_token_type type, bool has_space_before);
 t_fragment *new_fragment(const char *text, size_t len, t_quote_type quote_type, bool has_space_after);
 void append_fragment(t_fragment **list, t_fragment *new_frag);
-void append_token(t_token **list, t_token *new_token);
 t_token *build_token_list_from_fragments(t_token *raw_tokens);
 void free_fragments(t_fragment *frag);
 void free_token_list(t_token *tokens);
@@ -99,9 +97,7 @@ char			*handle_quoted_part(const char *input, int *i, char *tmp,
 char			*handle_plain_text(const char *input, int *i, char *tmp);
 int 			check_unmatched_quotes(const char *input);
 t_fragment 		*parse_mixed_fragments(const char *text);
-void            assign_token_types(t_token *head);
 t_fragment		*handle_backslashes(const char *text, int *i);
-
 
 // Debug functions
 void			print_fragments(t_fragment *fragments);

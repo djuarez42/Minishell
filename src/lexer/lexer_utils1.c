@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 01:00:25 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:03:58 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,12 +130,4 @@ t_token *create_token(t_token_type type, bool space_before)
     return tok;
 }
 
-void append_token(t_token **head, t_token *tok) 
-{
-    if (!tok) return;
-    if (!*head) { *head = tok; return; }
-    t_token *tmp = *head;
-    while (tmp->next) tmp = tmp->next;
-    tmp->next = tok;
-}
 

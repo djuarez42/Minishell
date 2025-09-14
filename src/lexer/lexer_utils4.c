@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 00:58:43 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:01:49 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,42 +69,4 @@ t_token *create_token_group(t_fragment *frag_head, t_token_type type)
     tok->fragments = frag_head;
     tok->next = NULL;
     return tok;
-}
-
-void assign_token_types(t_token *tokens)
-{
-    while (tokens)
-    {
-        char *text = tokens->fragments->text;
-        
-        if (strcmp(text, "|") == 0)
-            tokens->type = TOKEN_PIPE;
-        else if (strcmp(text, "<") == 0)
-            tokens->type = TOKEN_REDIRECT_IN;
-        else if (strcmp(text, ">") == 0)
-            tokens->type = TOKEN_REDIRECT_OUT;
-        else if (strcmp(text, "<<") == 0)
-            tokens->type = TOKEN_HEREDOC;
-        else if (strcmp(text, ">>") == 0)
-            tokens->type = TOKEN_APPEND;
-        else if (text[0] == '|' && text[1] != '\0')
-        {
-            // Token starts with pipe but has more content - syntax error will be caught in parser
-            tokens->type = TOKEN_PIPE;
-        }
-        else if (text[0] == '<' && text[1] != '\0' && !(text[1] == '<' && text[2] == '\0'))
-        {
-            // Token starts with < but isn't just "<" or "<<"
-            tokens->type = TOKEN_REDIRECT_IN;
-        }
-        else if (text[0] == '>' && text[1] != '\0' && !(text[1] == '>' && text[2] == '\0'))
-        {
-            // Token starts with > but isn't just ">" or ">>"
-            tokens->type = TOKEN_REDIRECT_OUT;
-        }
-        else
-            tokens->type = TOKEN_WORD;
-
-        tokens = tokens->next;
-    }
 }
