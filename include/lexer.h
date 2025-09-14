@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 01:28:23 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 20:38:16 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ int				should_add_token(const char *input, int i);
 void			check_and_add_token(char **tokens, int *tok_i, char **tmp);
 int				process_spaces_and_quotes(const char *input, int i, char **tmp,
 					t_quote_type *last_quote);
-char			*str_append(char *base, const char *add);
 int				init_tokens_and_quotes(char ***tokens_out,
 					t_quote_type **quotes_out);
 const char		*quote_type_str(t_quote_type q);
