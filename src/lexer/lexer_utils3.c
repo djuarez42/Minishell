@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 18:27:29 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 01:25:01 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 20:27:22 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,26 @@ void free_fragments(t_fragment *frag)
     while (frag)
     {
         tmp = frag->next;
-        free(frag->text);
+        if (frag->text)
+            free(frag->text);
+        if (frag->expanded_text)
+            free(frag->expanded_text);
         free(frag);
         frag = tmp;
     }
 }
 
-void	free_token_list(t_token *tokens)
+void free_token_list(t_token *tokens)
 {
-	t_token	*tmp;
+    t_token *tmp;
 
     while (tokens)
     {
         tmp = tokens->next;
         if (tokens->fragments)
             free_fragments(tokens->fragments);
+        if (tokens->final_text)
+            free(tokens->final_text);
         free(tokens);
         tokens = tmp;
     }

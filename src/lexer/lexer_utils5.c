@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 01:27:43 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 20:26:09 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,26 +146,32 @@ bool lx_is_space_between(t_fragment *cur, t_fragment *next)
 
 char *concat_fragments(t_fragment *frag)
 {
-    if (!frag) return NULL;
+    if (!frag)
+        return NULL;
 
     size_t len = 0;
     t_fragment *cur = frag;
     while (cur)
     {
-        len += strlen(cur->text);
+        if (cur->text)
+            len += strlen(cur->text);
         cur = cur->next;
     }
 
     char *res = malloc(len + 1);
-    if (!res) return NULL;
+    if (!res)
+        return NULL;
 
     size_t pos = 0;
     cur = frag;
     while (cur)
     {
-        size_t i = 0;
-        while (cur->text[i])
-            res[pos++] = cur->text[i++];
+        if (cur->text)
+        {
+            size_t i = 0;
+            while (cur->text[i])
+                res[pos++] = cur->text[i++];
+        }
         cur = cur->next;
     }
     res[pos] = '\0';
