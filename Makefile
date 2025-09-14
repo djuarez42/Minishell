@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/11 19:11:59 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/14 02:32:24 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,9 @@
 NAME = minishell
 
 CC = cc 
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+#LDFLAGS = -fsanitize=address
+
 
 INCLUDES = -Iinclude -Ilibft
 
@@ -80,6 +82,7 @@ $(LIBFT):
 	
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) $(LIBS) $(INCLUDES)
+#(LDFLAGS)
 
 clean:
 	rm -f $(OBJ)

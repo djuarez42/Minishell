@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 18:23:42 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 02:39:18 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,39 +336,34 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
 
     idx = *ctx->argc_argv;
 
-    // 1) expandir fragments (igual que siempre)
+    // 1) expandir fragments
     expand_fragments(tok, ctx->envp, ctx->state);
 
     // 2) construir final_text 
     free(tok->final_text);
     tok->final_text = concat_final_text(tok);
-    //printf("[DBG] PROCESS_TOKEN: token='%s'\n", tok->final_text ? tok->final_text : "(null)");
 
-    // 3) guardar final_text (para builtins que lo necesiten) 
+    // 3) guardar final_text
     if (ctx->cmd->argv_final_text)
     {
         ctx->cmd->argv_final_text[*ctx->argc_final_text] = ft_strdup(tok->final_text ? tok->final_text : "");
         (*ctx->argc_final_text)++;
     }
 
-    // 4) detectar assignment: si primer fragment contiene '=' 
+    // 4) detectar assignment
     frag = tok->fragments;
     if (frag && ft_strchr(frag->text ? frag->text : "", '='))
         is_assignment = 1;
 
-    // 5) construir argv 
+    // 5) construir argv
     if (is_assignment)
     {
-        // token entero como una sola entrada (assignment) 
         ctx->cmd->argv[idx] = ft_strdup(tok->final_text ? tok->final_text : "");
-        ctx->cmd->argv_quote[idx] = detect_combined_quote(tok->fragments);        //printf("[DBG] ASSIGNMENT argv[%d] = '%s'\n", idx, ctx->cmd->argv[idx]);
+        ctx->cmd->argv_quote[idx] = detect_combined_quote(tok->fragments);
         idx++;
     }
     else
     {
-        // Metodo robusto: construir palabras a partir de TODOS los fragments
-          // con máscara para que sólo los espacios provenientes de expansiones
-           //no-quoted actúen como separadores. 
         int nwords = 0;
         char **words = build_words_from_token(tok, &nwords);
 
@@ -378,21 +373,17 @@ char **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
             {
                 ctx->cmd->argv[idx] = ft_strdup(words[w]);
                 ctx->cmd->argv_quote[idx] = detect_combined_quote(tok->fragments);
-               // printf("[DBG] ADD argv[%d] = '%s'\n", idx, ctx->cmd->argv[idx]);
                 idx++;
             }
             free_str_array(words);
-        }
-        else
-        {
-            //Si build devolvió NULL puede ser porque token vacío: no añadimos nada
-            // nothing 
         }
     }
 
     *ctx->argc_argv = idx;
     return ctx->cmd->argv;
 }
+
+
 
 char **ft_split_spaces(const char *s)
 {
