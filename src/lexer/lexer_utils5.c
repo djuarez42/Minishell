@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 00:59:33 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:06:51 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,17 +203,4 @@ t_token *append_token_eof(t_token *head)
 
     cur->next = new;
     return head;
-}
-
-void free_tokens(t_token *tokens)
-{
-    t_token *tmp;
-    while (tokens)
-    {
-        tmp = tokens->next;
-        free_fragments(tokens->fragments);
-        free(tokens->final_text);
-        free(tokens);
-        tokens = tmp;
-    }
 }

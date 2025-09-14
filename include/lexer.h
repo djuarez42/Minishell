@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 01:04:06 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 01:06:58 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,8 @@ typedef struct s_token
 t_token *create_token(t_token_type type, bool has_space_before);
 t_fragment *new_fragment(const char *text, size_t len, t_quote_type quote_type, bool has_space_after);
 void append_fragment(t_fragment **list, t_fragment *new_frag);
-t_token *build_token_list_from_fragments(t_token *raw_tokens);
 void free_fragments(t_fragment *frag);
 void free_token_list(t_token *tokens);
-void free_tokens(t_token *tokens);
 
 enum lexer_state 
 {
