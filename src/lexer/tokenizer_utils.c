@@ -6,29 +6,14 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 20:40:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 20:38:02 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 00:06:14 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "minishell.h"
 
-int	is_quote(char c)
-{
-	return (c == '\'' || c == '\"');
-}
 
-int	is_operator(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
-
-int	operator_len(const char *s)
-{
-	if ((s[0] == '>' && s[1] == '>') || (s[0] == '<' && s[1] == '<'))
-		return (2);
-	return (1);
-}
 
 int	skip_spaces(const char *s, int i)
 {

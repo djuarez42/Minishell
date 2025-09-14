@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 20:24:42 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 00:06:25 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,6 @@ int	is_quote(char c)
 int	is_operator(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
-}
-
-int	operator_len(const char *s)
-{
-	if ((s[0] == '>' && s[1] == '>') || (s[0] == '<' && s[1] == '<'))
-		return (2);
-	return (1);
 }
 
 char	*remove_quotes(char *str)

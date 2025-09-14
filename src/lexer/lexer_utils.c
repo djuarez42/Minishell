@@ -6,24 +6,12 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 11:03:33 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/06 01:27:14 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 00:07:12 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "minishell.h"
-
-int	is_blank(const char *s)
-{
-	while (*s)
-	{
-		if (*s != ' ')
-			return (0);
-		s++;
-	}
-	return (1);
-}
-
 
 const char	*quote_type_str(t_quote_type q)
 {

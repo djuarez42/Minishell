@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 20:38:16 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 00:09:17 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,8 @@ enum lexer_state
 t_token			*tokenize_input(const char *input);
 int				is_quote(char c);
 int				is_operator(char c);
-int				operator_len(const char *s);
-int				is_blank(const char *s);
 t_token_type 	determine_token_type(char *str, t_quote_type quote);
 t_token			*append_token_eof(t_token *head);
-const char		*token_type_str(t_token_type type);
 char			*remove_quotes(char *str);
 bool			are_quotes_closed(const char *input);
 char			*extract_quoted_segment(const char *input, int *len);

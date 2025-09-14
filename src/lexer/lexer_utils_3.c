@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 16:45:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 22:12:47 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 00:12:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,26 +60,6 @@ char	*handle_quoted_part(const char *input, int *i, char *tmp,
 	return (tmp);
 }
 
-bool	are_quotes_closed(const char *input)
-{
-	int		i;
-	char	open_quote;
-
-	i = 0;
-	open_quote = 0;
-	while (input[i])
-	{
-		if (is_quote(input[i]))
-		{
-			if (open_quote == 0)
-				open_quote = input[i];
-			else if (input[i] == open_quote)
-				open_quote = 0;
-		}
-		i++;
-	}
-	return (open_quote == 0);
-}
 
 char	*extract_quoted_segment(const char *input, int *len)
 {
