@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 18:55:38 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 20:06:20 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include "lexer.h"       // define t_quote_type, t_token, etc.
 # include "exec_state.h"  // define t_exec_state
 
-# define MAX_ARGS 100
+# define MAX_ARGS 32645
 
 typedef struct s_redir
 {

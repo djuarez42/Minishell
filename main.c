@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 18:06:08 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 20:21:24 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int main(int argc, char **argv, char **envp)
         {
             cmds = parser_tokens(tokens, envp_copy, &state);
             if (cmds)
-                executor(cmds, &envp_copy, &state); // <-- sin expand_cmd_inplace
+                executor(cmds, &envp_copy, &state); 
             free_cmds(cmds);
             free_token_list(tokens);
         }

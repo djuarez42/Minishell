@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 22:24:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 20:23:04 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,22 @@
 t_fragment *new_fragment(const char *start, size_t len, t_quote_type qtype, bool space_after) 
 {
     t_fragment *frag = malloc(sizeof(t_fragment));
-    if (!frag) return NULL;
+    if (!frag)
+        return NULL;
+
     frag->text = malloc(len + 1);
-    if (!frag->text) { free(frag); return NULL; }
+    if (!frag->text) 
+    { 
+        free(frag); 
+        return NULL; 
+    }
     memcpy(frag->text, start, len);
     frag->text[len] = '\0';
+
+    frag->expanded_text = NULL;
     frag->quote_type = qtype;
     frag->has_space_after = space_after;
+    frag->is_variable = false;
     frag->next = NULL;
 
     return frag;
