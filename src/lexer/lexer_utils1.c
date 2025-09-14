@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/09 22:13:01 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 20:24:42 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,13 @@ char	*extract_token_text(const char *input, int *i, int type)
 t_token *create_token(t_token_type type, bool space_before) 
 {
     t_token *tok = malloc(sizeof(t_token));
+    if (!tok)
+        return NULL;
+
     tok->type = type;
     tok->fragments = NULL;
     tok->has_space_before = space_before;
+    tok->final_text = NULL;
     tok->next = NULL;
     return tok;
 }
