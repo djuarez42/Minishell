@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 02:39:18 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/14 21:01:48 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,43 @@ void	free_partial_cmd(t_cmd *cmd, int argc)
 	}
 }
 
-void	free_cmds(t_cmd *cmd)
+void free_cmds(t_cmd *cmd)
 {
-	t_cmd	*tmp;
-	int		i;
+    t_cmd *tmp;
+    int i;
 
-	while (cmd)
-	{
-		tmp = cmd->next;
-		if (cmd->argv)
-		{
-			i = 0;
-			while (cmd->argv[i])
-				free(cmd->argv[i++]);
-			free(cmd->argv);
-		}
-		if (cmd->argv_quote)
-			free(cmd->argv_quote);
-		free_redirs(cmd->redirs);
-		free(cmd);
-		cmd = tmp;
-	}
+    while (cmd)
+    {
+        tmp = cmd->next;
+
+        if (cmd->argv)
+        {
+            i = 0;
+            while (cmd->argv[i])
+                free(cmd->argv[i++]);
+            free(cmd->argv);
+        }
+
+        if (cmd->argv_final_text)
+        {
+            i = 0;
+            while (cmd->argv_final_text[i])
+                free(cmd->argv_final_text[i++]);
+            free(cmd->argv_final_text);
+        }
+
+        if (cmd->argv_quote)
+            free(cmd->argv_quote);
+
+        if (cmd->argv_first_word)
+            free(cmd->argv_first_word);
+
+        if (cmd->redirs)
+            free_redirs(cmd->redirs);
+
+        free(cmd);
+        cmd = tmp;
+    }
 }
 
 void	free_redirs(t_redir *redir)
