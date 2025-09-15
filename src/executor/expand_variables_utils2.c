@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/11 18:39:55 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 18:00:39 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,75 +96,6 @@ void	handle_backslash_dollar_parity(const char *input, int *i,
 		*backslashes_out = backslash_count;
 		*should_expand = false;
 	}
-}
-
-char	*handle_special_dollar(const char *input, int *i, t_exec_state *state)
-{
-	int	start;
-
-	start = *i + 1;
-	if (!input[start])
-	{
-		*i = *i + 1;
-		return (ft_strdup(""));
-	}
-	if (input[start] == '?')
-	{
-		*i = start + 1;
-		return (expand_exit_status(state));
-	}
-	if (input[start] == '$')
-	{
-		*i = start + 1;
-		return (ft_strdup("$"));
-	}
-	return (NULL);
-}
-
-char	*handle_dollar(const char *input, int *i, char **envp,
-	t_exec_state *state)
-{
-	int		start;
-	int		len;
-	char	*res;
-	char	*name;
-
-	if (!input || !i)
-		return (NULL);
-	res = handle_special_dollar(input, i, state);
-	if (res)
-		return (res);
-	
-	// $" and $' cases: $ should disappear, leaving quotes to be handled by tokenizer
-	start = *i + 1;
-	if (input[start] == '"' || input[start] == '\'')
-	{
-		*i = *i + 1; // Skip just the $
-		return (ft_strdup("")); // $ disappears completely
-	}
-
-	// $<digit> case: expand single digit as env var name
-	if (ft_isdigit((unsigned char)input[start]))
-	{
-		char name[2] = { input[start], '\0' };
-		*i = start + 1;
-		return (expand_env_var(name, envp));
-	}
-
-	// Normal variable expansion
-	len = skip_variable_name(input + start);
-	if (len == 0)
-	{
-		*i = *i + 1;
-		return (ft_strdup("$"));
-	}
-	name = ft_substr(input, start, len);
-	if (!name)
-		return (NULL);
-	res = expand_env_var(name, envp);
-	free(name);
-	*i = start + len;
-	return (res);
 }
 
 char	*extract_plain_text(const char *input, int *i, char *tmp)

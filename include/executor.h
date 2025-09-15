@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 17:54:31 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 18:00:47 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,9 @@ int     is_var_char(int c);
 int     skip_variable_name(const char *s);
 char    *expand_exit_status(t_exec_state *state);
 char    *expand_env_var(const char *name, char **envp);
-char    *handle_special_dollar(const char *input, int *i, t_exec_state *state);
+
 char    *handle_locale_string(const char *input, int *i);
 char    *extract_plain_text(const char *input, int *i, char *tmp);
-char    *handle_dollar(const char *input, int *i, char **envp, t_exec_state *state);
 char    *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_state *state);
 int     expand_argv(char **argv, t_quote_type *argv_quote, char **envp, t_exec_state *state);
 int     expand_redirs(t_redir *redir, char **envp, t_exec_state *state);
