@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 18:12:13 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 18:18:33 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,7 @@ char    *expand_env_var(const char *name, char **envp);
 
 char    *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_state *state);
 char    *expand_variables(const char *input, char **envp, t_exec_state *state, t_quote_type quote);
-bool    has_problematic_quotes(const char *str);
-void    count_quotes(const char *str, int *single_count, int *double_count);
-char    *preprocess_dollar_quotes(const char *input);
 
-/* --- Heredoc --- */
 int     open_heredoc_file(t_heredoc_args *args);
 void    redirect_stdin_heredoc(const char *filepath);
 int     write_heredoc_lines(t_heredoc_args *args);

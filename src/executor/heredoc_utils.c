@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:15 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/09 23:04:22 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 18:23:03 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,34 +144,3 @@ void	cleanup_heredoc_file(t_heredoc_args *args)
 	}
 }
 
-int	handle_redirections_heredoc(const char *delimiter, bool quoted,
-			char **envp, t_heredoc_args *args)
-{
-	int	fd;
-	int	res;
-
-	// Initialize heredoc args
-	args->delimiter = delimiter;
-	args->quoted = quoted;
-	args->envp = envp;
-	args->heredoc_path = NULL;
-
-	// Open unique heredoc file
-	fd = open_heredoc_file(args);
-	if (fd == -1)
-		return (1);
-	
-	args->fd = fd;
-	
-	// Write heredoc content
-	res = write_heredoc_lines(args);
-	close(fd);
-	
-	if (res == 130)
-		return (130); // SIGINT handling
-	
-	// Redirect stdin to read from heredoc file
-	redirect_stdin_heredoc(args->heredoc_path);
-	
-	return (0);
-}
