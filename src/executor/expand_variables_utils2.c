@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 18:00:39 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 18:06:02 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,75 +98,3 @@ void	handle_backslash_dollar_parity(const char *input, int *i,
 	}
 }
 
-char	*extract_plain_text(const char *input, int *i, char *tmp)
-{
-	int		start;
-	char	*segment;
-	char	*new_tmp;
-	int		backslashes_out;
-	bool	should_expand;
-
-	if (!input || !i)
-		return (NULL);
-	start = *i;
-	// Look for backslash sequences or dollar signs
-	while (input[*i] && input[*i] != '$')
-	{
-		if (input[*i] == '\\')
-		{
-			// Check if this is a backslash-dollar sequence
-			int temp_i = *i;
-			handle_backslash_dollar_parity(input, &temp_i, &backslashes_out, &should_expand);
-			if (should_expand || backslashes_out > 0)
-			{
-				// We found a backslash-dollar sequence, stop here
-				break;
-			}
-			// Not a backslash-dollar sequence, advance past the backslash
-			(*i)++;
-		}
-		else
-		{
-			(*i)++;
-		}
-	}
-	if (start == *i)
-		return (tmp);
-	segment = ft_substr(input, start, *i - start);
-	if (!segment)
-	{
-		free(tmp);
-		return (NULL);
-	}
-	new_tmp = str_append(tmp, segment);
-	if (!new_tmp)
-	{
-		free(segment);
-		free(tmp);
-		return (NULL);
-	}
-	free(segment);
-	return (new_tmp);
-}
-
-int	expand_redirs(t_redir *redir, char **envp, t_exec_state *state)
-{
-	char	*expanded;
-
-	while (redir)
-	{
-		if (redir->file)
-		{
-			expanded = expand_variables(redir->file, envp, state, QUOTE_NONE);
-			if (!expanded)
-			{
-				free(redir->file);
-				return (-1);
-			}
-			free(redir->file);
-			redir->file = expanded;
-		}
-		redir = redir->next;
-	}
-	return (0);
-}
