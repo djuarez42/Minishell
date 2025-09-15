@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/15 18:27:20 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/15 18:57:46 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,6 @@ SRC = main.c \
 		src/builtins/builtin_cd.c \
 		src/builtins/builtin_export.c \
 		src/builtins/builtin_unset_exit.c \
-		src/signals/signals.c 
 		
 
 OBJ = $(SRC:.c=.o)
