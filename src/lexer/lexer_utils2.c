@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 19:21:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 20:25:17 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,114 +53,10 @@ void	append_fragment(t_fragment **head, t_fragment *frag)
 	tmp->next = frag;
 }
 
-t_fragment *parse_mixed_fragments(const char *text)
-{
-	t_fragment *fragments = NULL;
-	int i = 0;
-
-	while (text[i])
-	{
-		while (text[i] && ft_isspace((unsigned char)text[i]))
-			i++;
-		if (!text[i])
-			break ;
-		if (text[i] == '\\')
-		{
-			t_fragment *bs = handle_backslashes(text, &i);
-			if (bs)
-			{
-				append_fragment(&fragments, bs);
-				continue;
-			}
-		}
-		if (is_dollar_string(text, i))
-		{
-			char quote = text[i + 1];
-			i += 2;
-			int start = i;
-
-			while (text[i] && text[i] != quote)
-			{
-				if (quote == '"' && text[i] == '\\' && text[i + 1])
-					i += 2;
-				else
-					i++;
-			}
-			int len = i - start;
-			bool space_after = text[i + 1] && ft_isspace((unsigned char)text[i + 1]);
-
-			if (quote == '\'')
-				append_fragment(&fragments,
-					new_fragment(&text[start], (size_t)len, QUOTE_DOLLAR, space_after));
-			else
-				append_fragment(&fragments,
-					new_fragment(&text[start], (size_t)len, QUOTE_DOUBLE, space_after));
-			if (text[i] == quote)
-				i++;
-			continue;
-		}
-		if (text[i] == '\'')
-		{
-			int start = ++i;
-			while (text[i] && text[i] != '\'')
-				i++;
-			int len = i - start;
-			bool space_after = text[i + 1] && ft_isspace((unsigned char)text[i + 1]);
-			append_fragment(&fragments, new_fragment(&text[start], (size_t)len, QUOTE_SINGLE, space_after));
-			if (text[i] == '\'')
-				i++;
-			continue;
-		}
-		else if (text[i] == '"')
-		{
-			int start = ++i;
-			while (text[i] && text[i] != '"')
-			{
-				if (text[i] == '\\' && text[i + 1])
-					i += 2;
-				else
-					i++;
-			}
-			int len = i - start;
-			bool space_after = text[i + 1] && ft_isspace((unsigned char)text[i + 1]);
-			append_fragment(&fragments, new_fragment(&text[start], (size_t)len, QUOTE_DOUBLE, space_after));
-			if (text[i] == '"')
-				i++;
-			continue;
-		}
-		else if (text[i] == '|' || text[i] == '<' || text[i] == '>')
-		{
-			int start = i;
-			if (text[i] == '<' && text[i + 1] == '<')
-				i += 2;
-			else if (text[i] == '>' && text[i + 1] == '>')
-				i += 2;
-			else
-				i++;
-			int len = i - start;
-			bool space_after = text[i] && ft_isspace((unsigned char)text[i]);
-			append_fragment(&fragments, new_fragment(&text[start], (size_t)len, QUOTE_NONE, space_after));
-			continue;
-		}
-		else
-		{
-			int start = i;
-			while (text[i] && !ft_isspace((unsigned char)text[i]) &&
-				   text[i] != '\'' && text[i] != '"' &&
-				   text[i] != '|' && text[i] != '<' && text[i] != '>')
-				i++;
-			int len = i - start;
-			bool space_after = text[i] && ft_isspace((unsigned char)text[i]);
-			append_fragment(&fragments, new_fragment(&text[start], (size_t)len, QUOTE_NONE, space_after));
-			continue;
-		}
-	}
-	return fragments;
-}
-
 void	print_fragments(t_fragment *fragments)
 {
-	int	i;
+	int			i;
+	const char	*space_str;
 
 	i = 0;
 	while (fragments)
@@ -168,108 +64,293 @@ void	print_fragments(t_fragment *fragments)
 		printf("Fragment %d:\n", i);
 		printf("  text           : \"%s\"\n", fragments->text);
 		printf("  quote_type     : %d\n", fragments->quote_type);
-		printf("  has_space_after: %s\n",
-			fragments->has_space_after ? "true" : "false");
+		if (fragments->has_space_after)
+			space_str = "true";
+		else
+			space_str = "false";
+		printf("  has_space_after: %s\n", space_str);
 		printf("  next           : %p\n\n", (void *)fragments->next);
 		fragments = fragments->next;
 		i++;
 	}
 }
 
-void print_tokens_raw(t_token *tokens)
+void	print_tokens_raw(t_token *tokens)
 {
-	int i = 0;
+	int			i;
+	int			j;
+	t_fragment	*frag;
+	const char	*space_str;
+	const char	*final_text;
+
+	i = 0;
 	while (tokens)
 	{
 		printf("Token %d:\n", i);
-		printf("  type           : %d\n", tokens->type); // enum directo
-		printf("  has_space_before: %s\n", tokens->has_space_before ? "true" : "false");
-		printf("  final_text     : \"%s\"\n", tokens->final_text ? tokens->final_text : "(null)");
-
-		// Imprimir fragments de este token
-		t_fragment *frag = tokens->fragments;
-		int j = 0;
+		printf("  type           : %d\n", tokens->type);
+		if (tokens->has_space_before)
+			printf("  has_space_before: true\n");
+		else
+			printf("  has_space_before: false\n");
+		if (tokens->final_text)
+			final_text = tokens->final_text;
+		else
+			final_text = "(null)";
+		printf("  final_text     : \"%s\"\n", final_text);
+		frag = tokens->fragments;
+		j = 0;
 		while (frag)
 		{
-			printf("    Fragment %d: text=\"%s\", quote_type=%d, has_space_after=%s\n",
-				   j,
-				   frag->text,
-				   frag->quote_type,      // enum directo
-				   frag->has_space_after ? "true" : "false");
+			if (frag->has_space_after)
+				space_str = "true";
+			else
+				space_str = "false";
+			printf("    Fragment %d: text=\"%s\", quote_type=%d, "
+				"has_space_after=%s\n",
+				j,
+				frag->text,
+				frag->quote_type,
+				space_str);
 			frag = frag->next;
 			j++;
 		}
-
 		printf("\n");
 		tokens = tokens->next;
 		i++;
 	}
 }
 
-t_fragment *handle_backslashes(const char *text, int *i)
+t_fragment	*handle_backslashes(const char *text, int *i)
 {
-	int start = *i;
-	int count = 0;
+	int			start;
+	int			count;
+	char		next;
+	int			keep;
+	int			buflen;
+	char		*buf;
+	int			j;
+	bool		space_after;
+	t_fragment	*f;
 
-	/* contar backslashes consecutivos */
+	start = *i;
+	count = 0;
 	while (text[*i] && text[*i] == '\\')
 	{
 		count++;
 		(*i)++;
 	}
-
 	if (count == 0)
-		return NULL;
-
-	char next = text[*i];
-
+		return (NULL);
+	next = text[*i];
 	if (next == '$')
 	{
-		int keep = count / 2; /* la mitad de los backslashes se quedan */
-
+		keep = count / 2;
 		if (count % 2 == 0)
 		{
-			/* N par: devolvemos sólo los backslashes conservados */
 			if (keep > 0)
 			{
-				char *buf = malloc((size_t)keep + 1);
+				buf = malloc((size_t)keep + 1);
 				if (!buf)
-					return NULL;
-				for (int j = 0; j < keep; j++)
+					return (NULL);
+				j = 0;
+				while (j < keep)
+				{
 					buf[j] = '\\';
+					j++;
+				}
 				buf[keep] = '\0';
-
-				bool space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
-				t_fragment *f = new_fragment(buf, keep, QUOTE_NONE, space_after);
+				space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
+				f = new_fragment(buf, keep, QUOTE_NONE, space_after);
 				free(buf);
-				return f;
+				return (f);
 			}
-			/* keep == 0 → no devolvemos fragmento, dejamos que el parser maneje el '$' */
-			return NULL;
+			return (NULL);
 		}
 		else
 		{
-			/* N impar: devolvemos backslashes + '$' literal */
-			int buflen = keep + 1;
-			char *buf = malloc((size_t)buflen + 1);
+			buflen = keep + 1;
+			buf = malloc((size_t)buflen + 1);
 			if (!buf)
-				return NULL;
-			for (int j = 0; j < keep; j++)
+				return (NULL);
+			j = 0;
+			while (j < keep)
+			{
 				buf[j] = '\\';
+				j++;
+			}
 			buf[keep] = '$';
 			buf[buflen] = '\0';
-
-			(*i)++; /* consumir el '$' */
-
-			bool space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
-			t_fragment *f = new_fragment(buf, buflen, QUOTE_NONE, space_after);
+			(*i)++;
+			space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
+			f = new_fragment(buf, buflen, QUOTE_NONE, space_after);
 			free(buf);
-			return f;
+			return (f);
 		}
 	}
+	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
+	f = new_fragment(&text[start], (size_t)count, QUOTE_NONE, space_after);
+	return (f);
+}
 
-	/* Caso general: no hay '$' después → todos los backslashes son literales */
-	bool space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
-	t_fragment *f = new_fragment(&text[start], (size_t)count, QUOTE_NONE, space_after);
-	return f;
+t_fragment *handle_spaces(const char *text, int *i)
+{
+	while (text[*i] && ft_isspace((unsigned char)text[*i]))
+		(*i)++;
+	return (NULL);
+}
+
+t_fragment *handle_backslashes_wrapper(const char *text, int *i)
+{
+	return handle_backslashes(text, i);
+}
+
+t_fragment	*handle_dollar_string(const char *text, int *i)
+{
+	char		quote;
+	int			start;
+	int			len;
+	bool		space_after;
+	t_fragment	*frag;
+
+	quote = text[*i + 1];
+	*i += 2;
+	start = *i;
+	while (text[*i] && text[*i] != quote)
+	{
+		if (quote == '"' && text[*i] == '\\' && text[*i + 1])
+			*i += 2;
+		else
+			(*i)++;
+	}
+	len = *i - start;
+	space_after = text[*i + 1] && ft_isspace((unsigned char)text[*i + 1]);
+	if (quote == '\'')
+		frag = new_fragment(&text[start], (size_t)len,
+				QUOTE_DOLLAR, space_after);
+	else
+		frag = new_fragment(&text[start], (size_t)len,
+				QUOTE_DOUBLE, space_after);
+	if (text[*i] == quote)
+		(*i)++;
+	return (frag);
+}
+
+
+t_fragment	*handle_single_quotes(const char *text, int *i)
+{
+	int			start;
+	int			len;
+	bool		space_after;
+	t_fragment	*frag;
+
+	(*i)++;
+	start = *i;
+	while (text[*i] && text[*i] != '\'')
+		(*i)++;
+	len = *i - start;
+	space_after = text[*i + 1] && ft_isspace((unsigned char)text[*i + 1]);
+	frag = new_fragment(&text[start], (size_t)len, QUOTE_SINGLE, space_after);
+	if (text[*i] == '\'')
+		(*i)++;
+	return (frag);
+}
+
+t_fragment	*handle_double_quotes(const char *text, int *i)
+{
+	int			start;
+	int			len;
+	bool		space_after;
+	t_fragment	*frag;
+
+	(*i)++;
+	start = *i;
+	while (text[*i] && text[*i] != '"')
+	{
+		if (text[*i] == '\\' && text[*i + 1])
+			*i += 2;
+		else
+			(*i)++;
+	}
+	len = *i - start;
+	space_after = text[*i + 1] && ft_isspace((unsigned char)text[*i + 1]);
+	frag = new_fragment(&text[start], (size_t)len, QUOTE_DOUBLE, space_after);
+	if (text[*i] == '"')
+		(*i)++;
+	return (frag);
+}
+
+t_fragment	*handle_operators(const char *text, int *i)
+{
+	int			start;
+	int			len;
+	bool		space_after;
+
+	start = *i;
+	if (text[*i] == '<' && text[*i + 1] == '<')
+	{
+		*i += 2;
+	}
+	else if (text[*i] == '>' && text[*i + 1] == '>')
+	{
+		*i += 2;
+	}
+	else
+	{
+		(*i)++;
+	}
+	len = *i - start;
+	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
+	return (new_fragment(&text[start], (size_t)len, QUOTE_NONE, space_after));
+}
+t_fragment *handle_generic_text(const char *text, int *i)
+{
+	t_fragment	*frag;
+	int			start;
+	int			len;
+	bool		space_after;
+
+	frag = NULL;
+	start = *i;
+	while (text[*i] && !ft_isspace((unsigned char)text[*i]) && text[*i] != '\''
+		&& text[*i] != '"' && text[*i] != '|'
+		&& text[*i] != '<' && text[*i] != '>')
+	{
+		(*i)++;
+	}
+	len = *i - start;
+	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
+	frag = new_fragment(&text[start], (size_t)len, QUOTE_NONE, space_after);
+	return (frag);
+}
+
+t_fragment *parse_mixed_fragments(const char *text)
+{
+	t_fragment	*fragments;
+	t_fragment	*frag;
+	int			i;
+
+	i = 0;
+	fragments = NULL;
+	while (text[i])
+	{
+		handle_spaces(text, &i);
+		if (!text[i])
+			break ;
+		frag = NULL;
+		if (text[i] == '\\')
+			frag = handle_backslashes_wrapper(text, &i);
+		else if (is_dollar_string(text, i))
+			frag = handle_dollar_string(text, &i);
+		else if (text[i] == '\'')
+			frag = handle_single_quotes(text, &i);
+		else if (text[i] == '"')
+			frag = handle_double_quotes(text, &i);
+		else if (text[i] == '|' || text[i] == '<' || text[i] == '>')
+			frag = handle_operators(text, &i);
+		else
+			frag = handle_generic_text(text, &i);
+		if (frag)
+			append_fragment(&fragments, frag);
+	}
+	return (fragments);
 }
