@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 14:38:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:10:51 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,26 +67,4 @@ int should_expand_fragment(t_fragment *frag)
         return 1; /* $'ansi' siempre se interpreta */
 
     return 0;
-}
-
-char **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx)
-{
-    t_fragment *frag = tok->fragments;
-    char *tmp;
-
-    while (frag)
-    {
-        if (frag->expanded_text && frag->expanded_text[0] != '\0')
-        {
-            tmp = ft_strdup(frag->expanded_text);
-            if (tmp)
-            {
-                ctx->cmd->argv[*ctx->argc_argv] = tmp;
-                ctx->cmd->argv_quote[*ctx->argc_argv] = frag->quote_type;
-                (*ctx->argc_argv)++;
-            }
-        }
-        frag = frag->next;
-    }
-    return ctx->cmd->argv;
 }

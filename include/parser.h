@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 17:04:29 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:10:56 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ t_redir *create_redir(t_token *cur);
 void    print_redirs(t_redir *redir);
 void    print_cmd_list(t_cmd *cmd_list);
 
-char    **process_token(t_token *tok, char **argv, int *argc, char **envp);
 char    **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx);
 void    free_str_array(char **arr);
 
@@ -80,7 +79,6 @@ char	*expand_tilde_bash(const char *text, char **envp);
 int      should_expand_fragment(t_fragment *frag);
 char    *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state);
 char    *concat_final_text(t_token *tok);
-char    **build_argv_from_fragments(t_token *tok, t_proc_ctx *ctx);
 char    **build_words_from_token(t_token *tok, int *out_count);
 char    **ft_split_spaces(const char *s);
 t_quote_type detect_combined_quote(t_fragment *frags);
