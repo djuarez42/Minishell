@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/12 21:13:24 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:00:05 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,22 +94,6 @@ void	add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd)
 	else
 		(*last)->next = new_cmd;
 	*last = new_cmd;
-}
-
-int	add_argument(t_cmd *cmd, char *value, t_quote_type quote, int *argc)
-{
-	cmd->argv[*argc] = ft_strdup(value);
-	if (!cmd->argv[*argc])
-	{
-		while (--(*argc) >= 0)
-			free(cmd->argv[*argc]);
-		free(cmd->argv);
-		cmd->argv = NULL;
-		return (0);
-	}
-	cmd->argv_quote[*argc] = quote;
-	(*argc)++;
-	return (1);
 }
 
 t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)

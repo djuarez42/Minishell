@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 20:06:20 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:00:09 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ typedef struct s_proc_ctx
 /* Prototipos del parser (ya con envp/state) */
 void    free_cmds(t_cmd *cmd);
 void    free_redirs(t_redir *redir);
-int     add_argument(t_cmd *cmd, char *value, t_quote_type quote, int *argc);
 
 t_cmd   *parser_tokens(t_token *tokens, char **envp, t_exec_state *state);
 t_token *parse_arguments(t_token *cur, t_cmd *cmd,
