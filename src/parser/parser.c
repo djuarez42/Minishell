@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/13 18:57:10 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:17:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,56 +203,4 @@ char	*expand_tilde_bash(const char *text, char **envp)
 	res = ft_strjoin(home, suffix);
 	free(suffix);
 	return (res);
-}
-
-t_token *expand_token_to_tokens(t_token *tok, char **envp, t_exec_state *state)
-{
-    char **words;
-    int word_count = 0;
-    t_token *head = NULL;
-    t_token *last = NULL;
-
-    if (!tok)
-        return NULL;
-
-    // 1) Expandir fragments del token como siempre
-    expand_fragments(tok, envp, state);
-
-    // 2) Construir palabras a partir del token
-    words = build_words_from_token(tok, &word_count);
-
-    if (!words)
-        return NULL;
-
-    // 3) Por cada palabra, crear un token
-    for (int i = 0; i < word_count; i++)
-    {
-        t_token_type type = TOKEN_WORD;
-
-        // Detectar operadores
-        if (strcmp(words[i], "|") == 0)
-            type = TOKEN_PIPE;
-        else if (strcmp(words[i], "<") == 0)
-            type = TOKEN_REDIRECT_IN;
-        else if (strcmp(words[i], ">") == 0)
-            type = TOKEN_REDIRECT_OUT;
-        else if (strcmp(words[i], "<<") == 0)
-            type = TOKEN_HEREDOC;
-        else if (strcmp(words[i], ">>") == 0)
-            type = TOKEN_APPEND;
-
-        t_token *new_tok = create_token(type, tok->has_space_before);
-        new_tok->fragments = new_fragment(words[i], strlen(words[i]), QUOTE_NONE, false);
-        new_tok->final_text = ft_strdup(words[i]);
-
-        // Append a la lista
-        if (!head)
-            head = new_tok;
-        else
-            last->next = new_tok;
-        last = new_tok;
-    }
-
-    free_str_array(words);
-    return head;
 }
