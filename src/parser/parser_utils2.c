@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 17:00:05 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:03:36 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,21 +70,6 @@ t_redir *create_redir(t_token *cur)
 
     redir->next = NULL;
     return (redir);
-}
-
-
-bool	is_quoted(const char *str)
-{
-	int	len;
-
-	len = ft_strlen(str);
-	if (len >= 2)
-	{
-		if ((str[0] == '"' && str[len - 1] == '"')
-			|| (str[0] == '\'' && str[len - 1] == '\''))
-			return (true);
-	}
-	return (false);
 }
 
 void	add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd)

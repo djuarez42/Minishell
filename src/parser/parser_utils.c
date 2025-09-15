@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 21:01:48 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:04:22 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,19 +99,6 @@ void	free_redirs(t_redir *redir)
 		free(redir);
 		redir = tmp;
 	}
-}
-
-int	init_cmd_args(t_cmd *cmd)
-{
-	cmd->argv = malloc(sizeof(char *) * MAX_ARGS);
-	cmd->argv_quote = malloc(sizeof(t_quote_type) * MAX_ARGS);
-	if (!cmd->argv || !cmd->argv_quote)
-	{
-		free(cmd->argv);
-		free(cmd->argv_quote);
-		return (0);
-	}
-	return (1);
 }
 
 char **process_token(t_token *tok, char **argv, int *argc, char **envp)

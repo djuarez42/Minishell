@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 17:00:09 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:04:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ t_redir *create_redir(t_token *cur);
 
 void    print_redirs(t_redir *redir);
 void    print_cmd_list(t_cmd *cmd_list);
-bool    is_quoted(const char *str);
-int     init_cmd_args(t_cmd *cmd);
 
 char    **process_token(t_token *tok, char **argv, int *argc, char **envp);
 char    **process_token_with_quotes(t_token *tok, t_proc_ctx *ctx);
