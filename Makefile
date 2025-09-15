@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/15 18:16:31 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/15 18:27:20 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,6 @@ SRC = main.c \
 		src/executor/expand_variables_utils.c \
 		src/executor/expand_variables_utils2.c \
 		src/executor/expand_variables.c \
-		src/executor/dollar_string_fix.c \
 		src/executor/dollar_quotes_fix.c \
 		src/builtins/builtins.c \
 		src/builtins/builtin_echo_pwd_env.c \

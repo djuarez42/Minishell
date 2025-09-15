@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 18:18:33 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 18:25:59 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,9 @@ int     write_heredoc_lines(t_heredoc_args *args);
 int     handle_redirections_heredoc(const char *delimiter, bool quoted, char **envp, t_heredoc_args *args);
 int     handle_redirections_heredoc_with_content(char **heredoc_content, bool quoted,
             char **envp, t_exec_state *state, t_heredoc_args *args);
-void    cleanup_heredoc_file(t_heredoc_args *args);
+
 char    *build_heredoc_delimiter(const char *text);
 
-/* --- Dollar string extra y errores (asegúrate de que estén DENTRO del guard) --- */
-int     is_dollar_string_pattern(const char *input, int pos);
 char    *process_dollar_string(const char *input, int *pos);
 void    print_error_file(const char *context);
 char    *interpret_ansi_c_escapes(const char *str);

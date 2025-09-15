@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:15 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/15 18:23:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 18:24:04 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,4 @@ void	redirect_stdin_heredoc(const char *filepath)
 	close(fd);
 }
 
-void	cleanup_heredoc_file(t_heredoc_args *args)
-{
-	if (args->heredoc_path)
-	{
-		unlink(args->heredoc_path); // Delete the temporary file
-		free(args->heredoc_path);
-		args->heredoc_path = NULL;
-	}
-}
 
