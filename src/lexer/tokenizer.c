@@ -68,24 +68,16 @@ void	skip_empty_fragments(t_fragment **cur)
 	}
 }
 
-t_token	*tokenize_input(const char *input)
+static t_token	*build_tokens_from_fragments(t_fragment *cur)
 {
-	t_fragment	*frags;
-	t_fragment	*cur;
 	t_token		*tokens;
 	t_token		*last_token;
 	t_token		*tok;
 	bool		space_before;
 
-	if (check_unmatched_quotes(input))
-		return (NULL);
-	frags = parse_mixed_fragments(input);
-	if (!frags)
-		return (NULL);
 	tokens = NULL;
 	last_token = NULL;
 	space_before = false;
-	cur = frags;
 	while (cur)
 	{
 		skip_empty_fragments(&cur);
@@ -101,6 +93,20 @@ t_token	*tokenize_input(const char *input)
 			last_token->next = tok;
 		last_token = tok;
 	}
+	return (tokens);
+}
+
+t_token	*tokenize_input(const char *input)
+{
+	t_fragment	*frags;
+	t_token		*tokens;
+
+	if (check_unmatched_quotes(input))
+		return (NULL);
+	frags = parse_mixed_fragments(input);
+	if (!frags)
+		return (NULL);
+	tokens = build_tokens_from_fragments(frags);
 	free_fragments(frags);
 	tokens = append_token_eof(tokens);
 	return (tokens);
