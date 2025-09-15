@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 17:07:31 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:12:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,44 +99,6 @@ void	free_redirs(t_redir *redir)
 		free(redir);
 		redir = tmp;
 	}
-}
-
-char *concat_token_fragments(t_token *tok, char **envp, t_exec_state *state)
-{
-    t_fragment *frag = tok->fragments;
-    char *result = ft_strdup("");
-    char *tmp;
-
-    if (!result)
-        return NULL;
-
-    while (frag)
-    {
-        // Ignorar fragments vacíos
-        if (frag->text[0] == '\0')
-        {
-            frag = frag->next;
-            continue;
-        }
-
-        // Expande variables solo si corresponde
-        if (should_expand_fragment(frag))
-            tmp = expand_variables(frag->text, envp, state, frag->quote_type);
-        else
-            tmp = ft_strdup(frag->text);
-
-        if (tmp)
-        {
-            // Concatenar al resultado final_text
-            char *new_result = str_append(result, tmp); // str_append libera result internamente
-            free(tmp);
-            result = new_result;
-        }
-
-        frag = frag->next;
-    }
-
-    return result;
 }
 
 void free_str_array(char **arr)

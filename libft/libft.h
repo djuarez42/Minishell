@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 23:25:54 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/11 19:04:32 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:15:02 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,5 @@ void				ft_putstr_fd(char *s, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
 char				*ft_strndup(const char *s, size_t n);
-char 				**ft_split_spaces(const char *s);
 
 #endif
