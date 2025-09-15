@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/11 17:02:23 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 17:54:31 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-# include "lexer.h"       // para t_quote_type si lo usas en prototipos
-# include "parser.h"      // para t_cmd, t_redir
-# include "exec_state.h"  // para t_exec_state
+# include "lexer.h"       
+# include "parser.h"      
+# include "exec_state.h" 
 
-/* --- Estructuras auxiliares --- */
+
 typedef struct s_heredoc_args
 {
     int             fd;
@@ -32,11 +32,10 @@ typedef struct s_heredoc_args
     char            *heredoc_path;
 }   t_heredoc_args;
 
-/* --- Funciones principales --- */
-void    execute_cmds(t_cmd *cmd, char **envp);
+
+
 void    executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state);
 
-/* --- Utils env y memoria --- */
 void    free_split(char **split);
 char    **new_envp(char **envp);
 void    free_envp(char **envp_copy);
@@ -45,22 +44,20 @@ int     env_find_index(char **envp, const char *name);
 char    *env_get_value(char **envp, const char *name);
 int     env_set_var(char ***penvp, const char *name, const char *value);
 int     env_set_assignment(char ***penvp, const char *assignment);
-char    **update_underscore_var(char **envp, const char *cmd_path);
 int     env_unset_var(char ***penvp, const char *name);
 
-/* --- Redirecciones --- */
+
 void    handle_redirections_out(const char *filename, int *error);
 void    handle_redirections_in(const char *filename, int *error);
 void    handle_redirections_append(const char *filename, int *error);
 int     handle_redirections(t_redir *redir, char **envp, t_exec_state *state);
 int     handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state);
 
-/* --- Exec helpers --- */
+
 int     execute_command(char *exec_path, t_cmd *cmd, char **envp);
 int     execute_execve(char *exec_path, char **argv, char **envp);
 char    *find_executable(char *cmd, char **envp);
 
-/* --- Expansión de variables --- */
 char    *str_append(char *dest, const char *src);
 int     is_var_start(int c);
 int     is_var_char(int c);
