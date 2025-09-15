@@ -6,69 +6,86 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 01:39:21 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 21:46:51 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *concat_fragments(t_fragment *frag)
+static size_t	calc_total_length(t_fragment *frag)
 {
-    if (!frag)
-        return NULL;
+	size_t		len;
+	t_fragment	*cur;
 
-    size_t len = 0;
-    t_fragment *cur = frag;
-    while (cur)
-    {
-        if (cur->text)
-            len += strlen(cur->text);
-        cur = cur->next;
-    }
-
-    char *res = malloc(len + 1);
-    if (!res)
-        return NULL;
-
-    size_t pos = 0;
-    cur = frag;
-    while (cur)
-    {
-        if (cur->text)
-        {
-            size_t i = 0;
-            while (cur->text[i])
-                res[pos++] = cur->text[i++];
-        }
-        cur = cur->next;
-    }
-    res[pos] = '\0';
-    return res;
+	len = 0;
+	cur = frag;
+	while (cur)
+	{
+		if (cur->text)
+			len += strlen(cur->text);
+		cur = cur->next;
+	}
+	return (len);
 }
 
-t_token *append_token_eof(t_token *head)
-
+static void	copy_fragments_to_buffer(t_fragment *frag, char *res)
 {
-    t_token *new;
+	size_t		pos;
+	size_t		i;
+	t_fragment	*cur;
 
-    new = malloc(sizeof(t_token));
-    if (!new)
-        return NULL;
+	pos = 0;
+	cur = frag;
+	while (cur)
+	{
+		if (cur->text)
+		{
+			i = 0;
+			while (cur->text[i])
+			{
+				res[pos] = cur->text[i];
+				pos++;
+				i++;
+			}
+		}
+		cur = cur->next;
+	}
+	res[pos] = '\0';
+}
 
-    new->fragments = NULL;
-    new->final_text = NULL;
-    new->type = TOKEN_EOF;
-    new->has_space_before = false;
-    new->next = NULL;
+char	*concat_fragments(t_fragment *frag)
+{
+	size_t	len;
+	char	*res;
 
-    if (!head)
-        return new;
+	if (!frag)
+		return (NULL);
+	len = calc_total_length(frag);
+	res = malloc(len + 1);
+	if (!res)
+		return (NULL);
+	copy_fragments_to_buffer(frag, res);
+	return (res);
+}
 
-    // Encuentra el último token de la lista
-    t_token *cur = head;
-    while (cur->next)
-        cur = cur->next;
+t_token	*append_token_eof(t_token *head)
+{
+	t_token	*new;
+	t_token	*cur;
 
-    cur->next = new;
-    return head;
+	new = malloc(sizeof(t_token));
+	if (!new)
+		return (NULL);
+	new->fragments = NULL;
+	new->final_text = NULL;
+	new->type = TOKEN_EOF;
+	new->has_space_before = false;
+	new->next = NULL;
+	if (!head)
+		return (new);
+	cur = head;
+	while (cur->next)
+		cur = cur->next;
+	cur->next = new;
+	return (head);
 }
