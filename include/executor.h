@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 18:07:30 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 18:12:13 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,6 @@ char    *expand_env_var(const char *name, char **envp);
 
 char    *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_state *state);
 char    *expand_variables(const char *input, char **envp, t_exec_state *state, t_quote_type quote);
-char    *expand_mixed_quotes(const char *input, char **envp, t_exec_state *state);
-char    *process_mixed_quotes_argv(char *arg, t_quote_type quote_type, char **envp, t_exec_state *state);
-bool    is_mixed_quotes(const char *str);
 bool    has_problematic_quotes(const char *str);
 void    count_quotes(const char *str, int *single_count, int *double_count);
 char    *preprocess_dollar_quotes(const char *input);

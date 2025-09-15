@@ -6,39 +6,12 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 01:30:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/09 21:02:00 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/15 18:12:08 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdbool.h>
-
-bool is_mixed_quotes(const char *str)
-{
-    if (!str)
-        return (false);
-    
-    bool has_double = false;
-    bool has_single = false;
-    bool has_dollar = false;
-    int i = 0;
-    
-    while (str[i])
-    {
-        // Check for quotes
-        if (str[i] == '\"')
-            has_double = true;
-        else if (str[i] == '\'')
-            has_single = true;
-        // Check for dollar sign
-        else if (str[i] == '$')
-            has_dollar = true;
-        
-        i++;
-    }
-    return ((has_dollar && (has_double || has_single)) || 
-            (has_double && has_single));
-}
 
 void count_quotes(const char *str, int *single_count, int *double_count)
 {
