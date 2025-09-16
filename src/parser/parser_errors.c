@@ -3,22 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_errors.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <ekakhmad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 23:20:20 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/30 23:20:20 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/16 19:45:20 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 
-/* 
- * Validates pipe syntax in the token stream:
- * - Cannot have a pipe at the beginning
- * - Cannot have consecutive pipes
- * - Cannot have a pipe at the end
- */
 int	validate_pipe_syntax(t_token *tokens)
 {
 	t_token *cur;

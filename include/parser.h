@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 17:35:52 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 19:48:31 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,15 @@ typedef struct s_proc_ctx
 	int					*argc_final_text;	// para argv_final_text
 }	t_proc_ctx;
 
+typedef struct s_parse_ctx
+{
+	t_token			*cur;
+	t_cmd			*head;
+	t_cmd			*last;
+	char			**envp;
+	t_exec_state	*state;
+}	t_parse_ctx;
+
 /* --------------------------- */
 /*   Liberación de memoria     */
 /* --------------------------- */
@@ -61,6 +70,7 @@ typedef struct s_proc_ctx
 void			free_cmds(t_cmd *cmd);
 void			free_redirs(t_redir *redir);
 void			free_str_array(char **arr);
+void			free_partial_cmd(t_cmd *cmd, int argc);
 
 /* --------------------------- */
 /*     Parser principal        */
@@ -98,6 +108,7 @@ char			*concat_final_text(t_token *tok);
 char			**build_words_from_token(t_token *tok, int *out_count);
 char			**process_token_with_quotes(t_token *tok, t_proc_ctx *ctx);
 t_quote_type	detect_combined_quote(t_fragment *frags);
+void			update_final_text(t_token *tok, t_proc_ctx *ctx);
 
 /* --------------------------- */
 /*       Debug / Prints        */

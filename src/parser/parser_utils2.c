@@ -6,217 +6,90 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 17:03:36 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 19:52:52 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_redir *create_redir(t_token *cur)
+static void	store_final_text(t_token *tok, t_proc_ctx *ctx)
 {
-    t_redir *redir;
-    t_fragment *frag;
+	char	*dup;
 
-    if (!cur || !cur->next || !cur->next->fragments)
-        return (NULL);
-
-    redir = malloc(sizeof(t_redir));
-    if (!redir)
-        return (NULL);
-
-    redir->type = cur->type;
-
-    // Guardar fragments completos para acceder a quote_type y demás
-    redir->fragments = cur->next->fragments;
-
-    // Detectar si el heredoc estaba entre comillas
-    frag = redir->fragments;
-    redir->quoted = false;
-    while (frag)
-    {
-        if (frag->quote_type == QUOTE_SINGLE || frag->quote_type == QUOTE_DOUBLE)
-        {
-            redir->quoted = true;
-            break;
-        }
-        frag = frag->next;
-    }
-
-    // Reconstruir el file / delimiter usando todos los fragments del token
-    {
-        t_token dummy_tok;
-        dummy_tok.fragments = cur->next->fragments;
-        redir->file = concat_final_text(&dummy_tok);
-        if (!redir->file)
-        {
-            free(redir);
-            return (NULL);
-        }
-    }
-
-    // Para heredoc, opcionalmente recolectar contenido
-    if (redir->type == TOKEN_HEREDOC)
-    {
-        redir->heredoc_content = collect_heredoc_content(redir->file, redir->quoted);
-        if (!redir->heredoc_content)
-        {
-            free(redir->file);
-            free(redir);
-            return (NULL);
-        }
-    }
-    else
-        redir->heredoc_content = NULL;
-
-    redir->next = NULL;
-    return (redir);
-}
-
-void	add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd)
-{
-	if (!*head)
-		*head = new_cmd;
-	else
-		(*last)->next = new_cmd;
-	*last = new_cmd;
-}
-
-t_cmd *create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
-{
-    t_cmd *cmd;
-
-    cmd = malloc(sizeof(t_cmd));
-    if (!cmd)
-        return NULL;
-
-    cmd->argv = malloc(sizeof(char *) * MAX_ARGS);
-    cmd->argv_quote = malloc(sizeof(t_quote_type) * MAX_ARGS);
-    cmd->argv_final_text = malloc(sizeof(char *) * MAX_ARGS);
-    cmd->argv_first_word = malloc(sizeof(bool) * MAX_ARGS); // 🔹 nueva
-
-    if (!cmd->argv || !cmd->argv_quote || !cmd->argv_final_text || !cmd->argv_first_word)
-    {
-        free(cmd->argv);
-        free(cmd->argv_quote);
-        free(cmd->argv_final_text);
-        free(cmd->argv_first_word); // 🔹 liberar también
-        free(cmd);
-        return NULL;
-    }
-
-    for (int i = 0; i < MAX_ARGS; i++)
-    {
-        cmd->argv[i] = NULL;
-        cmd->argv_quote[i] = QUOTE_NONE;
-        cmd->argv_final_text[i] = NULL;
-        cmd->argv_first_word[i] = false; // 🔹 inicializar
-    }
-
-    cmd->redirs = NULL;
-    cmd->pipe = 0;
-    cmd->next = NULL;
-
-    *cur = parse_cmd_block(*cur, cmd, envp, state);
-    if (!*cur)
-    {
-        free(cmd->argv);
-        free(cmd->argv_quote);
-        free(cmd->argv_final_text);
-        free(cmd->argv_first_word);
-        free(cmd);
-        return NULL;
-    }
-
-    if ((*cur)->type == TOKEN_PIPE)
-    {
-        cmd->pipe = 1;
-        *cur = (*cur)->next;
-    }
-
-    return cmd;
-}
-
-char	**collect_heredoc_content(const char *delimiter, bool quoted __attribute__((unused)))
-{
-	char	**lines;
-	char	*line;
-	int		capacity;
-	int		count;
-	int		is_interactive;
-
-	is_interactive = isatty(STDIN_FILENO);
-	capacity = 10;
-	count = 0;
-	lines = malloc(sizeof(char *) * capacity);
-	if (!lines)
-		return (NULL);
-
-	while (1)
+	if (ctx->cmd->argv_final_text)
 	{
-		if (is_interactive)
-		{
-			line = readline("> ");
-		}
+		if (tok->final_text)
+			dup = ft_strdup(tok->final_text);
 		else
-		{
-			// For non-interactive mode, read directly from stdin
-			char *buffer = NULL;
-			size_t len = 0;
-			ssize_t read_len = getline(&buffer, &len, stdin);
-			if (read_len == -1)
-			{
-				line = NULL;
-			}
-			else
-			{
-				// Remove trailing newline if present
-				if (read_len > 0 && buffer[read_len - 1] == '\n')
-					buffer[read_len - 1] = '\0';
-				line = ft_strdup(buffer);
-				free(buffer);
-			}
-		}
-		
-		if (!line)
-		{
-			// EOF - free collected lines and return NULL
-			while (count > 0)
-				free(lines[--count]);
-			free(lines);
-			return (NULL);
-		}
-		
-		// Check if this is the delimiter
-		if ((ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
-				&& line[ft_strlen(delimiter)] == '\0'))
-		{
-			free(line);
-			break ;
-		}
-		
-		// Expand lines array if needed
-		if (count >= capacity - 1)
-		{
-			capacity *= 2;
-			char **new_lines = malloc(sizeof(char *) * capacity);
-			int i;
-			if (!new_lines)
-			{
-				free(line);
-				while (count > 0)
-					free(lines[--count]);
-				free(lines);
-				return (NULL);
-			}
-			for (i = 0; i < count; i++)
-				new_lines[i] = lines[i];
-			free(lines);
-			lines = new_lines;
-		}
-		
-		lines[count++] = line;
+			dup = ft_strdup("");
+		ctx->cmd->argv_final_text[*ctx->argc_final_text] = dup;
+		(*ctx->argc_final_text)++;
 	}
-	
-	lines[count] = NULL;  // Null terminate the array
-	return (lines);
+}
+
+static int	process_assignment_case(t_token *tok, t_proc_ctx *ctx, int idx)
+{
+	char	*dup;
+
+	if (tok->final_text)
+		dup = ft_strdup(tok->final_text);
+	else
+		dup = ft_strdup("");
+	ctx->cmd->argv[idx] = dup;
+	ctx->cmd->argv_quote[idx] = detect_combined_quote(tok->fragments);
+	idx++;
+	return (idx);
+}
+
+static int	process_words_case(t_token *tok, t_proc_ctx *ctx, int idx)
+{
+	char	**words;
+	int		nwords;
+	int		w;
+
+	nwords = 0;
+	words = build_words_from_token(tok, &nwords);
+	if (words)
+	{
+		w = 0;
+		while (w < nwords)
+		{
+			ctx->cmd->argv[idx] = ft_strdup(words[w]);
+			ctx->cmd->argv_quote[idx] = detect_combined_quote(tok->fragments);
+			idx++;
+			w++;
+		}
+		free_str_array(words);
+	}
+	return (idx);
+}
+
+static int	process_assignment_or_words(t_token *tok, t_proc_ctx *ctx, int idx)
+{
+	t_fragment	*frag;
+	char		*text;
+
+	frag = tok->fragments;
+	text = NULL;
+	if (frag && frag->text)
+		text = frag->text;
+	if (frag && ft_strchr(text, '='))
+		idx = process_assignment_case(tok, ctx, idx);
+	else
+		idx = process_words_case(tok, ctx, idx);
+	return (idx);
+}
+
+char	**process_token_with_quotes(t_token *tok, t_proc_ctx *ctx)
+{
+	int	idx;
+
+	if (!tok || !ctx || !ctx->cmd)
+		return (NULL);
+	idx = *ctx->argc_argv;
+	update_final_text(tok, ctx);
+	store_final_text(tok, ctx);
+	idx = process_assignment_or_words(tok, ctx, idx);
+	*ctx->argc_argv = idx;
+	return (ctx->cmd->argv);
 }
