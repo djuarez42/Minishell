@@ -6,218 +6,11 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 17:51:37 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 18:16:55 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	append_fragment(t_fragment **head, t_fragment *frag)
-{
-	t_fragment	*tmp;
-
-	tmp = *head;
-	if (!frag)
-		return ;
-	if (!*head)
-	{
-		*head = frag;
-		return ;
-	}
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = frag;
-}
-
-t_fragment	*handle_backslashes_even_dollar(int keep, const char
-					*text, int *i)
-{
-	int			j;
-	char		*buf;
-	bool		space_after;
-	t_fragment	*f;
-
-	j = 0;
-	buf = malloc((size_t)keep + 1);
-	if (!buf)
-		return (NULL);
-	while (j < keep)
-	{
-		buf[j] = '\\';
-		j++;
-	}
-	buf[keep] = '\0';
-	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
-	f = new_fragment(buf, keep, QUOTE_NONE, space_after);
-	free(buf);
-	return (f);
-}
-
-t_fragment	*handle_backslashes_odd_dollar(int keep, const char
-					*text, int *i)
-{
-	int			j;
-	int			buflen;
-	char		*buf;
-	bool		space_after;
-	t_fragment	*f;
-
-	j = 0;
-	buflen = keep + 1;
-	buf = malloc((size_t)buflen + 1);
-	if (!buf)
-		return (NULL);
-	while (j < keep)
-	{
-		buf[j] = '\\';
-		j++;
-	}
-	buf[keep] = '$';
-	buf[buflen] = '\0';
-	(*i)++;
-	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
-	f = new_fragment(buf, buflen, QUOTE_NONE, space_after);
-	free(buf);
-	return (f);
-}
-
-t_fragment	*handle_backslashes_literal(int start, int count,
-				const char *text, int *i)
-{
-	bool		space_after;
-	t_fragment	*f;
-
-	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
-	f = new_fragment(&text[start], (size_t)count, QUOTE_NONE, space_after);
-	return (f);
-}
-
-int	count_consecutive_backslashes(const char *text, int *i)
-{
-	int	count;
-
-	count = 0;
-	while (text[*i] && text[*i] == '\\')
-	{
-		count++;
-		(*i)++;
-	}
-	return (count);
-}
-
-t_fragment	*handle_backslashes_dispatch(int count, const char *text,
-					int *i, int start)
-{
-	int		half;
-	char	next;
-
-	if (count == 0)
-		return (NULL);
-	next = text[*i];
-	if (next == '$')
-	{
-		half = count / 2;
-		if (count % 2 == 0)
-		{
-			if (half == 0)
-				return (NULL);
-			return (handle_backslashes_even_dollar(half, text, i));
-		}
-		return (handle_backslashes_odd_dollar(half, text, i));
-	}
-	return (handle_backslashes_literal(start, count, text, i));
-}
-
-t_fragment	*handle_backslashes(const char *text, int *i)
-{
-	int	start;
-	int	count;
-
-	start = *i;
-	count = count_consecutive_backslashes(text, i);
-	return (handle_backslashes_dispatch(count, text, i, start));
-}
-
-t_fragment	*handle_spaces(const char *text, int *i)
-{
-	while (text[*i] && ft_isspace((unsigned char)text[*i]))
-		(*i)++;
-	return (NULL);
-}
-
-t_fragment	*handle_backslashes_wrapper(const char *text, int *i)
-{
-	return (handle_backslashes(text, i));
-}
-
-void	skip_until_closing_quote(const char *text, int *i, char quote)
-{
-	while (text[*i] && text[*i] != quote)
-	{
-		if (quote == '"' && text[*i] == '\\' && text[*i + 1])
-			*i += 2;
-		else
-			(*i)++;
-	}
-}
-
-bool	calc_space_after(const char *text, int i)
-{
-	return (text[i + 1] && ft_isspace((unsigned char)text[i + 1]));
-}
-
-t_fragment	*make_dollar_fragment(const char *text, int start,
-			int len, char quote)
-{
-	bool		space_after;
-	t_fragment	*frag;
-
-	space_after = calc_space_after(text, start + len - 1);
-	if (quote == '\'')
-		frag = new_fragment(&text[start], (size_t)len,
-				QUOTE_DOLLAR, space_after);
-	else
-		frag = new_fragment(&text[start], (size_t)len,
-				QUOTE_DOUBLE, space_after);
-	return (frag);
-}
-
-t_fragment	*handle_dollar_string_lexer(const char *text, int *i)
-{
-	char		quote;
-	int			start;
-	int			len;
-	t_fragment	*frag;
-
-	quote = text[*i + 1];
-	*i += 2;
-	start = *i;
-	skip_until_closing_quote(text, i, quote);
-	len = *i - start;
-	frag = make_dollar_fragment(text, start, len, quote);
-	if (text[*i] == quote)
-		(*i)++;
-	return (frag);
-}
-
-t_fragment	*handle_single_quotes(const char *text, int *i)
-{
-	int			start;
-	int			len;
-	bool		space_after;
-	t_fragment	*frag;
-
-	(*i)++;
-	start = *i;
-	while (text[*i] && text[*i] != '\'')
-		(*i)++;
-	len = *i - start;
-	space_after = text[*i + 1] && ft_isspace((unsigned char)text[*i + 1]);
-	frag = new_fragment(&text[start], (size_t)len, QUOTE_SINGLE, space_after);
-	if (text[*i] == '\'')
-		(*i)++;
-	return (frag);
-}
 
 t_fragment	*handle_double_quotes(const char *text, int *i)
 {
@@ -267,7 +60,7 @@ t_fragment	*handle_operators(const char *text, int *i)
 	return (new_fragment(&text[start], (size_t)len, QUOTE_NONE, space_after));
 }
 
-t_fragment *handle_generic_text(const char *text, int *i)
+t_fragment	*handle_generic_text(const char *text, int *i)
 {
 	t_fragment	*frag;
 	int			start;
@@ -296,7 +89,7 @@ t_fragment	*get_next_fragment(const char *text, int *i)
 	if (text[*i] == '\\')
 		frag = handle_backslashes_wrapper(text, i);
 	else if (is_dollar_string(text, *i))
-		frag = handle_dollar_string_lexer(text, i);  // cambio aquí
+		frag = handle_dollar_string_lexer(text, i);
 	else if (text[*i] == '\'')
 		frag = handle_single_quotes(text, i);
 	else if (text[*i] == '"')

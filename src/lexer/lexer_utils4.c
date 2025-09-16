@@ -6,85 +6,66 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 18:04:15 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 18:10:18 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_fragments(t_fragment *frag)
+int	count_consecutive_backslashes(const char *text, int *i)
 {
-	t_fragment	*tmp;
+	int	count;
 
-	while (frag)
+	count = 0;
+	while (text[*i] && text[*i] == '\\')
 	{
-		tmp = frag->next;
-		if (frag->text)
-			free(frag->text);
-		if (frag->expanded_text)
-			free(frag->expanded_text);
-		free(frag);
-		frag = tmp;
+		count++;
+		(*i)++;
 	}
+	return (count);
 }
 
-void	free_token_list(t_token *tokens)
+t_fragment	*handle_backslashes_dispatch(int count, const char *text,
+					int *i, int start)
 {
-	t_token	*tmp;
+	int		half;
+	char	next;
 
-	while (tokens)
+	if (count == 0)
+		return (NULL);
+	next = text[*i];
+	if (next == '$')
 	{
-		tmp = tokens->next;
-		if (tokens->fragments)
-			free_fragments(tokens->fragments);
-		if (tokens->final_text)
-			free(tokens->final_text);
-		free(tokens);
-		tokens = tmp;
+		half = count / 2;
+		if (count % 2 == 0)
+		{
+			if (half == 0)
+				return (NULL);
+			return (handle_backslashes_even_dollar(half, text, i));
+		}
+		return (handle_backslashes_odd_dollar(half, text, i));
 	}
+	return (handle_backslashes_literal(start, count, text, i));
 }
 
-t_token_type	determine_token_type(char *str, t_quote_type quote)
+t_fragment	*handle_backslashes(const char *text, int *i)
 {
-	if (!str)
-		return (TOKEN_WORD);
-	if (quote != QUOTE_NONE)
-		return (TOKEN_WORD);
-	if (str[0] == '<' && str[1] == '<' && str[2] == '\0')
-		return (TOKEN_HEREDOC);
-	else if (str[0] == '>' && str[1] == '>' && str[2] == '\0')
-		return (TOKEN_APPEND);
-	else if (str[0] == '<' && str[1] == '\0')
-		return (TOKEN_REDIRECT_IN);
-	else if (str[0] == '>' && str[1] == '\0')
-		return (TOKEN_REDIRECT_OUT);
-	else if (str[0] == '|' && str[1] == '\0')
-		return (TOKEN_PIPE);
-	else
-		return (TOKEN_WORD);
+	int	start;
+	int	count;
+
+	start = *i;
+	count = count_consecutive_backslashes(text, i);
+	return (handle_backslashes_dispatch(count, text, i, start));
 }
 
-int	check_unmatched_quotes(const char *input)
+t_fragment	*handle_spaces(const char *text, int *i)
 {
-	int	single_open;
-	int	double_open;
-	int	i;
+	while (text[*i] && ft_isspace((unsigned char)text[*i]))
+		(*i)++;
+	return (NULL);
+}
 
-	single_open = 0;
-	double_open = 0;
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] == '\'' && double_open == 0)
-			single_open = !single_open;
-		else if (input[i] == '"' && single_open == 0)
-			double_open = !double_open;
-		i++;
-	}
-	if (single_open || double_open)
-	{
-		fprintf(stderr, "minishell: syntax error: unmatched quotes\n");
-		return (1);
-	}
-	return (0);
+t_fragment	*handle_backslashes_wrapper(const char *text, int *i)
+{
+	return (handle_backslashes(text, i));
 }

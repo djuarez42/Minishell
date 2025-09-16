@@ -6,86 +6,113 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 17:55:49 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 18:12:35 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-size_t	calc_total_length(t_fragment *frag)
+int	check_unmatched_quotes(const char *input)
 {
-	size_t		len;
-	t_fragment	*cur;
+	int	single_open;
+	int	double_open;
+	int	i;
 
-	len = 0;
-	cur = frag;
-	while (cur)
+	single_open = 0;
+	double_open = 0;
+	i = 0;
+	while (input[i])
 	{
-		if (cur->text)
-			len += strlen(cur->text);
-		cur = cur->next;
+		if (input[i] == '\'' && double_open == 0)
+			single_open = !single_open;
+		else if (input[i] == '"' && single_open == 0)
+			double_open = !double_open;
+		i++;
 	}
-	return (len);
+	if (single_open || double_open)
+	{
+		fprintf(stderr, "minishell: syntax error: unmatched quotes\n");
+		return (1);
+	}
+	return (0);
 }
 
-void	copy_fragments_to_buffer(t_fragment *frag, char *res)
+void	append_fragment(t_fragment **head, t_fragment *frag)
 {
-	size_t		pos;
-	size_t		i;
-	t_fragment	*cur;
+	t_fragment	*tmp;
 
-	pos = 0;
-	cur = frag;
-	while (cur)
-	{
-		if (cur->text)
-		{
-			i = 0;
-			while (cur->text[i])
-			{
-				res[pos] = cur->text[i];
-				pos++;
-				i++;
-			}
-		}
-		cur = cur->next;
-	}
-	res[pos] = '\0';
-}
-
-char	*concat_fragments(t_fragment *frag)
-{
-	size_t	len;
-	char	*res;
-
+	tmp = *head;
 	if (!frag)
-		return (NULL);
-	len = calc_total_length(frag);
-	res = malloc(len + 1);
-	if (!res)
-		return (NULL);
-	copy_fragments_to_buffer(frag, res);
-	return (res);
+		return ;
+	if (!*head)
+	{
+		*head = frag;
+		return ;
+	}
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = frag;
 }
 
-t_token	*append_token_eof(t_token *head)
+t_fragment	*handle_backslashes_even_dollar(int keep, const char
+					*text, int *i)
 {
-	t_token	*new;
-	t_token	*cur;
+	int			j;
+	char		*buf;
+	bool		space_after;
+	t_fragment	*f;
 
-	new = malloc(sizeof(t_token));
-	if (!new)
+	j = 0;
+	buf = malloc((size_t)keep + 1);
+	if (!buf)
 		return (NULL);
-	new->fragments = NULL;
-	new->final_text = NULL;
-	new->type = TOKEN_EOF;
-	new->has_space_before = false;
-	new->next = NULL;
-	if (!head)
-		return (new);
-	cur = head;
-	while (cur->next)
-		cur = cur->next;
-	cur->next = new;
-	return (head);
+	while (j < keep)
+	{
+		buf[j] = '\\';
+		j++;
+	}
+	buf[keep] = '\0';
+	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
+	f = new_fragment(buf, keep, QUOTE_NONE, space_after);
+	free(buf);
+	return (f);
+}
+
+t_fragment	*handle_backslashes_odd_dollar(int keep, const char
+					*text, int *i)
+{
+	int			j;
+	int			buflen;
+	char		*buf;
+	bool		space_after;
+	t_fragment	*f;
+
+	j = 0;
+	buflen = keep + 1;
+	buf = malloc((size_t)buflen + 1);
+	if (!buf)
+		return (NULL);
+	while (j < keep)
+	{
+		buf[j] = '\\';
+		j++;
+	}
+	buf[keep] = '$';
+	buf[buflen] = '\0';
+	(*i)++;
+	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
+	f = new_fragment(buf, buflen, QUOTE_NONE, space_after);
+	free(buf);
+	return (f);
+}
+
+t_fragment	*handle_backslashes_literal(int start, int count,
+				const char *text, int *i)
+{
+	bool		space_after;
+	t_fragment	*f;
+
+	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
+	f = new_fragment(&text[start], (size_t)count, QUOTE_NONE, space_after);
+	return (f);
 }
