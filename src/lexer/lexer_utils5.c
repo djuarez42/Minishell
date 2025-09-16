@@ -6,13 +6,13 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 21:46:51 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 17:55:49 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t	calc_total_length(t_fragment *frag)
+size_t	calc_total_length(t_fragment *frag)
 {
 	size_t		len;
 	t_fragment	*cur;
@@ -28,7 +28,7 @@ static size_t	calc_total_length(t_fragment *frag)
 	return (len);
 }
 
-static void	copy_fragments_to_buffer(t_fragment *frag, char *res)
+void	copy_fragments_to_buffer(t_fragment *frag, char *res)
 {
 	size_t		pos;
 	size_t		i;

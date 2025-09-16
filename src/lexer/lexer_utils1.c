@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 21:50:15 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 18:03:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,6 @@ void	print_fragments(t_fragment *fragments)
 void	print_tokens_raw(t_token *tokens)
 {
 	int			i;
-	int			j;
-	t_fragment	*frag;
-	const char	*space_str;
 	const char	*final_text;
 
 	i = 0;
@@ -86,23 +83,7 @@ void	print_tokens_raw(t_token *tokens)
 		else
 			final_text = "(null)";
 		printf("  final_text     : \"%s\"\n", final_text);
-		frag = tokens->fragments;
-		j = 0;
-		while (frag)
-		{
-			if (frag->has_space_after)
-				space_str = "true";
-			else
-				space_str = "false";
-			printf("    Fragment %d: text=\"%s\", quote_type=%d, "
-				"has_space_after=%s\n",
-				j,
-				frag->text,
-				frag->quote_type,
-				space_str);
-			frag = frag->next;
-			j++;
-		}
+		print_fragments(tokens->fragments);
 		printf("\n");
 		tokens = tokens->next;
 		i++;

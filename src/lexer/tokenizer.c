@@ -68,7 +68,7 @@ void	skip_empty_fragments(t_fragment **cur)
 	}
 }
 
-static t_token	*build_tokens_from_fragments(t_fragment *cur)
+t_token	*build_tokens_from_fragments(t_fragment *cur)
 {
 	t_token		*tokens;
 	t_token		*last_token;

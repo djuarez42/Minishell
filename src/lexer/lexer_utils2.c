@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 22:24:41 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 17:51:37 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	append_fragment(t_fragment **head, t_fragment *frag)
 	tmp->next = frag;
 }
 
-static t_fragment	*handle_backslashes_even_dollar(int keep, const char
+t_fragment	*handle_backslashes_even_dollar(int keep, const char
 					*text, int *i)
 {
 	int			j;
@@ -53,7 +53,7 @@ static t_fragment	*handle_backslashes_even_dollar(int keep, const char
 	return (f);
 }
 
-static t_fragment	*handle_backslashes_odd_dollar(int keep, const char
+t_fragment	*handle_backslashes_odd_dollar(int keep, const char
 					*text, int *i)
 {
 	int			j;
@@ -81,7 +81,7 @@ static t_fragment	*handle_backslashes_odd_dollar(int keep, const char
 	return (f);
 }
 
-static t_fragment	*handle_backslashes_literal(int start, int count,
+t_fragment	*handle_backslashes_literal(int start, int count,
 				const char *text, int *i)
 {
 	bool		space_after;
@@ -92,7 +92,7 @@ static t_fragment	*handle_backslashes_literal(int start, int count,
 	return (f);
 }
 
-static int	count_consecutive_backslashes(const char *text, int *i)
+int	count_consecutive_backslashes(const char *text, int *i)
 {
 	int	count;
 
@@ -105,7 +105,7 @@ static int	count_consecutive_backslashes(const char *text, int *i)
 	return (count);
 }
 
-static t_fragment	*handle_backslashes_dispatch(int count, const char *text,
+t_fragment	*handle_backslashes_dispatch(int count, const char *text,
 					int *i, int start)
 {
 	int		half;
@@ -150,7 +150,7 @@ t_fragment	*handle_backslashes_wrapper(const char *text, int *i)
 	return (handle_backslashes(text, i));
 }
 
-static void	skip_until_closing_quote(const char *text, int *i, char quote)
+void	skip_until_closing_quote(const char *text, int *i, char quote)
 {
 	while (text[*i] && text[*i] != quote)
 	{
@@ -161,13 +161,18 @@ static void	skip_until_closing_quote(const char *text, int *i, char quote)
 	}
 }
 
-static t_fragment	*make_dollar_fragment(const char *text, int start, int len,
-					char quote, int i)
+bool	calc_space_after(const char *text, int i)
+{
+	return (text[i + 1] && ft_isspace((unsigned char)text[i + 1]));
+}
+
+t_fragment	*make_dollar_fragment(const char *text, int start,
+			int len, char quote)
 {
 	bool		space_after;
 	t_fragment	*frag;
 
-	space_after = text[i + 1] && ft_isspace((unsigned char)text[i + 1]);
+	space_after = calc_space_after(text, start + len - 1);
 	if (quote == '\'')
 		frag = new_fragment(&text[start], (size_t)len,
 				QUOTE_DOLLAR, space_after);
@@ -177,7 +182,7 @@ static t_fragment	*make_dollar_fragment(const char *text, int start, int len,
 	return (frag);
 }
 
-t_fragment	*handle_dollar_string(const char *text, int *i)
+t_fragment	*handle_dollar_string_lexer(const char *text, int *i)
 {
 	char		quote;
 	int			start;
@@ -189,7 +194,7 @@ t_fragment	*handle_dollar_string(const char *text, int *i)
 	start = *i;
 	skip_until_closing_quote(text, i, quote);
 	len = *i - start;
-	frag = make_dollar_fragment(text, start, len, quote, *i);
+	frag = make_dollar_fragment(text, start, len, quote);
 	if (text[*i] == quote)
 		(*i)++;
 	return (frag);
@@ -283,7 +288,7 @@ t_fragment *handle_generic_text(const char *text, int *i)
 	return (frag);
 }
 
-static t_fragment	*get_next_fragment(const char *text, int *i)
+t_fragment	*get_next_fragment(const char *text, int *i)
 {
 	t_fragment	*frag;
 
@@ -291,7 +296,7 @@ static t_fragment	*get_next_fragment(const char *text, int *i)
 	if (text[*i] == '\\')
 		frag = handle_backslashes_wrapper(text, i);
 	else if (is_dollar_string(text, *i))
-		frag = handle_dollar_string(text, i);
+		frag = handle_dollar_string_lexer(text, i);  // cambio aquí
 	else if (text[*i] == '\'')
 		frag = handle_single_quotes(text, i);
 	else if (text[*i] == '"')
