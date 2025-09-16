@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 19:48:31 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 20:14:37 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,15 @@ typedef struct s_parse_ctx
 	char			**envp;
 	t_exec_state	*state;
 }	t_parse_ctx;
+
+typedef struct s_word_builder
+{
+	char			*buf;
+	unsigned char	*splittable;
+	size_t			len;
+	size_t			total_len;
+	int				count;
+}	t_word_builder;
 
 /* --------------------------- */
 /*   Liberación de memoria     */
