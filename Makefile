@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/16 19:07:51 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/16 20:06:15 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,7 @@ SRC = main.c \
 		src/parser/parser_utils1.c \
 		src/parser/parser_utils2.c \
 		src/parser/parser_utils3.c \
+		src/parser/parser_utils4.c \
 		src/parser/parser_print_utils.c \
 		src/executor/executor.c \
 		src/executor/executor_utils.c \
