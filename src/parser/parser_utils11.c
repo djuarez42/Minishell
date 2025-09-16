@@ -1,0 +1,72 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils11.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/16 22:11:46 by djuarez           #+#    #+#             */
+/*   Updated: 2025/09/16 22:31:41 by djuarez          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+static int	has_expandable_chars(t_fragment *frag)
+{
+	int	i;
+
+	i = 0;
+	while (frag->text[i])
+	{
+		if (frag->text[i] == '$')
+			return (1);
+		if (frag->text[i] == '~' && i == 0 && frag->quote_type == QUOTE_NONE)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	should_expand_fragment(t_fragment *frag)
+{
+	if (!frag || !frag->text)
+		return (0);
+	if (frag->quote_type == QUOTE_SINGLE)
+		return (0);
+	if (frag->quote_type == QUOTE_DOUBLE || frag->quote_type == QUOTE_NONE)
+		return (has_expandable_chars(frag));
+	if (frag->quote_type == QUOTE_DOLLAR)
+		return (1);
+	return (0);
+}
+
+char	*expand_fragment(const char *text, t_quote_type quote,
+			char **envp, t_exec_state *state)
+{
+	if (!text)
+		return (ft_strdup(""));
+	if (quote == QUOTE_SINGLE)
+		return (ft_strdup(text));
+	if (quote == QUOTE_DOLLAR)
+		return (expand_ansi_c_string(text));
+	if (text[0] == '~' && quote == QUOTE_NONE)
+		return (expand_tilde_bash(text, envp));
+	return (expand_variables(text, envp, state, quote));
+}
+
+void	expand_fragments(t_token *tok, char **envp, t_exec_state *state)
+{
+	t_fragment	*frag;
+
+	frag = tok->fragments;
+	while (frag)
+	{
+		if (should_expand_fragment(frag))
+			frag->expanded_text = expand_fragment(frag->text,
+					frag->quote_type, envp, state);
+		else
+			frag->expanded_text = ft_strdup(frag->text);
+		frag = frag->next;
+	}
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 20:17:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 20:14:37 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 22:30:00 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ typedef struct s_proc_ctx
 	t_cmd				*cmd;
 	char				**envp;
 	t_exec_state		*state;
-	int					*argc_argv;			// para argv
-	int					*argc_final_text;	// para argv_final_text
+	int					*argc_argv;
+	int					*argc_final_text;
 }	t_proc_ctx;
 
 typedef struct s_parse_ctx
@@ -120,10 +120,30 @@ t_quote_type	detect_combined_quote(t_fragment *frags);
 void			update_final_text(t_token *tok, t_proc_ctx *ctx);
 
 /* --------------------------- */
-/*       Debug / Prints        */
+/*  Utilidades internas parser */
 /* --------------------------- */
 
-void			print_redirs(t_redir *redir);
-void			print_cmd_list(t_cmd *cmd_list);
+void			calc_total_len(t_fragment *frag, t_word_builder *wb);
+void			copy_fragment_to_buffer(t_fragment *frag, t_word_builder *wb);
+void			fill_buffer_and_splittable(t_fragment *frag,
+					t_word_builder *wb);
+void			count_words(t_word_builder *wb);
+int				count_quoted_fragments(t_fragment *frag);
+void			fill_quoted_words(t_fragment *frag, char **words);
+char			**build_from_quoted_fragments(t_fragment *frag,
+					int *out_count);
+size_t			get_next_word_range(t_word_builder *wb, size_t start,
+					size_t *wlen);
+char			**split_buffer_to_words(t_word_builder *wb);
+char			**build_words_from_buffer(t_fragment *frag,
+					t_word_builder *wb, int *out_count);
+
+/* --------------------------- */
+/*  Utilidades internas heredoc */
+/* --------------------------- */
+
+char			*read_heredoc_line(int interactive);
+int				is_delimiter(const char *line, const char *delimiter);
+char			**expand_lines_array(char **lines, int *capacity, int count);
 
 #endif

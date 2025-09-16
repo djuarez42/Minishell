@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/14 20:21:24 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/16 22:50:26 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,8 @@ int main(int argc, char **argv, char **envp)
     envp_copy = new_envp(envp);
     if (!envp_copy)
         return 1;
-
     state.last_status = 0;
     is_interactive = isatty(STDIN_FILENO);
-
-    // Modo -c
     if (argc >= 3 && ft_strncmp(argv[1], "-c", 3) == 0)
     {
         input = ft_strdup(argv[2]);
@@ -41,7 +38,6 @@ int main(int argc, char **argv, char **envp)
             free_envp(envp_copy);
             return 1;
         }
-
         tokens = tokenize_input(input);
         if (tokens)
         {
@@ -55,8 +51,6 @@ int main(int argc, char **argv, char **envp)
         free_envp(envp_copy);
         return state.last_status;
     }
-
-    // Modo interactivo / batch
     while (1)
     {
         fail = 0;
@@ -80,20 +74,16 @@ int main(int argc, char **argv, char **envp)
                 free(line);
             }
         }
-
         if (!input)
             break;
-
         if (*input && is_interactive)
             add_history(input);
-
         tokens = tokenize_input(input);
         if (!tokens)
         {
             free(input);
             continue;
         }
-
         cmds = parser_tokens(tokens, envp_copy, &state);
         if (!cmds)
         {
@@ -101,14 +91,11 @@ int main(int argc, char **argv, char **envp)
             free(input);
             continue;
         }
-
-        executor(cmds, &envp_copy, &state); // <-- sin expand_cmd_inplace
-
+        executor(cmds, &envp_copy, &state);
         free_token_list(tokens);
         free_cmds(cmds);
         free(input);
     }
-
     free_envp(envp_copy);
     return state.last_status;
 }
