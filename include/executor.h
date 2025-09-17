@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 18:32:33 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/17 18:07:04 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ int				env_unset_var(char ***penvp, const char *name);
 void			handle_redirections_out(const char *filename, int *error);
 void			handle_redirections_in(const char *filename, int *error);
 void			handle_redirections_append(const char *filename, int *error);
-int				handle_redirections(t_redir *redir, char **envp, t_exec_state *state);
+int				handle_redirections(t_redir *redir, char **envp,
+					t_exec_state *state);
 int				handle_redirections_and_quotes(t_redir *redirs,
 					char **envp, t_exec_state *state);
 

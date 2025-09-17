@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:20:50 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/15 19:05:21 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/17 18:06:24 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	run_builtin_in_parent(t_cmd *cmd, char ***penvp);
 int	run_builtin_in_child(t_cmd *cmd, char ***penvp);
 
 /* Individual builtins */
-int bi_echo(t_cmd *cmd);
+int	bi_echo(t_cmd *cmd);
 int	bi_pwd(void);
 int	bi_env(char **argv, char **envp);
 int	bi_cd(char **argv, char ***penvp);
