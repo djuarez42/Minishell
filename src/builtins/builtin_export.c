@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/15 19:07:47 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/17 17:19:00 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,38 +42,37 @@ static int	validate_name_or_error(const char *arg)
 	return (0);
 }
 
-static void print_exported_env(char **envp)
+static void	print_exported_env(char **envp)
 {
-    int i = 0;
-    while (envp[i])
-    {
-        printf("declare -x %s\n", envp[i]);
-        i++;
-    }
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		printf("declare -x %s\n", envp[i]);
+		i++;
+	}
 }
 
-int bi_export(char **argv, char ***penvp)
+int	bi_export(char **argv, char ***penvp)
 {
-    int i;
-    int status;
+	int	i;
+	int	status;
 
-    if (!argv[1])
-    {
-        print_exported_env(*penvp);
-        return 0;
-    }
-
-    status = 0;
-    i = 1;
-    while (argv[i])
-    {
-        if (ft_strchr(argv[i], '='))
-            status |= assign_or_error(penvp, argv[i]);
-        else
-            status |= validate_name_or_error(argv[i]);
-        i++;
-    }
-    return status;
+	if (!argv[1])
+	{
+		print_exported_env(*penvp);
+		return (0);
+	}
+	status = 0;
+	i = 1;
+	while (argv[i])
+	{
+		if (ft_strchr(argv[i], '='))
+			status |= assign_or_error(penvp, argv[i]);
+		else
+			status |= validate_name_or_error(argv[i]);
+		i++;
+	}
+	return (status);
 }
-
-

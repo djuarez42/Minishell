@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/13 00:23:44 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/17 17:00:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,30 @@ static int	is_n_flag(const char *s)
 	return (s[i] == '\0');
 }
 
-int bi_echo(t_cmd *cmd)
+int	bi_echo(t_cmd *cmd)
 {
-    int i = 1;
-    int n_flag = 0;
+	int	i;
+	int	n_flag;
 
-    while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
-    {
-        n_flag = 1; i++;
-    }
-
-    while (cmd->argv[i])
-    {
-        write(STDOUT_FILENO, cmd->argv[i], ft_strlen(cmd->argv[i]));
-        if (cmd->argv[i + 1])
-            write(STDOUT_FILENO, " ", 1);
-        i++;
-    }
-    if (!n_flag)
-        write(STDOUT_FILENO, "\n", 1);
-    return 0;
+	i = 1;
+	n_flag = 0;
+	while (cmd->argv[i] && is_n_flag(cmd->argv[i]))
+	{
+		n_flag = 1;
+		i++;
+	}
+	while (cmd->argv[i])
+	{
+		write(STDOUT_FILENO, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		if (cmd->argv[i + 1])
+			write(STDOUT_FILENO, " ", 1);
+		i++;
+	}
+	if (!n_flag)
+		write(STDOUT_FILENO, "\n", 1);
+	return (0);
 }
+
 int	bi_pwd(void)
 {
 	char	*cwd;
@@ -70,18 +73,13 @@ int	bi_env(char **argv, char **envp)
 
 	if (!envp)
 		return (0);
-	
-	// Check if an argument was provided - if so, try to execute it
 	if (argv && argv[1])
 	{
-		// Check if the command exists in PATH
 		ft_putstr_fd("env: '", STDERR_FILENO);
 		ft_putstr_fd(argv[1], STDERR_FILENO);
 		ft_putstr_fd("': No such file or directory\n", STDERR_FILENO);
-		return (127); // Command not found error code
+		return (127);
 	}
-	
-	// No arguments - print environment
 	i = 0;
 	while (envp[i])
 	{

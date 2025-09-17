@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset_exit.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/08/23 20:25:34 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/17 17:08:58 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,9 @@ int	bi_unset(char **argv, char ***penvp)
 	{
 		if (env_identifier_valid(argv[i]))
 			(void)env_unset_var(penvp, argv[i]);
-		// Note: bash silently ignores invalid identifiers for unset
-		// No error message or exit status change needed
 		i++;
 	}
-	return (0); // bash always returns 0 for unset unless syntax error
+	return (0);
 }
 
 static int	is_valid_number(const char *s)
@@ -53,7 +51,7 @@ static int	is_valid_number(const char *s)
 int	bi_exit(char **argv)
 {
 	long long	code;
-	int		argc;
+	int			argc;
 
 	argc = 0;
 	while (argv[argc])
@@ -62,7 +60,8 @@ int	bi_exit(char **argv)
 		return (0);
 	if (!is_valid_number(argv[1]))
 	{
-		fprintf(stderr, "minishell: exit: %s: numeric argument required\n", argv[1]);
+		fprintf(stderr, "minishell: exit: %s: numeric argument required\n",
+			argv[1]);
 		return (2);
 	}
 	if (argc > 2)
