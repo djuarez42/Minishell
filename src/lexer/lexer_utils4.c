@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 18:10:18 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/19 19:01:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,18 @@ t_fragment	*handle_spaces(const char *text, int *i)
 	return (NULL);
 }
 
-t_fragment	*handle_backslashes_wrapper(const char *text, int *i)
+size_t	calc_total_length(t_fragment *frag)
 {
-	return (handle_backslashes(text, i));
+	size_t		len;
+	t_fragment	*cur;
+
+	len = 0;
+	cur = frag;
+	while (cur)
+	{
+		if (cur->text)
+			len += strlen(cur->text);
+		cur = cur->next;
+	}
+	return (len);
 }

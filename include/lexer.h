@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:28:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 16:30:00 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/19 17:00:00 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,11 @@ void			free_token_list(t_token *tokens);
 /* ------------------------ Fragment helpers --------------------------- */
 size_t			calc_total_length(t_fragment *frag);
 void			copy_fragments_to_buffer(t_fragment *frag, char *res);
+void			append_char_to_buf(char **buf, char c);
+void			handle_backslash_in_double(const char *text, int *i,
+					char **buf);
+char			*collect_double_quote_text(const char *text, int *i);
+bool			compute_space_after(const char *text, int i);
 
 /* ------------------------ Tokenization core -------------------------- */
 t_token_type	determine_token_type(char *str, t_quote_type quote);
@@ -95,7 +100,6 @@ void			skip_until_closing_quote(const char *text, int *i, char quote);
 
 /* -------------------------- Lexer helpers ---------------------------- */
 t_fragment		*handle_backslashes(const char *text, int *i);
-t_fragment		*handle_backslashes_wrapper(const char *text, int *i);
 t_fragment		*handle_backslashes_even_dollar(int keep, const char *text,
 					int *i);
 t_fragment		*handle_backslashes_odd_dollar(int keep, const char *text,

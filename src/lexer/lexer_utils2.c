@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 16:49:51 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/19 19:15:40 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,21 @@
 
 t_fragment	*handle_double_quotes(const char *text, int *i)
 {
-	int			start;
-	int			len;
-	bool		space_after;
 	t_fragment	*frag;
+	char		*buf;
+	size_t		len;
+	bool		space_after;
 
 	(*i)++;
-	start = *i;
-	while (text[*i] && text[*i] != '"')
-	{
-		if (text[*i] == '\\' && text[*i + 1])
-			*i += 2;
-		else
-			(*i)++;
-	}
-	len = *i - start;
-	space_after = text[*i + 1] && ft_isspace((unsigned char)text[*i + 1]);
-	frag = new_fragment(&text[start], (size_t)len, QUOTE_DOUBLE, space_after);
+	buf = collect_double_quote_text(text, i);
+	if (buf)
+		len = strlen(buf);
+	else
+		len = 0;
+	space_after = compute_space_after(text, *i);
+	frag = new_fragment(buf, len, QUOTE_DOUBLE, space_after);
+	if (buf)
+		free(buf);
 	if (text[*i] == '"')
 		(*i)++;
 	return (frag);
@@ -87,7 +85,7 @@ t_fragment	*get_next_fragment(const char *text, int *i)
 
 	frag = NULL;
 	if (text[*i] == '\\')
-		frag = handle_backslashes_wrapper(text, i);
+		frag = handle_backslashes(text, i);
 	else if (is_dollar_string(text, *i))
 		frag = handle_dollar_string_lexer(text, i);
 	else if (text[*i] == '\'')

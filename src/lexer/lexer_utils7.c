@@ -6,27 +6,11 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:14:41 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 18:16:34 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/19 19:05:20 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-size_t	calc_total_length(t_fragment *frag)
-{
-	size_t		len;
-	t_fragment	*cur;
-
-	len = 0;
-	cur = frag;
-	while (cur)
-	{
-		if (cur->text)
-			len += strlen(cur->text);
-		cur = cur->next;
-	}
-	return (len);
-}
 
 void	copy_fragments_to_buffer(t_fragment *frag, char *res)
 {
@@ -51,4 +35,68 @@ void	copy_fragments_to_buffer(t_fragment *frag, char *res)
 		cur = cur->next;
 	}
 	res[pos] = '\0';
+}
+
+void	append_char_to_buf(char **buf, char c)
+{
+	char	*tmp;
+	size_t	len;
+
+	len = 0;
+	if (*buf)
+		len = strlen(*buf);
+	tmp = malloc(len + 2);
+	if (!tmp)
+		return ;
+	if (*buf)
+	{
+		strcpy(tmp, *buf);
+		free(*buf);
+	}
+	tmp[len] = c;
+	tmp[len + 1] = '\0';
+	*buf = tmp;
+}
+
+void	handle_backslash_in_double(const char *text, int *i, char **buf)
+{
+	if (text[*i + 1] == '"' || text[*i + 1] == '$'
+		|| text[*i + 1] == '\\' || text[*i + 1] == '`')
+	{
+		append_char_to_buf(buf, text[*i + 1]);
+		(*i) += 2;
+	}
+	else
+	{
+		append_char_to_buf(buf, '\\');
+		(*i)++;
+	}
+}
+
+char	*collect_double_quote_text(const char *text, int *i)
+{
+	char	*buf;
+
+	buf = NULL;
+	while (text[*i] && text[*i] != '"')
+	{
+		if (text[*i] == '\\' && text[*i + 1])
+		{
+			handle_backslash_in_double(text, i, &buf);
+			continue ;
+		}
+		append_char_to_buf(&buf, text[*i]);
+		(*i)++;
+	}
+	return (buf);
+}
+
+bool	compute_space_after(const char *text, int i)
+{
+	if (text[i + 1])
+	{
+		if (ft_isspace((unsigned char)text[i + 1]))
+			return (true);
+	}
+	return (false);
 }

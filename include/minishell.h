@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 18:27:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 17:18:20 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/19 17:49:49 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,18 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <limits.h>
-
-//Librerias para el proyecto minishell
 # include <readline/readline.h>
 # include <readline/history.h>
 
-// Otros headers del proyecto (por ahora, solo el lexer)
+// src headers libraries
 # include "lexer.h"
 # include "parser.h"
 # include "executor.h"
 # include "libft.h"
 # include "signals.h"
-
-//Constantes globales si las necesitas
+# include "builtins.h"
+# include "exec_state.h"
+//Global constants
 # define PROMPT "minishell$ "
-
-//Funciton prototypes
 
 #endif
