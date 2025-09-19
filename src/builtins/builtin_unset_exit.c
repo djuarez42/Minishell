@@ -6,12 +6,13 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/17 17:08:58 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/19 21:31:19 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "libft.h"
+#include "minishell.h"
 
 int	bi_unset(char **argv, char ***penvp)
 {
