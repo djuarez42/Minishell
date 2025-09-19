@@ -118,6 +118,7 @@ char			**build_words_from_token(t_token *tok, int *out_count);
 char			**process_token_with_quotes(t_token *tok, t_proc_ctx *ctx);
 t_quote_type	detect_combined_quote(t_fragment *frags);
 void			update_final_text(t_token *tok, t_proc_ctx *ctx);
+char			*expand_command_substitutions(const char *text, char **envp);
 
 /* --------------------------- */
 /*  Utilidades internas parser */
