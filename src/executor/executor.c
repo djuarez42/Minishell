@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/18 19:56:13 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/18 20:30:16 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static inline void fd_diag_log(const char *where)
 /* ---------------- PATH search and exec helpers (existing) ---------------- */
 char	*find_executable(char *cmd, char **envp)
 {
-	char	cwd[PATH_MAX];
 	char	*path_env;
 	char	**paths;
 	char	*full_path;
@@ -48,35 +47,20 @@ char	*find_executable(char *cmd, char **envp)
 
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
-
 	path_env = env_get_value(envp, "PATH");
 	if (!path_env)
 		return (NULL);
-
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);
-
 	i = 0;
 	while (paths[i])
 	{
-		if (paths[i][0] == '.' && getcwd(cwd, sizeof(cwd))) // ruta relativa
-		{
-			full_path = ft_strjoin(cwd, "/");
-			full_path = ft_strjoin_free(full_path, paths[i] + 2); // quitar "./"
-			full_path = ft_strjoin_free(full_path, "/");
-			full_path = ft_strjoin_free(full_path, cmd);
-		}
-		else
-		{
-			full_path = ft_strjoin(paths[i], "/");
-			full_path = ft_strjoin_free(full_path, cmd);
-		}
-
+		full_path = ft_strjoin(paths[i], "/");
+		full_path = ft_strjoin_free(full_path, cmd);
 		if (access(full_path, X_OK) == 0)
 		{
-			free_split(paths);
-			return (full_path);
+			return (free_split(paths), full_path);
 		}
 		free(full_path);
 		i++;
@@ -84,6 +68,7 @@ char	*find_executable(char *cmd, char **envp)
 	free_split(paths);
 	return (NULL);
 }
+
 
 int	execute_execve(char *exec_path, char **argv, char **envp)
 {

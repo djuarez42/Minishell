@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/18 19:54:38 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/18 22:23:48 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int				handle_redirections_and_quotes(t_redir *redirs,
 int				execute_command(char *exec_path, t_cmd *cmd, char **envp);
 int				execute_execve(char *exec_path, char **argv, char **envp);
 char			*find_executable(char *cmd, char **envp);
+char			*execute_command_substitution(const char *cmd, char **envp);
 
 /* --------------------------- */
 /*   Expansión de variables    */

@@ -1,1 +1,2 @@
-echo "fake ls"
+#!/bin/bash
+echo "fake ls ejecutado"

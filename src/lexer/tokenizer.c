@@ -109,5 +109,6 @@ t_token	*tokenize_input(const char *input)
 	tokens = build_tokens_from_fragments(frags);
 	free_fragments(frags);
 	tokens = append_token_eof(tokens);
+	//print_tokens_raw(tokens);
 	return (tokens);
 }
