@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:47:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 22:33:23 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/19 20:05:22 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,23 @@ void	copy_fragment_to_buffer(t_fragment *frag, t_word_builder *wb)
 		wb->len++;
 		i++;
 	}
+}
+
+int	validate_redirection(t_token *cur)
+{
+	if (!cur->next || cur->next->type != TOKEN_WORD)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+		if (cur->type == TOKEN_HEREDOC)
+			ft_putstr_fd("<<", 2);
+		else if (cur->type == TOKEN_REDIRECT_OUT)
+			ft_putstr_fd(">", 2);
+		else if (cur->type == TOKEN_APPEND)
+			ft_putstr_fd(">>", 2);
+		else if (cur->type == TOKEN_REDIRECT_IN)
+			ft_putstr_fd("<", 2);
+		ft_putendl_fd("'", 2);
+		return (0);
+	}
+	return (1);
 }

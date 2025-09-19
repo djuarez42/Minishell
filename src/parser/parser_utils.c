@@ -6,35 +6,11 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 19:08:48 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/19 20:08:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
-{
-	t_redir	*new_redir;
-	t_redir	*last;
-
-	if (!cur)
-		return (NULL);
-	if (!cur->next || cur->next->type != TOKEN_WORD)
-		return (NULL);
-	new_redir = create_redir(cur);
-	if (!new_redir)
-		return (NULL);
-	if (!cmd->redirs)
-		cmd->redirs = new_redir;
-	else
-	{
-		last = cmd->redirs;
-		while (last->next)
-			last = last->next;
-		last->next = new_redir;
-	}
-	return (cur->next->next);
-}
 
 static void	init_proc_ctx(t_proc_ctx *ctx, t_cmd *cmd,
 				char **envp, t_exec_state *state)
@@ -85,4 +61,28 @@ t_token	*parse_arguments(t_token *cur, t_cmd *cmd,
 		return (NULL);
 	finalize_arguments(cmd, &ctx);
 	return (cur);
+}
+
+t_token	*parse_redirections(t_token *cur, t_cmd *cmd)
+{
+	t_redir	*new_redir;
+	t_redir	*last;
+
+	if (!cur)
+		return (NULL);
+	if (!validate_redirection(cur))
+		return (NULL);
+	new_redir = create_redir(cur);
+	if (!new_redir)
+		return (NULL);
+	if (!cmd->redirs)
+		cmd->redirs = new_redir;
+	else
+	{
+		last = cmd->redirs;
+		while (last->next)
+			last = last->next;
+		last->next = new_redir;
+	}
+	return (cur->next->next);
 }

@@ -125,6 +125,8 @@ size_t			get_next_word_range(t_word_builder *wb, size_t start,
 char			**split_buffer_to_words(t_word_builder *wb);
 char			**build_words_from_buffer(t_fragment *frag,
 					t_word_builder *wb, int *out_count);
+int				validate_redirection(t_token *cur);
+
 
 /*  Utilidades internas heredoc */
 
