@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:14:41 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 19:05:20 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/19 19:24:10 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,15 @@ void	append_char_to_buf(char **buf, char c)
 
 void	handle_backslash_in_double(const char *text, int *i, char **buf)
 {
-	if (text[*i + 1] == '"' || text[*i + 1] == '$'
-		|| text[*i + 1] == '\\' || text[*i + 1] == '`')
+	if (text[*i + 1] == '"' || text[*i + 1] == '\\' || text[*i + 1] == '`')
 	{
 		append_char_to_buf(buf, text[*i + 1]);
+		(*i) += 2;
+	}
+	else if (text[*i + 1] == '$')
+	{
+		append_char_to_buf(buf, '\\');
+		append_char_to_buf(buf, '$');
 		(*i) += 2;
 	}
 	else
