@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:15 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/15 18:24:04 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/20 19:25:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	open_heredoc_file(t_heredoc_args *args)
 	return (fd);
 }
 
-int write_heredoc_lines(t_heredoc_args *args)
+/*int write_heredoc_lines(t_heredoc_args *args) (THIS FUNCION IS ALSO ON redir_utils2.c)
 {
     char *line;
     char *expanded_line;
@@ -90,15 +90,12 @@ int write_heredoc_lines(t_heredoc_args *args)
             result = 130;
             break;
         }
-
-
         if ((ft_strncmp(line, args->delimiter, ft_strlen(args->delimiter)) == 0 &&
              line[ft_strlen(args->delimiter)] == '\0'))
         {
             free(line);
             break;
         }
-
         if (!args->quoted)
             expanded_line = expand_variables(line, args->envp, args->state, QUOTE_NONE);
         else
@@ -112,11 +109,10 @@ int write_heredoc_lines(t_heredoc_args *args)
         }
         free(line);
     }
-
     signal(SIGINT, original_sigint);
     signal(SIGQUIT, original_sigquit);
     return result;
-}
+}*/
 
 
 void	redirect_stdin_heredoc(const char *filepath)
