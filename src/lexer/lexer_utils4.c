@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 19:01:43 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/20 13:42:52 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ size_t	calc_total_length(t_fragment *frag)
 	while (cur)
 	{
 		if (cur->text)
-			len += strlen(cur->text);
+			len += ft_strlen(cur->text);
 		cur = cur->next;
 	}
 	return (len);

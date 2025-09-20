@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:14:41 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 19:24:10 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/20 13:27:23 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ void	append_char_to_buf(char **buf, char c)
 
 	len = 0;
 	if (*buf)
-		len = strlen(*buf);
+		len = ft_strlen(*buf);
 	tmp = malloc(len + 2);
 	if (!tmp)
 		return ;
 	if (*buf)
 	{
-		strcpy(tmp, *buf);
+		ft_strlcpy(tmp, *buf, len + 1);
 		free(*buf);
 	}
 	tmp[len] = c;

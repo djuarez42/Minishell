@@ -22,7 +22,7 @@ t_token	*create_operator_token(t_fragment **cur, bool *space_before)
 	tok = create_token(determine_token_type((*cur)->text,
 				(*cur)->quote_type), *space_before);
 	*space_before = (*cur)->has_space_after;
-	frag_copy = new_fragment((*cur)->text, strlen((*cur)->text),
+	frag_copy = new_fragment((*cur)->text, ft_strlen((*cur)->text),
 			(*cur)->quote_type, (*cur)->has_space_after);
 	append_fragment(&tok->fragments, frag_copy);
 	tok->final_text = concat_fragments(tok->fragments);
@@ -39,7 +39,7 @@ t_token	*create_word_token(t_fragment **cur, bool *space_before)
 	*space_before = false;
 	while (*cur)
 	{
-		frag_copy = new_fragment((*cur)->text, strlen((*cur)->text),
+		frag_copy = new_fragment((*cur)->text, ft_strlen((*cur)->text),
 				(*cur)->quote_type, (*cur)->has_space_after);
 		append_fragment(&tok->fragments, frag_copy);
 		if ((*cur)->has_space_after)
@@ -61,7 +61,7 @@ t_token	*create_word_token(t_fragment **cur, bool *space_before)
 
 void	skip_empty_fragments(t_fragment **cur)
 {
-	while (*cur && strlen((*cur)->text) == 0
+	while (*cur && ft_strlen((*cur)->text) == 0
 		&& (*cur)->quote_type == QUOTE_NONE)
 	{
 		*cur = (*cur)->next;

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 23:31:50 by djuarez           #+#    #+#             */
-/*   Updated: 2024/07/06 21:56:42 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/20 14:42:24 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 #include <stdio.h>
 #include <stddef.h>

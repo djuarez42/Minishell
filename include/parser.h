@@ -70,14 +70,14 @@ typedef struct s_word_builder
 	int				count;
 }	t_word_builder;
 
-/*   Liberación de memoria     */
+/*   Free memory     */
 
 void			free_cmds(t_cmd *cmd);
 void			free_redirs(t_redir *redir);
 void			free_str_array(char **arr);
 void			free_partial_cmd(t_cmd *cmd, int argc);
 
-/*     Parser principal        */
+/*     Main parser        */
 
 t_cmd			*parser_tokens(t_token *tokens,
 					char **envp, t_exec_state *state);
@@ -89,13 +89,13 @@ t_token			*parse_redirections(t_token *cur, t_cmd *cmd);
 t_redir			*create_redir(t_token *cur);
 char			**collect_heredoc_content(const char *delimiter, bool quoted);
 
-/*  Creación y manejo de nodos */
+/*  Nodes creation and handle */
 
 t_cmd			*create_cmd_node(t_token **cur,
 					char **envp, t_exec_state *state);
 void			add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd);
 
-/*    Expansión de fragments   */
+/*    Fragments Expansion  */
 
 void			expand_fragments(t_token *tok,
 					char **envp, t_exec_state *state);
@@ -110,7 +110,7 @@ t_quote_type	detect_combined_quote(t_fragment *frags);
 void			update_final_text(t_token *tok, t_proc_ctx *ctx);
 char			*expand_command_substitutions(const char *text, char **envp);
 
-/*  Utilidades internas parser */
+/* Parser Utils */
 void			calc_total_len(t_fragment *frag, t_word_builder *wb);
 void			copy_fragment_to_buffer(t_fragment *frag, t_word_builder *wb);
 void			fill_buffer_and_splittable(t_fragment *frag,
@@ -127,9 +127,7 @@ char			**build_words_from_buffer(t_fragment *frag,
 					t_word_builder *wb, int *out_count);
 int				validate_redirection(t_token *cur);
 
-
-/*  Utilidades internas heredoc */
-
+/*  Herdoc Utils */
 char			*read_heredoc_line(int interactive);
 int				is_delimiter(const char *line, const char *delimiter);
 char			**expand_lines_array(char **lines, int *capacity, int count);

@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 16:39:47 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 16:46:45 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/20 14:49:01 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char	*extract_subcommand(const char *start, const char *end)
 	cmd = malloc(len + 1);
 	if (!cmd)
 		return (NULL);
-	strncpy(cmd, start, len);
+	ft_strlcpy(cmd, start, len + 1);
 	cmd[len] = '\0';
 	return (cmd);
 }
@@ -92,7 +92,7 @@ char	*expand_command_substitutions(const char *text, char **envp)
 	result = ft_strdup(text);
 	if (!result)
 		return (NULL);
-	start = strstr(result, "$(");
+	start = ft_strstr(result, "$(");
 	while (start)
 	{
 		start += 2;
@@ -104,7 +104,7 @@ char	*expand_command_substitutions(const char *text, char **envp)
 			break ;
 		cmd_out = run_subcommand(cmd, envp);
 		result = rebuild_result(result, start, end, cmd_out);
-		start = strstr(result, "$(");
+		start = ft_strstr(result, "$(");
 	}
 	return (result);
 }

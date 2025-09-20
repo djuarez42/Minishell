@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 17:01:55 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/20 13:42:08 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ t_fragment	*new_fragment(const char *start, size_t len, t_quote_type qtype,
 		free(frag);
 		return (NULL);
 	}
-	memcpy(frag->text, start, len);
+	ft_memcpy(frag->text, start, len);
 	frag->text[len] = '\0';
 	frag->expanded_text = NULL;
 	frag->quote_type = qtype;
