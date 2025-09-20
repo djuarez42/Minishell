@@ -6,11 +6,24 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 17:26:49 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/20 16:37:07 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	signal_handler(int signo)
+{
+	if (signo == SIGINT)
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	else if (signo == SIGQUIT)
+		(void)signo;
+}
 
 static void	process_input(char *input, char ***envp_copy, t_exec_state *state)
 {
@@ -32,6 +45,9 @@ static void	process_input(char *input, char ***envp_copy, t_exec_state *state)
 static void	run_interactive_shell(char ***envp_copy, t_exec_state *state)
 {
 	char	*input;
+
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, signal_handler);
 
 	while (1)
 	{
