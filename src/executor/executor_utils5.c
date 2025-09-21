@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:56:44 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 21:33:51 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:36:18 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ static int	process_heredoc(t_redir *redir)
 	is_quoted = false;
 	while (frag)
 	{
-		if (frag->quote_type == QUOTE_SINGLE || frag->quote_type == QUOTE_DOUBLE)
+		if (frag->quote_type == QUOTE_SINGLE
+			|| frag->quote_type == QUOTE_DOUBLE)
 		{
 			is_quoted = true;
 			break ;
@@ -40,7 +41,7 @@ static int	process_heredoc(t_redir *redir)
 
 static void	process_remove_quotes(t_redir *redir)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = remove_quotes(redir->file);
 	free(redir->file);
