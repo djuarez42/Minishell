@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/18 22:23:48 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 15:14:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include "exec_state.h"
 
 /* --------------------------- */
-/*        Estructuras          */
+/*        Structures           */
 /* --------------------------- */
 
 typedef struct s_heredoc_args
@@ -36,13 +36,13 @@ typedef struct s_heredoc_args
 }	t_heredoc_args;
 
 /* --------------------------- */
-/*     Función principal       */
+/*     Main function           */
 /* --------------------------- */
 
 void			executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state);
 
 /* --------------------------- */
-/*    Gestión del entorno      */
+/*    ENV managment            */
 /* --------------------------- */
 
 void			free_split(char **split);
@@ -56,7 +56,7 @@ int				env_set_assignment(char ***penvp, const char *assignment);
 int				env_unset_var(char ***penvp, const char *name);
 
 /* --------------------------- */
-/*       Redirecciones         */
+/*       Redirections          */
 /* --------------------------- */
 
 void			handle_redirections_out(const char *filename, int *error);
@@ -68,7 +68,7 @@ int				handle_redirections_and_quotes(t_redir *redirs,
 					char **envp, t_exec_state *state);
 
 /* --------------------------- */
-/*  Ejecución de comandos      */
+/*  Command execution          */
 /* --------------------------- */
 
 int				execute_command(char *exec_path, t_cmd *cmd, char **envp);
@@ -77,7 +77,7 @@ char			*find_executable(char *cmd, char **envp);
 char			*execute_command_substitution(const char *cmd, char **envp);
 
 /* --------------------------- */
-/*   Expansión de variables    */
+/*   Variables expansion       */
 /* --------------------------- */
 
 char			*str_append(char *dest, const char *src);
@@ -106,7 +106,7 @@ int				handle_redirections_heredoc_with_content(char **heredoc_content,
 char			*build_heredoc_delimiter(const char *text);
 
 /* --------------------------- */
-/*      Utils / Errores        */
+/*      Utils / Errors         */
 /* --------------------------- */
 
 void			print_error_file(const char *context);

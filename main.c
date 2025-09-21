@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/20 16:37:07 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 15:11:32 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static void	run_interactive_shell(char ***envp_copy, t_exec_state *state)
 
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler);
-
 	while (1)
 	{
 		input = readline("minishell$ ");

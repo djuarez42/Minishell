@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 18:27:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 17:49:49 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 15:24:05 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # include "signals.h"
 # include "builtins.h"
 # include "exec_state.h"
+
 //Global constants
 # define PROMPT "minishell$ "
 
