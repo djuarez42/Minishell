@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/21 21:01:50 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/21 21:21:19 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,6 +67,7 @@ SRC = main.c \
 		src/executor/executor_utils2.c \
 		src/executor/executor_utils3.c \
 		src/executor/executor_utils4.c \
+		src/executor/executor_utils5.c \
 		src/executor/env_utils.c \
 		src/executor/redir_utils.c \
 		src/executor/redir_utils2.c \
