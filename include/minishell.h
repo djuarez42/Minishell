@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 18:27:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 15:24:05 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 17:59:26 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
 
 // src headers libraries
 # include "lexer.h"

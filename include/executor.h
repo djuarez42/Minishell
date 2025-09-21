@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 15:14:41 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 18:02:56 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,27 @@ typedef struct s_heredoc_args
 	t_exec_state	*state;
 	char			*heredoc_path;
 }	t_heredoc_args;
+
+typedef struct s_fork_ctx
+{
+	t_cmd			*cur;
+	char			**envp;
+	t_exec_state	*state;
+	int				(*pipes)[2];
+	size_t			i;
+	size_t			n_cmds;
+	size_t			n_pipes;
+	pid_t			*pids;
+}	t_fork_ctx;
+
+typedef struct s_wait_ctx
+{
+	int		status;
+	pid_t	w;
+	pid_t	last_pid;
+	int		final_status;
+	size_t	left;
+}	t_wait_ctx;
 
 /* --------------------------- */
 /*     Main function           */
