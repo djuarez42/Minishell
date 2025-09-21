@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils3.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:48:52 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 21:01:14 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 22:11:12 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	create_pipes(int (**pipes)[2], size_t n_pipes)
 		*pipes = NULL;
 		return (0);
 	}
-	*pipes = (int (*)[2])malloc(sizeof(int [2]) * n_pipes);
+	*pipes = (int (*)[2])malloc(sizeof (int [2]) * n_pipes);
 	if (!*pipes)
 		return (-1);
 	return (create_pipes_loop(*pipes, n_pipes));

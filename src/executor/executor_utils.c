@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 19:34:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 18:34:51 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:42:59 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "minishell.h"
 
 static int	alloc_pids_in_ctx(t_fork_ctx *ctx)
 {
@@ -58,8 +57,8 @@ static int	fork_loop(t_cmd *start, size_t n_cmds, char **envp,
 	return (wait_and_cleanup(ctx.pids, n_cmds));
 }
 
-int	fork_and_run_pipeline(t_cmd *start, size_t n_cmds,
-	char **envp, t_exec_state *state)
+int	fork_and_run_pipeline(t_cmd *start, size_t n_cmds, char **envp,
+		t_exec_state *state)
 {
 	return (fork_loop(start, n_cmds, envp, state));
 }

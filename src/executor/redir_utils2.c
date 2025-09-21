@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/20 19:17:01 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:16:28 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,19 @@
 
 static void	itoa_buffer_int(int n, char *buffer)
 {
-	int		len;
-	int		i;
+	int				len;
+	int				i;
 	unsigned int	nb;
 
-	len = (n <= 0) ? 1 : 0;
-	nb = (n < 0) ? -n : n;
+	len = 0;
+	if (n <= 0)
+		len = 1;
+	else
+		len = 0;
+	if (n < 0)
+		nb = -n;
+	else
+		nb = n;
 	i = nb;
 	while (i > 0)
 	{
@@ -41,12 +48,11 @@ static void	itoa_buffer_int(int n, char *buffer)
 
 int	open_heredoc_file(t_heredoc_args *args)
 {
-	int		fd;
+	int			fd;
 	char		*path;
 	static int	counter = 0;
 	char		count_str[16];
 
-	// Generate unique path: /tmp/.heredoc_<pid>_<counter>
 	itoa_buffer_int(getpid(), count_str);
 	path = ft_strjoin("/tmp/.heredoc_", count_str);
 	itoa_buffer_int(counter++, count_str);
@@ -57,6 +63,7 @@ int	open_heredoc_file(t_heredoc_args *args)
 	if (fd == -1)
 	{
 		perror("open heredoc");
+		free(path);
 		args->heredoc_path = NULL;
 		return (-1);
 	}
@@ -67,35 +74,32 @@ int	write_heredoc_lines(t_heredoc_args *args)
 {
 	char	*line;
 	char	*expanded_line;
-	int		result = 0;
+	int		result;
 	void	(*original_sigint)(int);
 	void	(*original_sigquit)(int);
 
+	result = 0;
 	original_sigint = signal(SIGINT, SIG_DFL);
 	original_sigquit = signal(SIGQUIT, SIG_IGN);
-
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
 		{
 			result = 130;
-			break;
+			break ;
 		}
-
-		if ((ft_strncmp(line, args->delimiter,
-					ft_strlen(args->delimiter)) == 0
+		if ((ft_strncmp(line, args->delimiter, ft_strlen(args->delimiter)) == 0
 				&& line[ft_strlen(args->delimiter)] == '\0'))
 		{
 			free(line);
-			break;
+			break ;
 		}
-
 		if (!args->quoted)
-			expanded_line = expand_variables(line, args->envp, args->state, QUOTE_NONE);
+			expanded_line = expand_variables(line, args->envp, args->state,
+					QUOTE_NONE);
 		else
 			expanded_line = ft_strdup(line);
-
 		if (expanded_line)
 		{
 			write(args->fd, expanded_line, ft_strlen(expanded_line));
@@ -104,10 +108,9 @@ int	write_heredoc_lines(t_heredoc_args *args)
 		}
 		free(line);
 	}
-
 	signal(SIGINT, original_sigint);
 	signal(SIGQUIT, original_sigquit);
-	return result;
+	return (result);
 }
 
 void	redirect_stdin_heredoc(const char *filepath)
@@ -120,12 +123,12 @@ void	redirect_stdin_heredoc(const char *filepath)
 		perror("heredoc redirect");
 		if (fd != -1)
 			close(fd);
-		return;
+		return ;
 	}
 	close(fd);
 }
 
-void print_error_file(const char *context)
+void	print_error_file(const char *context)
 {
-    fprintf(stderr, "minishell: line 1: %s: %s\n", context, strerror(errno));
+	fprintf(stderr, "minishell: line 1: %s: %s\n", context, strerror(errno));
 }

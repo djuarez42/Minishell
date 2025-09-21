@@ -3,36 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_quotes_fix.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/21 15:26:12 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:38:49 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_state *state)
+static char	*dq_handle_edge_cases(const char *input, int *i,
+			t_exec_state *state)
 {
-	int		start;
-	int		len;
-	char	*res;
-	char	*name;
+	int	start;
 
-	if (!input || !i)
-		return (NULL);
 	start = *i + 1;
 	if (input[start] == '"')
 	{
 		*i = start;
 		return (ft_strdup(""));
 	}
-	else if (input[start] == '?')
+	if (input[start] == '?')
 	{
 		*i = start + 1;
 		return (expand_exit_status(state));
 	}
-	else if (input[start] == '$')
+	if (input[start] == '$')
 	{
 		*i = start + 1;
 		return (ft_strdup("$"));
@@ -42,6 +38,16 @@ char *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_st
 		*i = *i + 1;
 		return (ft_strdup("$"));
 	}
+	return (NULL);
+}
+
+static char	*dq_expand_variable(const char *input, int start, int *i,
+			char **envp)
+{
+	int		len;
+	char	*name;
+	char	*res;
+
 	if (!is_var_start(input[start]))
 	{
 		*i = *i + 1;
@@ -60,4 +66,19 @@ char *handle_dollar_quotes_fix(const char *input, int *i, char **envp, t_exec_st
 	free(name);
 	*i = start + len;
 	return (res);
+}
+
+char	*handle_dollar_quotes_fix(const char *input, int *i, char **envp,
+			t_exec_state *state)
+{
+	int		start;
+	char	*res;
+
+	if (!input || !i)
+		return (NULL);
+	res = dq_handle_edge_cases(input, i, state);
+	if (res)
+		return (res);
+	start = *i + 1;
+	return (dq_expand_variable(input, start, i, envp));
 }

@@ -66,13 +66,19 @@ SRC = main.c \
 		src/executor/executor_utils1.c \
 		src/executor/executor_utils2.c \
 		src/executor/executor_utils3.c \
-		src/executor/executor_utils4.c \
-		src/executor/env_utils.c \
+			src/executor/executor_utils4.c \
+			src/executor/exec_common.c \
+			src/executor/exec_run.c \
+			src/executor/env_utils.c \
+		src/executor/env_set.c \
+		src/executor/env_copy.c \
 		src/executor/redir_utils.c \
 		src/executor/redir_utils2.c \
 		src/executor/expand_variables_utils.c \
 		src/executor/expand_variables_utils2.c \
-		src/executor/expand_variables.c \
+			src/executor/expand_variables.c \
+			src/executor/expand_ansi.c \
+			src/executor/exec_substitution.c \
 		src/executor/dollar_quotes_fix.c \
 		src/builtins/builtins.c \
 		src/builtins/builtin_echo_pwd_env.c \

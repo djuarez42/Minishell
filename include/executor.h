@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 18:46:37 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:58:34 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,14 @@ int				is_var_char(int c);
 int				skip_variable_name(const char *s);
 char			*expand_exit_status(t_exec_state *state);
 char			*expand_env_var(const char *name, char **envp);
+typedef struct s_dollar_ctx
+{
+	char			**envp;
+	t_exec_state	*state;
+	t_quote_type	quote;
+} t_dollar_ctx;
 char			*handle_dollar_quotes_fix(const char *input, int *i,
-					char **envp, t_exec_state *state);
+						char **envp, t_exec_state *state);
 char			*expand_variables(const char *input, char **envp,
 					t_exec_state *state, t_quote_type quote);
 

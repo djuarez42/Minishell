@@ -3,81 +3,80 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 18:22:18 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:17:25 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <string.h> // For memset
 
-void handle_redirections_out(const char *filename, int *error)
+void	handle_redirections_out(const char *filename, int *error)
 {
-    int fd;
+	int	fd;
 
-    fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd == -1)
-    {
-        print_error_file(filename);
-        *error = 1;
-        return ;
-    }
-    if (dup2(fd, STDOUT_FILENO) == -1)
-    {
-        print_error_file("dup2");
-        close(fd);
-        *error = 1;
-        return ;
-    }
-    close(fd);
+	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		print_error_file(filename);
+		*error = 1;
+		return ;
+	}
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		print_error_file("dup2");
+		close(fd);
+		*error = 1;
+		return ;
+	}
+	close(fd);
 }
 
-void handle_redirections_in(const char *filename, int *error)
+void	handle_redirections_in(const char *filename, int *error)
 {
-    int fd;
+	int	fd;
 
-    fd = open(filename, O_RDONLY);
-    if (fd == -1)
-    {
-        print_error_file(filename);
-        *error = 1;
-        return ;
-    }
-    if (dup2(fd, STDIN_FILENO) == -1)
-    {
-        print_error_file("dup2");
-        close(fd);
-        *error = 1;
-        return ;
-    }
-    close(fd);
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		print_error_file(filename);
+		*error = 1;
+		return ;
+	}
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		print_error_file("dup2");
+		close(fd);
+		*error = 1;
+		return ;
+	}
+	close(fd);
 }
 
-void handle_redirections_append(const char *filename, int *error)
+void	handle_redirections_append(const char *filename, int *error)
 {
-    int fd;
+	int	fd;
 
-    fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-    if (fd == -1)
-    {
-        print_error_file(filename);
-        *error = 1;
-        return ;
-    }
-    if (dup2(fd, STDOUT_FILENO) == -1)
-    {
-        print_error_file("dup2");
-        close(fd);
-        *error = 1;
-        return ;
-    }
-    close(fd);
+	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd == -1)
+	{
+		print_error_file(filename);
+		*error = 1;
+		return ;
+	}
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		print_error_file("dup2");
+		close(fd);
+		*error = 1;
+		return ;
+	}
+	close(fd);
 }
 
-int	handle_redirections_heredoc(const char *delimiter, bool quoted,
-			char **envp, t_heredoc_args *args)
+int	handle_redirections_heredoc(const char *delimiter, bool quoted, char **envp,
+		t_heredoc_args *args)
 {
 	int	fd;
 	int	res;
@@ -86,25 +85,28 @@ int	handle_redirections_heredoc(const char *delimiter, bool quoted,
 	args->quoted = quoted;
 	args->envp = envp;
 	args->heredoc_path = NULL;
-
 	fd = open_heredoc_file(args);
 	if (fd == -1)
 		return (1);
-
 	args->fd = fd;
-
 	res = write_heredoc_lines(args);
 	close(fd);
-
 	if (res == 130)
+	{
+		if (args->heredoc_path)
+		{
+			unlink(args->heredoc_path);
+			free(args->heredoc_path);
+			args->heredoc_path = NULL;
+		}
 		return (130);
-
+	}
 	redirect_stdin_heredoc(args->heredoc_path);
-	return 0;
+	return (0);
 }
 
-int	handle_redirections_heredoc_with_content(char **heredoc_content, bool quoted,
-			char **envp, t_exec_state *state, t_heredoc_args *args)
+int	handle_redirections_heredoc_with_content(char **heredoc_content,
+		bool quoted, char **envp, t_exec_state *state, t_heredoc_args *args)
 {
 	int		fd;
 	int		i;
@@ -113,28 +115,25 @@ int	handle_redirections_heredoc_with_content(char **heredoc_content, bool quoted
 	fd = open_heredoc_file(args);
 	if (fd == -1)
 		return (1);
-	
-	// Write pre-collected content to temp file
+
 	i = 0;
 	while (heredoc_content[i])
 	{
 		if (!quoted)
-			expanded_line = expand_variables(heredoc_content[i], envp, state, QUOTE_NONE);
+			expanded_line = expand_variables(heredoc_content[i], envp, state,
+					QUOTE_NONE);
 		else
 			expanded_line = ft_strdup(heredoc_content[i]);
-		
 		if (!expanded_line)
 		{
 			close(fd);
 			return (1);
 		}
-		
 		write(fd, expanded_line, ft_strlen(expanded_line));
 		write(fd, "\n", 1);
 		free(expanded_line);
 		i++;
 	}
-	
 	close(fd);
 	redirect_stdin_heredoc(args->heredoc_path);
 	return (0);
@@ -142,8 +141,8 @@ int	handle_redirections_heredoc_with_content(char **heredoc_content, bool quoted
 
 int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
 {
-	int			res;
-	int			err;
+	int				res;
+	int				err;
 	t_heredoc_args	args;
 
 	err = 0;
@@ -159,15 +158,16 @@ int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
 		else if (redir->type == TOKEN_HEREDOC)
 		{
 			args.state = state;
-			// Use pre-collected content if available, otherwise fall back to stdin reading
-			if (redir->heredoc_content)
-			{
-				res = handle_redirections_heredoc_with_content(redir->heredoc_content, 
-					redir->quoted, envp, state, &args);
+
+				if (redir->heredoc_content)
+				{
+				res = handle_redirections_heredoc_with_content(redir->heredoc_content,
+						redir->quoted, envp, state, &args);
 			}
 			else
 			{
-				res = handle_redirections_heredoc(redir->file, redir->quoted, envp, &args);
+				res = handle_redirections_heredoc(redir->file, redir->quoted,
+						envp, &args);
 			}
 			if (res == 130)
 				return (130);

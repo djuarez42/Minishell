@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 18:26:53 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 22:01:09 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp,
-	t_exec_state *state)
+		t_exec_state *state)
 {
-	int		(*pipes)[2];
 	size_t	n_pipes;
+	int		(*pipes)[2];
 
 	if (init_pipes_and_n(n_cmds, &pipes, &n_pipes) != 0)
 		return (1);
@@ -31,7 +31,7 @@ static int	handle_empty_command(t_exec_state *state)
 }
 
 static int	apply_redirections_and_run_builtin(t_cmd *cur, char ***envp,
-			t_exec_state *state)
+		t_exec_state *state)
 {
 	int	res;
 	int	status;

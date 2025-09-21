@@ -3,223 +3,111 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 19:17:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/18 22:23:05 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 22:39:16 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Helper function to create a string from a single character
-static char *ft_strdupc(char c)
+static char	*ft_strdupc(char c)
 {
-    char *str;
-    
-    str = (char *)malloc(sizeof(char) * 2);
-    if (!str)
-        return (NULL);
-    str[0] = c;
-    str[1] = '\0';
-    return (str);
+	char	*str;
+
+	str = (char *)malloc(sizeof(char) * 2);
+	if (!str)
+		return (NULL);
+	str[0] = c;
+	str[1] = '\0';
+	return (str);
 }
 
-// Helper function to specifically handle $"string" pattern
-static char *handle_dollar_string(const char *input, int *i)
+static char	*handle_dollar_string(const char *input, int *i)
 {
-    char *result;
-    int start, end;
+	char	*result;
+	int		start;
+	int		end;
 
-    if (!input)
-        return ft_strdup("");
-
-    (*i)++; // saltamos el $
-
-    if (input[*i] == '"')
-        (*i)++; // saltamos la comilla inicial
-
-    start = *i;
-    end = start;
-
-    while (input[end] && input[end] != '"')
-        end++;
-
-    result = ft_substr(input, start, end - start);
-    if (!result)
-        return NULL;
-
-    if (input[end] == '"')
-        *i = end + 1; // saltamos la comilla final
-    else
-        *i = end;
-
-    return result;
+	if (!input)
+		return (ft_strdup(""));
+	(*i)++;
+	if (input[*i] == '"')
+		(*i)++;
+	start = *i;
+	end = start;
+	while (input[end] && input[end] != '"')
+		end++;
+	result = ft_substr(input, start, end - start);
+	if (!result)
+	{
+		return (NULL);
+	}
+	if (input[end] == '"')
+		*i = end + 1;
+	else
+		*i = end;
+	return (result);
 }
 
-// Helper function to check for $"string" pattern
-int is_dollar_string(const char *input, int pos)
+int	is_dollar_string(const char *input, int pos)
 {
-    if (!input || !input[pos])
-        return 0;
-    return (input[pos] == '$' && input[pos + 1] &&
-            (input[pos + 1] == '"' || input[pos + 1] == '\''));
+	if (!input || !input[pos])
+		return (0);
+	return (input[pos] == '$' && input[pos + 1] && (input[pos + 1] == '"'
+			|| input[pos + 1] == '\''));
+}
+static char	*handle_dollar(const char *input, int *i, t_dollar_ctx ctx)
+{
+	if (is_dollar_string(input, *i))
+		return (handle_dollar_string(input, i));
+	if (ctx.quote == QUOTE_DOUBLE || ctx.quote == QUOTE_NONE)
+		return (handle_dollar_quotes_fix(input, i, ctx.envp, ctx.state));
+	(*i)++;
+	return (ft_strdup("$"));
 }
 
-char *expand_variables(const char *input, char **envp, t_exec_state *state,
-                       t_quote_type quote)
+static int	append_piece(char **acc, char *piece)
 {
-    int     i;
-    char    *tmp;
-    char    *piece;
+	char	*tmp;
 
-    if (!input)
-        return (NULL);
-    if (input[0] == '\0')
-        return (ft_strdup(""));
-
-    i = 0;
-    tmp = NULL;
-    while (input[i])
-    {
-        /* Caso especial: \$ → conservar la barra */
-        if (input[i] == '\\' && input[i + 1] == '$')
-        {
-            piece = ft_strdup("\\$");
-            if (!piece)
-            {
-                free(tmp);
-                return NULL;
-            }
-            tmp = str_append(tmp, piece);
-            free(piece);
-            i += 2;
-        }
-        /* Variables normales */
-        else if (input[i] == '$')
-        {
-            if (is_dollar_string(input, i))
-                piece = handle_dollar_string(input, &i);
-            else if (quote == QUOTE_DOUBLE || quote == QUOTE_NONE)
-                piece = handle_dollar_quotes_fix(input, &i, envp, state);
-            else
-            {
-                piece = ft_strdup("$");
-                i++;
-            }
-            tmp = str_append(tmp, piece);
-            free(piece);
-        }
-        /* Caracteres normales */
-        else
-        {
-            piece = ft_strdupc(input[i]);
-            tmp = str_append(tmp, piece);
-            free(piece);
-            i++;
-        }
-    }
-    return tmp;
+	tmp = str_append(*acc, piece);
+	free(piece);
+	*acc = tmp;
+	return (*acc == NULL);
 }
 
-char *interpret_ansi_c_escapes(const char *str)
+char	*expand_variables(const char *input, char **envp, t_exec_state *state,
+			t_quote_type quote)
 {
-    int i = 0, j = 0;
-    char *res;
-    size_t len = ft_strlen(str);
+	int		i;
+	char	*tmp;
+	char	*piece;
+	t_dollar_ctx	ctx;
 
-    res = malloc(len + 1); // tamaño máximo, luego realloc si quieres
-    if (!res)
-        return NULL;
-
-    while (str[i])
-    {
-        if (str[i] == '\\' && str[i + 1])
-        {
-            i++;
-            if (str[i] == 'n') res[j++] = '\n';
-            else if (str[i] == 't') res[j++] = '\t';
-            else if (str[i] == 'r') res[j++] = '\r';
-            else if (str[i] == '\\') res[j++] = '\\';
-            else if (str[i] == '\'') res[j++] = '\'';
-            else if (str[i] == '"') res[j++] = '"';
-            else res[j++] = str[i]; // otros escapes literales
-            i++;
-        }
-        else
-            res[j++] = str[i++];
-    }
-    res[j] = '\0';
-    return res;
-}
-
-char *expand_ansi_c_string(const char *input)
-{
-    char *res;
-    char *tmp;
-
-    if (!input)
-        return ft_strdup("");
-
-    res = ft_strdup(input);
-    if (!res)
-        return NULL;
-
-    tmp = res;
-    res = interpret_ansi_c_escapes(res);
-    free(tmp);
-
-    return res;
-}
-
-char *execute_command_substitution(const char *cmd, char **envp)
-{
-    int fd[2];
-    pid_t pid;
-    char buffer[1024];
-    int n;
-    char *result = NULL;
-    size_t size = 0;
-
-    if (pipe(fd) == -1)
-        return NULL;
-
-    pid = fork();
-    if (pid < 0)
-        return NULL;
-    else if (pid == 0)
-    {
-        // hijo
-        close(fd[0]);
-        dup2(fd[1], STDOUT_FILENO);
-        dup2(fd[1], STDERR_FILENO);
-        close(fd[1]);
-        // usar envp aquí
-        char *argv[] = {"/bin/sh", "-c", (char *)cmd, NULL};
-        execve("/bin/sh", argv, envp);
-        _exit(127);
-    }
-    else
-    {
-        // padre
-        close(fd[1]);
-        while ((n = read(fd[0], buffer, sizeof(buffer))) > 0)
-        {
-            char *tmp = realloc(result, size + n + 1);
-            if (!tmp)
-            {
-                free(result);
-                result = NULL;
-                break;
-            }
-            result = tmp;
-            memcpy(result + size, buffer, n);
-            size += n;
-        }
-        if (result)
-            result[size] = '\0';
-        close(fd[0]);
-        waitpid(pid, NULL, 0);
-    }
-    return result;
+	if (!input)
+		return (NULL);
+	if (input[0] == '\0')
+		return (ft_strdup(""));
+	i = 0;
+	tmp = NULL;
+	ctx.envp = envp;
+	ctx.state = state;
+	ctx.quote = quote;
+	while (input[i])
+	{
+		if (input[i] == '\\' && input[i + 1] == '$')
+		{
+			piece = ft_strdup("\\$");
+			i += 2;
+		}
+		else if (input[i] == '$')
+			piece = handle_dollar(input, &i, ctx);
+		else
+			piece = ft_strdupc(input[i++]);
+		if (!piece || append_piece(&tmp, piece))
+			return (free(tmp), NULL);
+	}
+	return (tmp);
 }
