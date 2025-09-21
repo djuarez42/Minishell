@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 18:33:33 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 18:46:37 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,18 @@ char			*interpret_ansi_c_escapes(const char *str);
 char			*expand_ansi_c_string(const char *input);
 int				is_dollar_string(const char *input, int pos);
 
-
 //para ordenar 
-
 int				init_pipes_and_n(int n_cmds, int (**pipes)[2], size_t *n_pipes);
 int				fork_and_run_pipeline(t_cmd *start, size_t n_cmds,
 					char **envp, t_exec_state *state);
 size_t			count_pipeline_cmds(t_cmd *start);
+void			close_all_pipes(int (*pipes)[2], size_t n_pipes);
+int				setup_pipes(t_fork_ctx *ctx, size_t n_cmds);
+int				fork_and_init_children(t_cmd *start, size_t n_cmds,
+					t_fork_ctx *ctx, pid_t *pids);
+int				wait_and_cleanup(pid_t *pids, size_t n_cmds);
+void			wire_child_pipes(size_t idx, size_t n_cmds, int (*pipes)[2]);
+int				wait_pipeline(pid_t *pids, size_t n);
+int				create_pipes(int (**pipes)[2], size_t n_pipes);
 
 #endif

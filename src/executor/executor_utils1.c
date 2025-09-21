@@ -6,196 +6,90 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 16:15:03 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 16:16:38 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/21 18:43:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*find_executable(char *cmd, char **envp)
+static void	run_child_process_with_ctx(t_fork_ctx *ctx)
 {
-	char	*path_env;
-	char	**paths;
-	char	*full_path;
-	int		i;
+	t_exec_state	child_state;
+	int				res;
+	int				code;
 
-	if (ft_strchr(cmd, '/'))
-		return (ft_strdup(cmd));
-	path_env = env_get_value(envp, "PATH");
-	if (!path_env)
-		return (NULL);
-	paths = ft_split(path_env, ':');
-	if (!paths)
-		return (NULL);
-	i = 0;
-	while (paths[i])
-	{
-		full_path = ft_strjoin(paths[i], "/");
-		full_path = ft_strjoin_free(full_path, cmd);
-		if (access(full_path, X_OK) == 0)
-		{
-			return (free_split(paths), full_path);
-		}
-		free(full_path);
-		i++;
-	}
-	free_split(paths);
-	return (NULL);
+	child_state = *(ctx->state);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	wire_child_pipes(ctx->i, ctx->n_cmds, ctx->pipes);
+	close_all_pipes(ctx->pipes, ctx->n_pipes);
+	res = handle_redirections_and_quotes(ctx->cur->redirs,
+			ctx->envp, &child_state);
+	if (res == 130)
+		exit(130);
+	if (res == 1)
+		exit(1);
+	if (!ctx->cur->argv || !ctx->cur->argv[0])
+		exit(2);
+	if (is_builtin(ctx->cur->argv[0]))
+		exit(run_builtin_in_child(ctx->cur, &ctx->envp));
+	code = execute_command(NULL, ctx->cur, ctx->envp);
+	exit(code);
 }
 
-int	execute_execve(char *exec_path, char **argv, char **envp)
+static int	handle_fork_error(pid_t *pids, size_t i, int (*pipes)[2],
+	size_t n_pipes)
 {
-	int		idx;
-	char	*new_var;
-	int		code;
+	while (i > 0)
+		waitpid(pids[--i], NULL, 0);
+	close_all_pipes(pipes, n_pipes);
+	free(pipes);
+	free(pids);
+	perror("fork");
+	return (1);
+}
 
-	idx = env_find_index(envp, "_");
-	if (idx >= 0)
+int	wait_and_cleanup(pid_t *pids, size_t n_cmds)
+{
+	int	status;
+
+	status = wait_pipeline(pids, n_cmds);
+	free(pids);
+	return (status);
+}
+
+int	fork_and_init_children(t_cmd *start, size_t n_cmds, t_fork_ctx *ctx,
+		pid_t *pids)
+{
+	size_t	i;
+	t_cmd	*cur;
+
+	i = 0;
+	cur = start;
+	while (i < n_cmds && cur)
 	{
-		free(envp[idx]);
-		new_var = ft_strjoin("_=", exec_path);
-		if (new_var)
-			envp[idx] = new_var;
-		else
-			envp[idx] = ft_strdup("_=");
-	}
-	if (execve(exec_path, argv, envp) == -1)
-	{
-		if (errno == ENOENT)
+		pids[i] = fork();
+		if (pids[i] == -1)
+			return (handle_fork_error(pids, i, ctx->pipes, ctx->n_pipes));
+		if (pids[i] == 0)
 		{
-			fprintf(stderr, "minishell: %s: command not found\n", argv[0]);
-			code = 127;
+			ctx->cur = cur;
+			ctx->i = i;
+			run_child_process_with_ctx(ctx);
 		}
-		else if (errno == EACCES || errno == EPERM
-			|| errno == EISDIR || errno == ENOEXEC)
-		{
-			if (errno == EISDIR)
-				fprintf(stderr, "minishell: %s: Is a directory\n", exec_path);
-			else
-				fprintf(stderr, "minishell: %s: Permission denied\n",
-					exec_path);
-			code = 126;
-		}
-		else
-		{
-			fprintf(stderr, "minishell: %s: %s\n", exec_path, strerror(errno));
-			code = 1;
-		}
-		_exit(code);
+		i++;
+		cur = cur->next;
 	}
 	return (0);
 }
 
-void	free_split(char **split)
+int	setup_pipes(t_fork_ctx *ctx, size_t n_cmds)
 {
-	int	i;
-
-	i = 0;
-	while (split && split[i])
-		free(split[i++]);
-	free(split);
-}
-
-int handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state)
-{
-    t_redir *redir;
-    int res;
-
-    redir = redirs;
-    while (redir)
-    {
-        if (redir->type == TOKEN_HEREDOC)
-        {
-            // Decidir si expandir usando los fragments
-            t_fragment *frag = redir->fragments;
-            bool is_quoted = false;
-            while (frag)
-            {
-                if (frag->quote_type == QUOTE_SINGLE || frag->quote_type == QUOTE_DOUBLE)
-                {
-                    is_quoted = true;
-                    break;
-                }
-                frag = frag->next;
-            }
-            redir->quoted = is_quoted;
-
-            // Reconstruir delimiter
-            char *built_delim = build_heredoc_delimiter(redir->file);
-            if (!built_delim)
-                return (1);
-            free(redir->file);
-            redir->file = built_delim;
-
-        }
-        else
-        {
-            char *tmp = remove_quotes(redir->file);
-            free(redir->file);
-            redir->file = tmp;
-        }
-        redir = redir->next;
-    }
-    res = handle_redirections(redirs, envp, state);
-    return res;
-}
-
-int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
-{
-	if (!cmd || !cmd->argv || !cmd->argv[0])
-	{
-		fprintf(stderr, "minishell: syntax error near unexpected token `|'\n");
-		return (2);
-	}
-	exec_path = find_executable(cmd->argv[0], envp);
-	if (!exec_path)
-	{
-		fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
-		return (127);
-	}
-	return (execute_execve(exec_path, cmd->argv, envp));
-}
-
-char	*str_append(char *base, const char *add)
-{
-	char	*new;
-	size_t	len;
-
-	len = 0;
-	if (base)
-		len += ft_strlen(base);
-	if (add)
-		len += ft_strlen(add);
-	new = malloc(len + 1);
-	if (!new)
-		return (NULL);
-	new[0] = '\0';
-	if (base)
-		ft_strlcat(new, base, len + 1);
-	if (add)
-		ft_strlcat(new, add, len + 1);
-	free(base);
-	return (new);
-}
-
-char *build_heredoc_delimiter(const char *text)
-{
-	t_fragment *fragments;
-	char *delimiter;
-	t_token dummy_tok;
-
-	if (!text)
-		return ft_strdup("");
-	// Parsear texto en fragments
-	fragments = parse_mixed_fragments(text);
-	if (!fragments)
-		return ft_strdup(text);
-	// Usamos un token dummy para reutilizar concat_final_text
-	dummy_tok.fragments = fragments;
-	delimiter = concat_final_text(&dummy_tok);
-
-	// Liberar fragments temporales
-	free_fragments(fragments);
-
-	return delimiter;
+	if (n_cmds > 1)
+		ctx->n_pipes = n_cmds - 1;
+	else
+		ctx->n_pipes = 0;
+	if (create_pipes(&ctx->pipes, ctx->n_pipes) == -1)
+		return (perror("pipe"), 1);
+	return (0);
 }
