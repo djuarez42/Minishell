@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils5.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:47:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/20 21:04:21 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/22 21:27:23 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ t_token	*parse_cmd_block(t_token *cur, t_cmd *cmd,
 		cur = parse_redirections(cur, cmd);
 		if (!cur)
 		{
-			free_partial_cmd(cmd, -1);
-			free_redirs(cmd->redirs);
-			cmd->redirs = NULL;
+			/* parser failed while handling redirections: free any arrays allocated so far */
+			free_cmd_arrays(cmd);
+			cmd->freed_by_parser = true;
 			return (NULL);
 		}
 		if (cur && cur->type == TOKEN_WORD)

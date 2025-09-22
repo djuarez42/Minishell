@@ -41,6 +41,7 @@ typedef struct s_cmd
 	t_redir				*redirs;
 	int					pipe;
 	struct s_cmd		*next;
+	bool			freed_by_parser;
 }	t_cmd;
 
 typedef struct s_proc_ctx
@@ -76,6 +77,7 @@ void			free_cmds(t_cmd *cmd);
 void			free_redirs(t_redir *redir);
 void			free_str_array(char **arr);
 void			free_partial_cmd(t_cmd *cmd, int argc);
+void		free_cmd_arrays(t_cmd *cmd);
 
 /*     Main parser        */
 
