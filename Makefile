@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/22 04:15:42 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/22 04:45:04 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,6 +77,7 @@ SRC = main.c \
 		src/executor/executor_utils12.c \
 		src/executor/executor_utils13.c \
 		src/executor/executor_utils14.c \
+		src/executor/executor_utils15.c \
 		src/executor/env_utils.c \
 		src/executor/dollar_quotes_fix.c \
 		src/builtins/builtins.c \
