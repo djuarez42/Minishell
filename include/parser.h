@@ -17,9 +17,9 @@
 # include "lexer.h"       
 # include "exec_state.h"
 
-# define MAX_ARGS 65536
+# define MAX_ARGS 1024
 
-/*        Estructuras          */
+/*        Structures          */
 
 typedef struct s_redir
 {

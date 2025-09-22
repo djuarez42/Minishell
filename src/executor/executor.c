@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 22:01:09 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:22:02 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,10 @@
 static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp,
 		t_exec_state *state)
 {
-	size_t	n_pipes;
-	int		(*pipes)[2];
-
-	if (init_pipes_and_n(n_cmds, &pipes, &n_pipes) != 0)
-		return (1);
+	(void)start;
+	(void)n_cmds;
+	(void)envp;
+	(void)state;
 	return (fork_and_run_pipeline(start, n_cmds, envp, state));
 }
 

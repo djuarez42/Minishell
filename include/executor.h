@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 21:58:34 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:51:50 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,13 @@ typedef struct s_wait_ctx
 	int		final_status;
 	size_t	left;
 }	t_wait_ctx;
+
+typedef struct s_dollar_ctx
+{
+	char			**envp;
+	t_exec_state	*state;
+	t_quote_type	quote;
+}	t_dollar_ctx;
 
 /* --------------------------- */
 /*     Main function           */
@@ -107,12 +114,6 @@ int				is_var_char(int c);
 int				skip_variable_name(const char *s);
 char			*expand_exit_status(t_exec_state *state);
 char			*expand_env_var(const char *name, char **envp);
-typedef struct s_dollar_ctx
-{
-	char			**envp;
-	t_exec_state	*state;
-	t_quote_type	quote;
-} t_dollar_ctx;
 char			*handle_dollar_quotes_fix(const char *input, int *i,
 						char **envp, t_exec_state *state);
 char			*expand_variables(const char *input, char **envp,
@@ -128,8 +129,8 @@ int				write_heredoc_lines(t_heredoc_args *args);
 int				handle_redirections_heredoc(const char *delimiter, bool quoted,
 					char **envp, t_heredoc_args *args);
 int				handle_redirections_heredoc_with_content(char **heredoc_content,
-					bool quoted, char **envp, t_exec_state *state,
 					t_heredoc_args *args);
+
 char			*build_heredoc_delimiter(const char *text);
 
 /* --------------------------- */
@@ -140,7 +141,7 @@ void			print_error_file(const char *context);
 char			*interpret_ansi_c_escapes(const char *str);
 char			*expand_ansi_c_string(const char *input);
 int				is_dollar_string(const char *input, int pos);
-
+char			*handle_dollar_string(const char *input, int *i);
 //para ordenar 
 int				init_pipes_and_n(int n_cmds, int (**pipes)[2], size_t *n_pipes);
 int				fork_and_run_pipeline(t_cmd *start, size_t n_cmds,
@@ -154,5 +155,4 @@ int				wait_and_cleanup(pid_t *pids, size_t n_cmds);
 void			wire_child_pipes(size_t idx, size_t n_cmds, int (*pipes)[2]);
 int				wait_pipeline(pid_t *pids, size_t n);
 int				create_pipes(int (**pipes)[2], size_t n_pipes);
-
 #endif

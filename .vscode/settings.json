@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "unistd.h": "c",
-        "exec_state.h": "c"
-    }
+		"unistd.h": "c",
+		"exec_state.h": "c",
+		"executor.h": "c"
+	}
 }
