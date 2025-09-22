@@ -56,6 +56,13 @@ typedef struct s_wait_ctx
 	size_t	left;
 }	t_wait_ctx;
 
+typedef struct s_dollar_ctx
+{
+	char			**envp;
+	t_exec_state	*state;
+	t_quote_type	quote;
+}	t_dollar_ctx;
+
 /* --------------------------- */
 /*     Main function           */
 /* --------------------------- */
