@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redir_utils.c                                      :+:      :+:    :+:   */
+/*   executor_utils13.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 17:34:49 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 18:22:18 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/22 04:13:21 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <string.h> // For memset
 
-void handle_redirections_out(const char *filename, int *error)
+void	handle_redirections_out(const char *filename, int *error)
 {
     int fd;
 
@@ -34,7 +33,7 @@ void handle_redirections_out(const char *filename, int *error)
     close(fd);
 }
 
-void handle_redirections_in(const char *filename, int *error)
+void	handle_redirections_in(const char *filename, int *error)
 {
     int fd;
 
@@ -55,7 +54,7 @@ void handle_redirections_in(const char *filename, int *error)
     close(fd);
 }
 
-void handle_redirections_append(const char *filename, int *error)
+void	handle_redirections_append(const char *filename, int *error)
 {
     int fd;
 
@@ -101,82 +100,4 @@ int	handle_redirections_heredoc(const char *delimiter, bool quoted,
 
 	redirect_stdin_heredoc(args->heredoc_path);
 	return 0;
-}
-
-int	handle_redirections_heredoc_with_content(char **heredoc_content, bool quoted,
-			char **envp, t_exec_state *state, t_heredoc_args *args)
-{
-	int		fd;
-	int		i;
-	char	*expanded_line;
-
-	fd = open_heredoc_file(args);
-	if (fd == -1)
-		return (1);
-	
-	// Write pre-collected content to temp file
-	i = 0;
-	while (heredoc_content[i])
-	{
-		if (!quoted)
-			expanded_line = expand_variables(heredoc_content[i], envp, state, QUOTE_NONE);
-		else
-			expanded_line = ft_strdup(heredoc_content[i]);
-		
-		if (!expanded_line)
-		{
-			close(fd);
-			return (1);
-		}
-		
-		write(fd, expanded_line, ft_strlen(expanded_line));
-		write(fd, "\n", 1);
-		free(expanded_line);
-		i++;
-	}
-	
-	close(fd);
-	redirect_stdin_heredoc(args->heredoc_path);
-	return (0);
-}
-
-int	handle_redirections(t_redir *redir, char **envp, t_exec_state *state)
-{
-	int			res;
-	int			err;
-	t_heredoc_args	args;
-
-	err = 0;
-	memset(&args, 0, sizeof(args));
-	while (redir)
-	{
-		if (redir->type == TOKEN_REDIRECT_OUT)
-			handle_redirections_out(redir->file, &err);
-		else if (redir->type == TOKEN_REDIRECT_IN)
-			handle_redirections_in(redir->file, &err);
-		else if (redir->type == TOKEN_APPEND)
-			handle_redirections_append(redir->file, &err);
-		else if (redir->type == TOKEN_HEREDOC)
-		{
-			args.state = state;
-			// Use pre-collected content if available, otherwise fall back to stdin reading
-			if (redir->heredoc_content)
-			{
-				res = handle_redirections_heredoc_with_content(redir->heredoc_content, 
-					redir->quoted, envp, state, &args);
-			}
-			else
-			{
-				res = handle_redirections_heredoc(redir->file, redir->quoted, envp, &args);
-			}
-			if (res == 130)
-				return (130);
-			if (res != 0)
-				err = 1;
-		}
-		if (err)
-			return (1);
-		redir = redir->next;
-	}
-	return (0);
 }

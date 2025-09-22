@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 03:00:51 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/22 03:46:59 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,8 @@ int				write_heredoc_lines(t_heredoc_args *args);
 int				handle_redirections_heredoc(const char *delimiter, bool quoted,
 					char **envp, t_heredoc_args *args);
 int				handle_redirections_heredoc_with_content(char **heredoc_content,
-					bool quoted, char **envp, t_exec_state *state,
 					t_heredoc_args *args);
+
 char			*build_heredoc_delimiter(const char *text);
 
 /* --------------------------- */
