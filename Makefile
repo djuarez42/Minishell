@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/22 04:45:04 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/22 05:47:17 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,6 @@ INCLUDES = -Iinclude -Ilibft
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-# Detect OS to link readline correctly
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
 	# macOS (Homebrew usually provides readline in default search paths)
@@ -78,14 +77,16 @@ SRC = main.c \
 		src/executor/executor_utils13.c \
 		src/executor/executor_utils14.c \
 		src/executor/executor_utils15.c \
-		src/executor/env_utils.c \
-		src/executor/dollar_quotes_fix.c \
+		src/executor/executor_utils16.c \
+		src/executor/executor_utils17.c \
+		src/executor/executor_utils18.c \
+		src/executor/executor_utils19.c \
 		src/builtins/builtins.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \
 		src/builtins/builtin_export.c \
 		src/builtins/builtin_unset_exit.c \
-		
+
 
 OBJ = $(SRC:.c=.o)
 
@@ -110,26 +111,4 @@ fclean: clean
 	
 re: fclean all
 
-# Run builtin tests
-.PHONY: test-builtin
-test-builtin: $(NAME)
-	@bash ./tests/builtins_tests.sh
-
-# Run contributor-specific tests
-.PHONY: test-a test-b
-test-a: $(NAME)
-	@bash ./tests/contributor_a_tests.sh
-
-test-b: $(NAME)
-	@bash ./tests/contributor_b_tests.sh
-
-# Smoke tests: mandatory-only quick suite
-.PHONY: test-smoke
-test-smoke: $(NAME)
-	@bash ./tests/smoke_tests.sh
-
 .PHONY: all clean fclean re
-
-.PHONY: test-subject
-test-subject: $(NAME)
-	@bash ./tests/subject_full_tests.sh

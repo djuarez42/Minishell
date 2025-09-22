@@ -19,7 +19,7 @@
 
 # define MAX_ARGS 65536
 
-/*        Estructuras          */
+/*        Structures          */
 
 typedef struct s_redir
 {

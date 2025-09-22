@@ -6,13 +6,11 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 02:34:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 03:00:08 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/22 05:14:58 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 int	is_dollar_string(const char *input, int pos)
 {
@@ -101,4 +99,3 @@ char	*expand_variables(const char *input, char **envp,
 	}
 	return (tmp);
 }
-
