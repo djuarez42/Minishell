@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_variables_utils2.c                          :+:      :+:    :+:   */
+/*   executor_utils11.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/15 18:06:02 by djuarez          ###   ########.fr       */
+/*   Created: 2025/08/12 19:18:28 by djuarez           #+#    #+#             */
+/*   Updated: 2025/09/22 03:15:05 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,44 +57,45 @@ char	*create_backslash_string(int count)
 	return (result);
 }
 
-void	handle_backslash_dollar_parity(const char *input, int *i, 
-											int *backslashes_out, bool *should_expand)
+static void	handle_backslash_sequence(const char *input, int *i, int *count)
 {
-	int	backslash_count;
-
-	backslash_count = 0;
-	// Count consecutive backslashes
+	*count = 0;
 	while (input[*i] == '\\')
 	{
-		backslash_count++;
+		(*count)++;
 		(*i)++;
 	}
-	// Check if we have a dollar sign after backslashes
-	if (input[*i] == '$')
+}
+
+static void	handle_dollar_case(int *i, int backslash_count,
+								int *backslashes_out, bool *should_expand)
+{
+	if (backslash_count % 2 == 0)
 	{
-		if (backslash_count % 2 == 0)
-		{
-			// Even number of backslashes: output half, then expand variable
-			*backslashes_out = backslash_count / 2;
-			*should_expand = true;
-		}
-		else
-		{
-			// Odd number of backslashes: output half, then literal $
-			*backslashes_out = backslash_count / 2;
-			*should_expand = false;
-			// Move back to the $ so it gets processed as a literal
-			(*i)--; 
-		}
-		// Skip the dollar sign only if we're expanding the variable
-		if (*should_expand)
-			(*i)++;
+		*backslashes_out = backslash_count / 2;
+		*should_expand = true;
+		(*i)++;
 	}
 	else
 	{
-		// No dollar sign after backslashes, treat as literal backslashes
+		*backslashes_out = backslash_count / 2;
+		*should_expand = false;
+		(*i)--;
+	}
+}
+
+void	handle_backslash_dollar_parity(const char *input, int *i,
+										int *backslashes_out,
+										bool *should_expand)
+{
+	int	backslash_count;
+
+	handle_backslash_sequence(input, i, &backslash_count);
+	if (input[*i] == '$')
+		handle_dollar_case(i, backslash_count, backslashes_out, should_expand);
+	else
+	{
 		*backslashes_out = backslash_count;
 		*should_expand = false;
 	}
 }
-
