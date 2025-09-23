@@ -3,15 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset_exit.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/20 15:33:51 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 16:15:30 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
-#include "libft.h"
 #include "minishell.h"
 
 int	bi_unset(char **argv, char ***penvp)
@@ -61,13 +59,14 @@ int	bi_exit(char **argv)
 		return (0);
 	if (!is_valid_number(argv[1]))
 	{
-		fprintf(stderr, "minishell: exit: %s: numeric argument required\n",
-			argv[1]);
+		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+		ft_putstr_fd(argv[1], STDERR_FILENO);
+		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 		return (2);
 	}
 	if (argc > 2)
 	{
-		fprintf(stderr, "minishell: exit: too many arguments\n");
+		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 		return (1);
 	}
 	code = (long long)ft_atoi(argv[1]);

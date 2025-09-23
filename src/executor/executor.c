@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 20:22:02 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:30:08 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp,
 
 static int	handle_empty_command(t_exec_state *state)
 {
-	fprintf(stderr, "minishell: syntax error near unexpected token `|'\n");
+	ft_putstr_fd("minishell: syntax error near unexpected token `|'\n",
+		STDERR_FILENO);
 	state->last_status = 2;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/22 19:30:08 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:45:31 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,19 @@ char	*handle_dollar_quotes_fix(const char *input, int *i, char **envp,
 	if (!is_var_start(input[*i + 1]))
 		return (handle_invalid_var_start(i));
 	return (handle_normal_variable(input, i, envp));
+}
+
+void	free_split(char **arr)
+{
+	int	i;
+
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
 }

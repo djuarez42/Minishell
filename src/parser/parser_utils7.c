@@ -6,62 +6,11 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:57:25 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 21:27:23 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:32:40 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_partial_cmd(t_cmd *cmd, int argc)
-{
-	int	i;
-
-	if (!cmd)
-		return ;
-	if (cmd->argv)
-	{
-		i = 0;
-		if (argc >= 0)
-		{
-			while (i < argc)
-			{
-				free(cmd->argv[i]);
-				i++;
-			}
-		}
-		else
-		{
-			while (cmd->argv[i])
-			{
-				free(cmd->argv[i]);
-				i++;
-			}
-		}
-		free(cmd->argv);
-		cmd->argv = NULL;
-	}
-	if (cmd->argv_final_text)
-	{
-		i = 0;
-		while (cmd->argv_final_text[i])
-		{
-			free(cmd->argv_final_text[i]);
-			i++;
-		}
-		free(cmd->argv_final_text);
-		cmd->argv_final_text = NULL;
-	}
-	if (cmd->argv_first_word)
-	{
-		free(cmd->argv_first_word);
-		cmd->argv_first_word = NULL;
-	}
-	if (cmd->argv_quote)
-	{
-		free(cmd->argv_quote);
-		cmd->argv_quote = NULL;
-	}
-}
 
 void	free_cmd_arrays(t_cmd *cmd)
 {

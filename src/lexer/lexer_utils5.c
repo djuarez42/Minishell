@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils5.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 18:12:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 16:30:48 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	check_unmatched_quotes(const char *input)
 	}
 	if (single_open || double_open)
 	{
-		fprintf(stderr, "minishell: syntax error: unmatched quotes\n");
+		ft_putstr_fd("minishell: syntax error: unmatched quotes\n",
+			STDERR_FILENO);
 		return (1);
 	}
 	return (0);
@@ -54,8 +55,7 @@ void	append_fragment(t_fragment **head, t_fragment *frag)
 	tmp->next = frag;
 }
 
-t_fragment	*handle_backslashes_even_dollar(int keep, const char
-					*text, int *i)
+t_fragment	*handle_backslashes_even_dollar(int keep, const char *text, int *i)
 {
 	int			j;
 	char		*buf;
@@ -78,8 +78,7 @@ t_fragment	*handle_backslashes_even_dollar(int keep, const char
 	return (f);
 }
 
-t_fragment	*handle_backslashes_odd_dollar(int keep, const char
-					*text, int *i)
+t_fragment	*handle_backslashes_odd_dollar(int keep, const char *text, int *i)
 {
 	int			j;
 	int			buflen;
@@ -106,8 +105,8 @@ t_fragment	*handle_backslashes_odd_dollar(int keep, const char
 	return (f);
 }
 
-t_fragment	*handle_backslashes_literal(int start, int count,
-				const char *text, int *i)
+t_fragment	*handle_backslashes_literal(int start, int count, const char *text,
+		int *i)
 {
 	bool		space_after;
 	t_fragment	*f;

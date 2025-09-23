@@ -6,7 +6,7 @@
 #    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/22 19:51:59 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/09/23 21:26:33 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,6 +60,7 @@ SRC = main.c \
 		src/parser/parser_utils10.c \
 		src/parser/parser_utils11.c \
 		src/parser/parser_utils12.c \
+		src/parser/parser_utils13.c \
 		src/executor/executor.c \
 		src/executor/executor_utils.c \
 		src/executor/executor_utils1.c \
@@ -85,6 +86,10 @@ SRC = main.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \
 		src/builtins/builtin_export.c \
+		src/builtins/export_print.c \
+		src/builtins/export_print_helpers.c \
+		src/builtins/export_utils_names.c \
+		src/builtins/export_utils_print.c \
 		src/builtins/builtin_unset_exit.c \
 
 OBJ = $(SRC:.c=.o)

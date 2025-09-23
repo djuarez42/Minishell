@@ -6,14 +6,14 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 21:27:23 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:52:11 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	init_proc_ctx(t_proc_ctx *ctx, t_cmd *cmd,
-				char **envp, t_exec_state *state)
+static void	init_proc_ctx(t_proc_ctx *ctx, t_cmd *cmd, char **envp,
+		t_exec_state *state)
 {
 	static int	argc_argv;
 	static int	argc_final_text;
@@ -41,16 +41,8 @@ static t_token	*process_word_tokens(t_token *cur, t_proc_ctx *ctx)
 	return (cur);
 }
 
-static void	finalize_arguments(t_cmd *cmd, t_proc_ctx *ctx)
-{
-	cmd->argv[*ctx->argc_argv] = NULL;
-	cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE;
-	if (cmd->argv_final_text)
-		cmd->argv_final_text[*ctx->argc_final_text] = NULL;
-}
-
-t_token	*parse_arguments(t_token *cur, t_cmd *cmd,
-			char **envp, t_exec_state *state)
+t_token	*parse_arguments(t_token *cur, t_cmd *cmd, char **envp,
+		t_exec_state *state)
 {
 	t_proc_ctx	ctx;
 
@@ -58,7 +50,22 @@ t_token	*parse_arguments(t_token *cur, t_cmd *cmd,
 	cur = process_word_tokens(cur, &ctx);
 	if (!cur)
 		return (NULL);
-	finalize_arguments(cmd, &ctx);
+	cmd->argv[*ctx.argc_argv] = NULL;
+	cmd->argv_quote[*ctx.argc_argv] = QUOTE_NONE;
+	if (cmd->argv_final_text)
+		cmd->argv_final_text[*ctx.argc_final_text] = NULL;
+	return (cur);
+}
+
+t_token	*parse_arguments_ctx(t_token *cur, t_proc_ctx *ctx)
+{
+	cur = process_word_tokens(cur, ctx);
+	if (!cur)
+		return (NULL);
+	ctx->cmd->argv[*ctx->argc_argv] = NULL;
+	ctx->cmd->argv_quote[*ctx->argc_argv] = QUOTE_NONE;
+	if (ctx->cmd->argv_final_text)
+		ctx->cmd->argv_final_text[*ctx->argc_final_text] = NULL;
 	return (cur);
 }
 

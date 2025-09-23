@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:28:43 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 19:31:02 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:45:39 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ static void	handle_execve_error(char *exec_path, char **argv)
 		fprintf(stderr, "minishell: %s: command not found\n", argv[0]);
 		code = 127;
 	}
-	else if (errno == EACCES || errno == EPERM
-		|| errno == EISDIR || errno == ENOEXEC)
+	else if (errno == EACCES || errno == EPERM || errno == EISDIR
+		|| errno == ENOEXEC)
 	{
 		if (errno == EISDIR)
 			fprintf(stderr, "minishell: %s: Is a directory\n", exec_path);
@@ -99,18 +99,4 @@ int	execute_execve(char *exec_path, char **argv, char **envp)
 	if (execve(exec_path, argv, envp) == -1)
 		handle_execve_error(exec_path, argv);
 	return (0);
-}
-void	free_split(char **arr)
-{
-    int	i;
-
-    if (!arr)
-        return ;
-    i = 0;
-    while (arr[i])
-    {
-        free(arr[i]);
-        i++;
-    }
-    free(arr);
 }

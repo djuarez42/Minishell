@@ -6,76 +6,83 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:52:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 19:31:42 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:32:53 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/* 
+
+/*
 static void	process_unquoted_filename(t_redir *redir)
 {
-	char	*tmp;
+	char		*tmp;
+	t_redir		*redir;
+	int			res;
+	t_fragment	*frag;
+	bool		is_quoted;
+	char		*built_delim;
+	char		*tmp;
 
 	tmp = remove_quotes(redir->file);
 	free(redir->file);
 	redir->file = tmp;
 } */
-/* 
-int handle_redirections_and_quotes(t_redir *redirs, char **envp, t_exec_state *state)
+/*
+int	handle_redirections_and_quotes(t_redir *redirs, char **envp,
+		t_exec_state *state)
 {
-    t_redir *redir;
-    int res;
-
-    redir = redirs;
-    while (redir)
-    {
-        if (redir->type == TOKEN_HEREDOC)
-        {
-            // Decidir si expandir usando los fragments
-            t_fragment *frag = redir->fragments;
-            bool is_quoted = false;
-            while (frag)
-            {
-                if (frag->quote_type == QUOTE_SINGLE || frag->quote_type == QUOTE_DOUBLE)
-                {
-                    is_quoted = true;
-                    break;
-                }
-                frag = frag->next;
-            }
-            redir->quoted = is_quoted;
-
-            // Reconstruir delimiter
-            char *built_delim = build_heredoc_delimiter(redir->file);
-            if (!built_delim)
-                return (1);
-            free(redir->file);
-            redir->file = built_delim;
-
-        }
-        else
-        {
-            char *tmp = remove_quotes(redir->file);
-            free(redir->file);
-            redir->file = tmp;
-        }
-        redir = redir->next;
-    }
-    res = handle_redirections(redirs, envp, state);
-    return res;
+	redir = redirs;
+	while (redir)
+	{
+		if (redir->type == TOKEN_HEREDOC)
+		{
+			// Decidir si expandir usando los fragments
+			frag = redir->fragments;
+			is_quoted = false;
+			while (frag)
+			{
+				if (frag->quote_type == QUOTE_SINGLE
+					|| frag->quote_type == QUOTE_DOUBLE)
+				{
+					is_quoted = true;
+					break ;
+				}
+				frag = frag->next;
+			}
+			redir->quoted = is_quoted;
+			// Reconstruir delimiter
+			built_delim = build_heredoc_delimiter(redir->file);
+			if (!built_delim)
+				return (1);
+			free(redir->file);
+			redir->file = built_delim;
+		}
+		else
+		{
+			tmp = remove_quotes(redir->file);
+			free(redir->file);
+			redir->file = tmp;
+		}
+		redir = redir->next;
+	}
+	res = handle_redirections(redirs, envp, state);
+	return (res);
 }
  */
 int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 	{
-		fprintf(stderr, "minishell: syntax error near unexpected token `|'\n");
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n",
+			STDERR_FILENO);
 		return (2);
 	}
 	exec_path = find_executable(cmd->argv[0], envp);
 	if (!exec_path)
 	{
-		fprintf(stderr, "minishell: %s: command not found\n", cmd->argv[0]);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		return (127);
 	}
 	return (execute_execve(exec_path, cmd->argv, envp));
@@ -103,7 +110,7 @@ char	*str_append(char *base, const char *add)
 	return (new);
 }
 
-char *build_heredoc_delimiter(const char *text)
+char	*build_heredoc_delimiter(const char *text)
 {
 	t_fragment	*fragments;
 	char		*delimiter;

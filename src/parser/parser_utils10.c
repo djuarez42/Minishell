@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils10.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 21:36:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 22:13:44 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 16:33:59 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 char	*read_heredoc_line(int interactive)
 {
-	char	*line;
-	char	*buffer;
-	size_t	len;
-	ssize_t	read_len;
+	char		*line;
+	char		*buffer;
+	size_t		len;
+	ssize_t		read_len;
 
 	if (interactive)
 		return (readline("> "));

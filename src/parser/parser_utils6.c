@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:51:04 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 21:27:23 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:04:29 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ t_cmd	*create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
 	*cur = parse_cmd_block(*cur, cmd, envp, state);
 	if (!*cur)
 	{
-		/* free any allocated strings and arrays inside cmd */
 		if (!cmd->freed_by_parser)
 			free_cmd_arrays(cmd);
 		free(cmd);
