@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:48:52 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 21:42:14 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 16:05:37 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,16 @@ int	create_pipes(int (**pipes)[2], size_t n_pipes)
 		*pipes = NULL;
 		return (0);
 	}
-	*pipes = (int (*)[2])malloc(sizeof(int [2]) * n_pipes);
+	*pipes = (int (*)[2])malloc(sizeof (int [2]) * n_pipes);
 	if (!*pipes)
 		return (-1);
-	return (create_pipes_loop(*pipes, n_pipes));
+	if (create_pipes_loop(*pipes, n_pipes) == -1)
+	{
+		free(*pipes);
+		*pipes = NULL;
+		return (-1);
+	}
+	return (0);
 }
 
 void	close_all_pipes(int (*pipes)[2], size_t n_pipes)

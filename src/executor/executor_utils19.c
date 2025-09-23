@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/22 05:27:25 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 16:01:14 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ static char	*handle_special_dollar_cases(const char *input, int *i,
 		*i = start;
 		return (ft_strdup(""));
 	}
-	else if (input[start] == '?')
+	if (input[start] == '?')
 	{
 		*i = start + 1;
 		return (expand_exit_status(state));
 	}
-	else if (input[start] == '$')
+	if (input[start] == '$')
 	{
 		*i = start + 1;
 		return (ft_strdup("$"));

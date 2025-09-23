@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:05:32 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/20 20:48:32 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/22 21:27:23 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ static t_token	*process_word_tokens(t_token *cur, t_proc_ctx *ctx)
 		ctx->cmd->argv = process_token_with_quotes(cur, ctx);
 		if (!ctx->cmd->argv)
 		{
-			free_partial_cmd(ctx->cmd, *ctx->argc_argv);
 			return (NULL);
 		}
 		cur = cur->next;

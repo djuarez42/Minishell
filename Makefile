@@ -3,10 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
+#    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
+<<<<<<< HEAD
 #    Updated: 2025/09/22 05:47:17 by djuarez          ###   ########.fr        #
+=======
+#    Updated: 2025/09/22 19:51:59 by ekakhmad         ###   ########.fr        #
+>>>>>>> new-beta-2209
 #                                                                              #
 # **************************************************************************** #
 
@@ -86,7 +90,10 @@ SRC = main.c \
 		src/builtins/builtin_cd.c \
 		src/builtins/builtin_export.c \
 		src/builtins/builtin_unset_exit.c \
+<<<<<<< HEAD
 
+=======
+>>>>>>> new-beta-2209
 
 OBJ = $(SRC:.c=.o)
 

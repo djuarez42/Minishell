@@ -1,43 +1,55 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_utils6.c                                  :+:      :+:    :+:   */
+/*   exec_common.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/21 21:28:43 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 16:12:45 by djuarez          ###   ########.fr       */
+/*   Created: 2025/09/21 22:28:41 by ekakhmad          #+#    #+#             */
+/*   Updated: 2025/09/23 16:06:39 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*search_in_path_dirs(char *cmd, char **paths)
+void	free_split(char **split)
 {
-	char	*full_path;
-	int		i;
+	int	i;
 
 	i = 0;
-	while (paths[i])
-	{
-		full_path = ft_strjoin(paths[i], "/");
-		full_path = ft_strjoin_free(full_path, cmd);
-		if (access(full_path, X_OK) == 0)
-		{
-			free_split(paths);
-			return (full_path);
-		}
-		free(full_path);
-		i++;
-	}
-	free_split(paths);
-	return (NULL);
+	while (split && split[i])
+		free(split[i++]);
+	free(split);
+}
+
+char	*str_append(char *base, const char *add)
+{
+	char	*new;
+	size_t	len;
+
+	len = 0;
+	if (base)
+		len += ft_strlen(base);
+	if (add)
+		len += ft_strlen(add);
+	new = malloc(len + 1);
+	if (!new)
+		return (NULL);
+	new[0] = '\0';
+	if (base)
+		ft_strlcat(new, base, len + 1);
+	if (add)
+		ft_strlcat(new, add, len + 1);
+	free(base);
+	return (new);
 }
 
 char	*find_executable(char *cmd, char **envp)
 {
 	char	*path_env;
 	char	**paths;
+	char	*full_path;
+	int		i;
 
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
@@ -47,27 +59,21 @@ char	*find_executable(char *cmd, char **envp)
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);
-	return (search_in_path_dirs(cmd, paths));
-}
-
-static void	update_last_arg_var(char *exec_path, char **envp)
-{
-	int		idx;
-	char	*new_var;
-
-	idx = env_find_index(envp, "_");
-	if (idx >= 0)
+	i = 0;
+	while (paths[i])
 	{
-		free(envp[idx]);
-		new_var = ft_strjoin("_=", exec_path);
-		if (new_var)
-			envp[idx] = new_var;
-		else
-			envp[idx] = ft_strdup("_=");
+		full_path = ft_strjoin(paths[i], "/");
+		full_path = ft_strjoin_free(full_path, cmd);
+		if (access(full_path, X_OK) == 0)
+			return (free_split(paths), full_path);
+		free(full_path);
+		i++;
 	}
+	free_split(paths);
+	return (NULL);
 }
 
-static void	handle_execve_error(char *exec_path, char **argv)
+static void	report_exec_error(const char *exec_path, char **argv)
 {
 	int	code;
 
@@ -76,8 +82,8 @@ static void	handle_execve_error(char *exec_path, char **argv)
 		fprintf(stderr, "minishell: %s: command not found\n", argv[0]);
 		code = 127;
 	}
-	else if (errno == EACCES || errno == EPERM
-		|| errno == EISDIR || errno == ENOEXEC)
+	else if (errno == EACCES || errno == EPERM || errno == EISDIR
+		|| errno == ENOEXEC)
 	{
 		if (errno == EISDIR)
 			fprintf(stderr, "minishell: %s: Is a directory\n", exec_path);
@@ -95,23 +101,20 @@ static void	handle_execve_error(char *exec_path, char **argv)
 
 int	execute_execve(char *exec_path, char **argv, char **envp)
 {
-	update_last_arg_var(exec_path, envp);
+	int		idx;
+	char	*new_var;
+
+	idx = env_find_index(envp, "_");
+	if (idx >= 0)
+	{
+		free(envp[idx]);
+		new_var = ft_strjoin("_=", exec_path);
+		if (new_var)
+			envp[idx] = new_var;
+		else
+			envp[idx] = ft_strdup("_=");
+	}
 	if (execve(exec_path, argv, envp) == -1)
-		handle_execve_error(exec_path, argv);
+		report_exec_error(exec_path, argv);
 	return (0);
-}
-
-void	free_split(char **arr)
-{
-    int	i;
-
-    if (!arr)
-        return ;
-    i = 0;
-    while (arr[i])
-    {
-        free(arr[i]);
-        i++;
-    }
-    free(arr);
 }

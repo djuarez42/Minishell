@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils6.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:51:04 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 21:03:45 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/22 21:27:23 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static t_cmd	*alloc_cmd_struct(void)
 	cmd->argv_quote = malloc(sizeof(t_quote_type) * MAX_ARGS);
 	cmd->argv_final_text = malloc(sizeof(char *) * MAX_ARGS);
 	cmd->argv_first_word = malloc(sizeof(bool) * MAX_ARGS);
+	cmd->freed_by_parser = false;
 	if (!cmd->argv || !cmd->argv_quote
 		|| !cmd->argv_final_text || !cmd->argv_first_word)
 	{
@@ -109,10 +110,9 @@ t_cmd	*create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
 	*cur = parse_cmd_block(*cur, cmd, envp, state);
 	if (!*cur)
 	{
-		free(cmd->argv);
-		free(cmd->argv_quote);
-		free(cmd->argv_final_text);
-		free(cmd->argv_first_word);
+		/* free any allocated strings and arrays inside cmd */
+		if (!cmd->freed_by_parser)
+			free_cmd_arrays(cmd);
 		free(cmd);
 		return (NULL);
 	}
