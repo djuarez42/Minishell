@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 05:02:16 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 05:15:40 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 20:31:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@ static char	*build_env_entry(const char *name, const char *value)
 {
 	char	*entry;
 
-	if (value)
-	{
-		entry = ft_strjoin(name, "=");
-		entry = ft_strjoin_free(entry, (char *)value);
-	}
-	else
-		entry = ft_strjoin(name, "=");
+	if (!name)
+		return (NULL);
+	if (value == NULL)
+		return (ft_strdup(name));
+	entry = ft_strjoin(name, "=");
+	if (!entry)
+		return (NULL);
+	entry = ft_strjoin_free(entry, (char *)value);
 	return (entry);
 }
 
@@ -67,16 +68,37 @@ static int	insert_new_env_var(char ***penvp, char *entry)
 	return (1);
 }
 
-static int	update_existing_env_var(char ***penvp, int idx, char *entry)
+int	update_env(char ***envp_copy, char *new_var)
 {
-	free((*penvp)[idx]);
-	(*penvp)[idx] = entry;
+	int		i;
+	char	*name;
+	int		len;
+
+	len = 0;
+	while (new_var[len] && new_var[len] != '=')
+		len++;
+	name = ft_substr(new_var, 0, len);
+	if (!name)
+		return (1);
+	i = 0;
+	while ((*envp_copy)[i])
+	{
+		if (ft_strncmp((*envp_copy)[i], name, len) == 0
+			&& ((*envp_copy)[i][len] == '=' || (*envp_copy)[i][len] == '\0'))
+		{
+			free((*envp_copy)[i]);
+			(*envp_copy)[i] = ft_strdup(new_var);
+			free(name);
+			return (0);
+		}
+		i++;
+	}
+	free(name);
 	return (1);
 }
 
 int	env_set_var(char ***penvp, const char *name, const char *value)
 {
-	int		idx;
 	char	*entry;
 
 	if (!env_identifier_valid(name))
@@ -84,8 +106,8 @@ int	env_set_var(char ***penvp, const char *name, const char *value)
 	entry = build_env_entry(name, value);
 	if (!entry)
 		return (0);
-	idx = env_find_index(*penvp, name);
-	if (idx < 0)
+	if (update_env(penvp, entry) == 1)
 		return (insert_new_env_var(penvp, entry));
-	return (update_existing_env_var(penvp, idx, entry));
+	free(entry);
+	return (1);
 }

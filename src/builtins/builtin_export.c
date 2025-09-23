@@ -3,25 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/22 21:29:30 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/23 20:34:14 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 #include "libft.h"
 #include "executor.h"
 #include "builtins.h"
 
-static char *dup_name(const char *env)
+/* ------------------------ AUXILIARY FUNCTIONS ------------------------ */
+
+static char	*dup_name(const char *env)
 {
-	const char *eq;
-	size_t len;
+	const char	*eq;
+	size_t		len;
 
 	eq = ft_strchr(env, '=');
 	if (!eq)
@@ -30,10 +32,10 @@ static char *dup_name(const char *env)
 	return (ft_strndup(env, len));
 }
 
-static int cmp_env(const void *a, const void *b)
+static int	cmp_env(const void *a, const void *b)
 {
-	const char *sa = *(const char **)a;
-	const char *sb = *(const char **)b;
+	const char	*sa = *(const char **)a;
+	const char	*sb = *(const char **)b;
 
 	if (!sa && !sb)
 		return (0);
@@ -41,84 +43,22 @@ static int cmp_env(const void *a, const void *b)
 		return (-1);
 	if (!sb)
 		return (1);
-	{
-		char *a_name = dup_name(sa);
-		char *b_name = dup_name(sb);
-		int res = strcmp(a_name, b_name);
-		free(a_name);
-		free(b_name);
-		return (res);
-	}
+
+	char *a_name = dup_name(sa);
+	char *b_name = dup_name(sb);
+	int res = strcmp(a_name, b_name);
+	free(a_name);
+	free(b_name);
+	return (res);
 }
-
-/* removed escape_value (unused) */
-
-static int needs_single_quotes(const char *s)
-{
-	size_t i;
-
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i])
-	{
-	if (!(ft_isalnum((unsigned char)s[i]) || s[i] == '_' || s[i] == '/' || s[i] == '.' || s[i] == ':' || s[i] == ',' || s[i] == '-' || s[i] == '@'))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-static char *quote_value_single(const char *val)
-{
-	size_t i;
-	size_t extra = 0;
-	char *out;
-	size_t pos;
-
-	if (!val)
-		return (ft_strdup(""));
-	if (!needs_single_quotes(val))
-		return (ft_strdup(val));
-	/* count extra size needed for replacing '\'' with '\'\'' sequence */
-	i = 0;
-	while (val[i])
-	{
-		if (val[i] == '\'')
-			extra += 3; /* '\'' -> '\'\'' (4 chars instead of 1) */
-		i++;
-	}
-	out = malloc(ft_strlen(val) + extra + 3); /* quotes + NUL */
-	if (!out)
-		return (NULL);
-	pos = 0;
-	out[pos++] = '\'';
-	i = 0;
-	while (val[i])
-	{
-		if (val[i] == '\'')
-		{
-			/* append '\'\'' sequence */
-			out[pos++] = '\'';
-			out[pos++] = '\\';
-			out[pos++] = '\'';
-			out[pos++] = '\'';
-		}
-		else
-			out[pos++] = val[i];
-		i++;
-	}
-	out[pos++] = '\'';
-	out[pos] = '\0';
-	return (out);
-}
-
 static void	print_export_ident_error(const char *s)
 {
 	ft_putstr_fd("minishell: export: `", STDERR_FILENO);
 	write(STDERR_FILENO, s, ft_strlen(s));
 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
+
+/* ------------------------ ENV MANAGEMENT ------------------------ */
 
 static int	assign_or_error(char ***penvp, const char *arg)
 {
@@ -140,21 +80,127 @@ static int	validate_name_or_error(const char *arg)
 	return (0);
 }
 
+static char	*get_name_from_plus_equal(const char *arg)
+{
+	char *plus = ft_strchr(arg, '+');
+	if (!plus)
+		return (NULL);
+	return (ft_strndup(arg, plus - arg));
+}
+
+static int	env_append_assignment(char ***penvp, const char *arg)
+{
+	char	*name;
+	char	*value;
+	char	*old_value;
+	char	*new_value;
+	int		idx;
+
+	name = get_name_from_plus_equal(arg);
+	if (!name || !env_identifier_valid(name))
+	{
+		free(name);
+		print_export_ident_error(arg);
+		return (1);
+	}
+	value = ft_strdup(ft_strchr(arg, '=') + 1);
+	if (!value)
+		return (free(name), 1);
+
+	idx = env_find_index(*penvp, name);
+	if (idx >= 0)
+		old_value = ft_strdup(ft_strchr((*penvp)[idx], '=') + 1);
+	else
+		old_value = ft_strdup("");
+
+	if (!old_value)
+		return (free(name), free(value), 1);
+
+	new_value = ft_strjoin(old_value, value);
+	free(old_value);
+	free(value);
+
+	if (!new_value)
+		return (free(name), 1);
+
+	env_set_var(penvp, name, new_value);
+	free(name);
+	free(new_value);
+	return (0);
+}
+
+/* ------------------------ PRINT ENV ------------------------ */
+
+static int	needs_quotes(const char *val)
+{
+	size_t i = 0;
+
+	if (!val)
+		return (0);
+	while (val[i])
+	{
+		if (!(ft_isalnum((unsigned char)val[i]) || val[i] == '_' || val[i] == '/' ||
+			  val[i] == '.' || val[i] == ':' || val[i] == ',' || val[i] == '-' || val[i] == '@'))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static char	*quote_value_single(const char *val)
+{
+	size_t i, extra = 0, pos;
+	char *out;
+
+	if (!val)
+		return (ft_strdup(""));
+	if (!needs_quotes(val))
+		return (ft_strdup(val));
+	i = 0;
+	while (val[i])
+	{
+		if (val[i] == '\'')
+			extra += 3;
+		i++;
+	}
+	out = malloc(ft_strlen(val) + extra + 3);
+	if (!out)
+		return (NULL);
+	pos = 0;
+	out[pos++] = '\'';
+	i = 0;
+	while (val[i])
+	{
+		if (val[i] == '\'')
+		{
+			out[pos++] = '\'';
+			out[pos++] = '\\';
+			out[pos++] = '\'';
+			out[pos++] = '\'';
+		}
+		else
+			out[pos++] = val[i];
+		i++;
+	}
+	out[pos++] = '\'';
+	out[pos] = '\0';
+	return (out);
+}
+
 static void	print_exported_env(char **envp)
 {
-	int i;
-	int n;
-	char **copy;
+	int		i, n;
+	char	**copy;
 
 	if (!envp)
-		return;
-	/* count */
+		return ;
 	n = 0;
 	while (envp[n])
 		n++;
+
 	copy = malloc(sizeof(char *) * (n + 1));
 	if (!copy)
-		return;
+		return ;
 	i = 0;
 	while (i < n)
 	{
@@ -162,51 +208,44 @@ static void	print_exported_env(char **envp)
 		i++;
 	}
 	copy[n] = NULL;
-	/* sort by variable name */
+
+
 	qsort(copy, n, sizeof(char *), cmp_env);
+
 	i = 0;
-	while (copy[i])
+	while (i < n)
 	{
 		char *eq = ft_strchr(copy[i], '=');
 		if (!eq)
-			printf("%s\n", copy[i]);
+		{
+			printf("declare -x %s\n", copy[i]);
+		}
+		else if (*(eq + 1) == '\0')
+			size_t name_len = eq - copy[i];
+			printf("declare -x %.*s=\"\"\n", (int)name_len, copy[i]);
+		}
 		else
 		{
 			size_t name_len = eq - copy[i];
 			char *name = ft_strndup(copy[i], name_len);
 			char *val = eq + 1;
-			/* skip listing of the special _ var to match bash */
-			if (ft_strlen(name) == 1 && name[0] == '_')
+			if (!(ft_strlen(name) == 1 && name[0] == '_')) // ignorar "_"
 			{
-				free(name);
-				free(copy[i]);
-				i++;
-				continue;
-			}
-			/* print empty value as '' to match bash */
-			if (val && val[0] == '\0')
-			{
-				printf("%s=''%s", name, "\n");
-				free(name);
-				free(copy[i]);
-				i++;
-				continue;
-			}
-			char *q = quote_value_single(val);
-			if (q)
-			{
-				printf("%s=%s\n", name, q);
+				char *q = quote_value_single(val);
+				printf("declare -x %s=%s\n", name, q ? q : val);
 				free(q);
 			}
-			else
-				printf("%s=%s\n", name, val);
 			free(name);
 		}
-		free(copy[i]);
 		i++;
 	}
+	i = 0;
+	while (i < n)
+		free(copy[i++]);
 	free(copy);
 }
+
+/* ------------------------ MAIN BUILTIN FUNCTION ------------------------ */
 
 int	bi_export(char **argv, char ***penvp)
 {
@@ -215,17 +254,25 @@ int	bi_export(char **argv, char ***penvp)
 
 	if (!argv[1])
 	{
-		print_exported_env(*penvp);
+		print_exported_env(*penvp); // si no hay argumentos, imprimimos todo
 		return (0);
 	}
+
 	status = 0;
 	i = 1;
 	while (argv[i])
 	{
-		if (ft_strchr(argv[i], '='))
+		if (ft_strnstr(argv[i], "+=", ft_strlen(argv[i])))
+			status |= env_append_assignment(penvp, argv[i]);
+		else if (ft_strchr(argv[i], '='))
 			status |= assign_or_error(penvp, argv[i]);
 		else
-			status |= validate_name_or_error(argv[i]);
+		{
+			if (validate_name_or_error(argv[i]) == 0)
+				env_set_var(penvp, argv[i], NULL);
+			else
+				status |= 1;
+		}
 		i++;
 	}
 	return (status);
