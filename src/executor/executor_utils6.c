@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:28:43 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 16:12:45 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 16:15:42 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	execute_execve(char *exec_path, char **argv, char **envp)
 	return (0);
 }
 
-void	free_split(char **arr)
+/*void	free_split(char **arr)
 {
     int	i;
 
@@ -114,4 +114,4 @@ void	free_split(char **arr)
         i++;
     }
     free(arr);
-}
+}*/
