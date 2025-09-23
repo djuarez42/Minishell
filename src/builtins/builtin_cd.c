@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/17 17:22:53 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 21:50:32 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,19 @@ static void	update_pwd_vars(char ***penvp)
 	free(newpwd);
 }
 
-static const char	*resolve_cd_target(char **argv, char ***penvp)
+static const char	*resolve_cd_target(char **argv, char ***penvp, int *type)
 {
 	const char	*path;
 	char		*temp;
 
 	if (!argv[1])
+	{
+		*type = 0;
 		return (env_get_value(*penvp, "HOME"));
+	}
 	if (ft_strncmp(argv[1], "-", 2) == 0)
 	{
+		*type = 1;
 		path = env_get_value(*penvp, "OLDPWD");
 		if (path)
 		{
@@ -57,14 +61,18 @@ static const char	*resolve_cd_target(char **argv, char ***penvp)
 		}
 		return (path);
 	}
+	*type = -1;
 	return (argv[1]);
 }
 
-static int	change_dir_and_update(const char *path, char ***penvp)
+static int	change_dir_and_update(const char *path, char ***penvp, int type)
 {
 	if (!path)
 	{
-		ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO);
+		if (type == 0)
+			ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+		else if (type == 1)
+			ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO);
 		return (1);
 	}
 	if (chdir(path) == -1)
@@ -79,12 +87,14 @@ static int	change_dir_and_update(const char *path, char ***penvp)
 int	bi_cd(char **argv, char ***penvp)
 {
 	const char	*path;
+	int			type;
 
+	type = -1;
 	if (argv[1] && argv[2])
 	{
 		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
 		return (1);
 	}
-	path = resolve_cd_target(argv, penvp);
-	return (change_dir_and_update(path, penvp));
+	path = resolve_cd_target(argv, penvp, &type);
+	return (change_dir_and_update(path, penvp, type));
 }
