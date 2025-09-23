@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/23 20:34:14 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 20:39:04 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,14 +193,17 @@ static void	print_exported_env(char **envp)
 	char	**copy;
 
 	if (!envp)
-		return ;
+		return;
+
+	/* contar */
 	n = 0;
 	while (envp[n])
 		n++;
 
+	/* copiar */
 	copy = malloc(sizeof(char *) * (n + 1));
 	if (!copy)
-		return ;
+		return;
 	i = 0;
 	while (i < n)
 	{
@@ -209,22 +212,24 @@ static void	print_exported_env(char **envp)
 	}
 	copy[n] = NULL;
 
-
+	/* ordenar */
 	qsort(copy, n, sizeof(char *), cmp_env);
 
+	/* imprimir */
 	i = 0;
 	while (i < n)
 	{
 		char *eq = ft_strchr(copy[i], '=');
-		if (!eq)
+		if (!eq) // caso: export a → solo nombre
 		{
 			printf("declare -x %s\n", copy[i]);
 		}
-		else if (*(eq + 1) == '\0')
+		else if (*(eq + 1) == '\0') // caso: export a= → cadena vacía
+		{
 			size_t name_len = eq - copy[i];
 			printf("declare -x %.*s=\"\"\n", (int)name_len, copy[i]);
 		}
-		else
+		else // caso: export a=valor
 		{
 			size_t name_len = eq - copy[i];
 			char *name = ft_strndup(copy[i], name_len);
@@ -239,11 +244,14 @@ static void	print_exported_env(char **envp)
 		}
 		i++;
 	}
+
+	/* liberar */
 	i = 0;
 	while (i < n)
 		free(copy[i++]);
 	free(copy);
 }
+
 
 /* ------------------------ MAIN BUILTIN FUNCTION ------------------------ */
 
