@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/24 00:46:43 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/24 01:26:56 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ static char	*quote_value_single(const char *val)
 	return (out);
 }
 
-static void	print_exported_env(char **envp)
+/*static void	print_exported_env(char **envp)
 {
 	int		i, n;
 	char	**copy;
@@ -229,7 +229,172 @@ static void	print_exported_env(char **envp)
 	while (i < n)
 		free(copy[i++]);
 	free(copy);
+}*/
+
+/*static char	**duplicate_env(char **envp, int *out_size)
+{
+	int		i;
+	int		n;
+	char	**copy;
+
+	if (!envp)
+		return (NULL);
+	n = 0;
+	while (envp[n])
+		n++;
+	copy = malloc(sizeof(char *) * (n + 1));
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		copy[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	copy[n] = NULL;
+	if (out_size)
+		*out_size = n;
+	return (copy);
+}*/
+
+static void	print_env_entry(char *entry)
+{
+	char	*eq;
+	char	*name;
+	char	*val;
+	char	*q;
+	size_t	name_len;
+
+	eq = ft_strchr(entry, '=');
+	if (!eq)
+	{
+		printf("declare -x %s\n", entry);
+		return ;
+	}
+	name_len = eq - entry;
+	if (*(eq + 1) == '\0')
+	{
+		printf("declare -x %.*s=\"\"\n", (int)name_len, entry);
+		return ;
+	}
+	name = ft_strndup(entry, name_len);
+	val = eq + 1;
+	if (!(ft_strlen(name) == 1 && name[0] == '_'))
+	{
+		q = quote_value_single(val);
+		printf("declare -x %s=%s\n", name, q ? q : val);
+		free(q);
+	}
+	free(name);
 }
+
+/*static void	print_exported_env(char **envp)
+{
+	int		i;
+	int		n;
+	char	**copy;
+
+	copy = duplicate_env(envp, &n);
+	if (!copy)
+		return ;
+	qsort(copy, n, sizeof(char *), cmp_env);
+	i = 0;
+	while (i < n)
+	{
+		print_env_entry(copy[i]);
+		i++;
+	}
+	i = 0;
+	while (i < n)
+		free(copy[i++]);
+	free(copy);
+}*/
+
+/* Duplica el envp garantizando que no deje entradas NULL */
+
+static char	**duplicate_env(char **envp, int *out_size)
+{
+	int		i;
+	int		n;
+	char	**copy;
+
+	if (!envp)
+		return (NULL);
+	n = 0;
+	while (envp[n])
+		n++;
+	copy = malloc(sizeof(char *) * (n + 1));
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		copy[i] = ft_strdup(envp[i]);
+		if (!copy[i])
+		{
+			while (i > 0)
+				free(copy[--i]);
+			free(copy);
+			return (NULL);
+		}
+		i++;
+	}
+	copy[n] = NULL;
+	if (out_size)
+		*out_size = n;
+	return (copy);
+}
+
+static void	sort_env_array(char **arr, int n)
+{
+	int		i;
+	int		j;
+	char	*tmp;
+
+	if (!arr || n <= 1)
+		return ;
+	i = 0;
+	while (i < n - 1)
+	{
+		j = i + 1;
+		while (j < n)
+		{
+			if (cmp_env(&arr[i], &arr[j]) > 0)
+			{
+				tmp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+static void	print_exported_env(char **envp)
+{
+	int		i;
+	int		n;
+	char	**copy;
+
+	if (!envp)
+		return ;
+	copy = duplicate_env(envp, &n);
+	if (!copy)
+		return ;
+	sort_env_array(copy, n);
+	i = 0;
+	while (i < n)
+	{
+		print_env_entry(copy[i]);
+		i++;
+	}
+	i = 0;
+	while (i < n)
+		free(copy[i++]);
+	free(copy);
+}
+
 
 static int	handle_export_arg(char ***penvp, char *arg)
 {
