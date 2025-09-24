@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 23:25:54 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/20 14:43:43 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/24 16:31:58 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int					ft_tolower(int c);
 size_t				ft_strlcpy(char *dst, const char *src, size_t dsize);
 size_t				ft_strlcat(char *dst, const char *src, size_t dsize);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
+int					ft_strcmp(const char *s1, const char *s2);
 char				*ft_strnstr(const char *big,
 						const char *little, size_t len);
 int					ft_atoi(const char *nptr);
