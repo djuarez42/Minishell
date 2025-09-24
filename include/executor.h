@@ -155,4 +155,8 @@ void			wire_child_pipes(size_t idx, size_t n_cmds, int (*pipes)[2]);
 int				wait_pipeline(pid_t *pids, size_t n);
 int				create_pipes(int (**pipes)[2], size_t n_pipes);
 
+/* fd guard helpers for parent-side redirs */
+int				fd_guard_begin(int saved[3]);
+void			fd_guard_end(int saved[3]);
+
 #endif
