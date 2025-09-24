@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_substitution.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 22:41:32 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/22 19:11:14 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/24 17:58:04 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static char	*read_command_output_and_wait(int read_fd, pid_t pid)
 			break ;
 		}
 		result = tmp;
-		memcpy(result + size, buffer, n);
+		ft_memcpy(result + size, buffer, n);
 		size += n;
 		n = read(read_fd, buffer, sizeof(buffer));
 	}
