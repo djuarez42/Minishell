@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:20:50 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/24 16:55:50 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/24 17:02:56 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ char	**copy_env_entries(char **envp, int n);
 int	cmp_env(const void *a, const void *b);
 void	print_env_entry(char *entry);
 int	env_append_assignment(char ***penvp, const char *arg);
+int	needs_quotes(const char *val);
+size_t	calc_extra_quotes(const char *val);
+char	*build_quoted_value(const char *val, size_t extra);
 
 /* Individual builtins */
 int	bi_echo(t_cmd *cmd);
