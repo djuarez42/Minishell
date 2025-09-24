@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 19:34:11 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/24 21:41:37 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,16 @@ t_cmd	*parser_tokens(t_token *tokens, char **envp, t_exec_state *state)
 	ctx.envp = envp;
 	ctx.state = state;
 	if (check_initial_pipe(ctx.cur))
+	{
+		if (ctx.state)
+			ctx.state->last_status = 2;
 		return (NULL);
+	}
 	if (parse_loop(&ctx))
+	{
+		if (ctx.state)
+			ctx.state->last_status = 2;
 		return (NULL);
+	}
 	return (ctx.head);
 }

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:51:04 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 21:04:29 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/24 21:41:37 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,3 +122,6 @@ t_cmd	*create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
 	}
 	return (cmd);
 }
+
+
+/* parser_tokens implemented in src/parser/parser.c */
