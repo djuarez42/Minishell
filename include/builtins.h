@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:20:50 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/17 18:06:24 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/24 16:55:50 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,15 @@ int	run_builtin_in_parent(t_cmd *cmd, char ***penvp);
 
 /* Execute in child (pipeline member) */
 int	run_builtin_in_child(t_cmd *cmd, char ***penvp);
+
+/*export utils*/
+int	assign_or_error(char ***penvp, const char *arg);
+int	validate_name_or_error(const char *arg);
+int	count_env_entries(char **envp);
+char	**copy_env_entries(char **envp, int n);
+int	cmp_env(const void *a, const void *b);
+void	print_env_entry(char *entry);
+int	env_append_assignment(char ***penvp, const char *arg);
 
 /* Individual builtins */
 int	bi_echo(t_cmd *cmd);
