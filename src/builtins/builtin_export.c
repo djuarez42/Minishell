@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/24 16:08:17 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/24 16:13:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,42 +148,6 @@ static int	env_append_assignment(char ***penvp, const char *arg)
 	return (append_and_set(penvp, name, old_value, value));
 }
 
-/*static int	env_append_assignment(char ***penvp, const char *arg)
-{
-	char	*name;
-	char	*value;
-	char	*old_value;
-	char	*new_value;
-	int		idx;
-
-	name = get_name_from_plus_equal(arg);
-	if (!name || !env_identifier_valid(name))
-	{
-		free(name);
-		print_export_ident_error(arg);
-		return (1);
-	}
-	value = ft_strdup(ft_strchr(arg, '=') + 1);
-	if (!value)
-		return (free(name), 1);
-	idx = env_find_index(*penvp, name);
-	if (idx >= 0)
-		old_value = ft_strdup(ft_strchr((*penvp)[idx], '=') + 1);
-	else
-		old_value = ft_strdup("");
-	if (!old_value)
-		return (free(name), free(value), 1);
-	new_value = ft_strjoin(old_value, value);
-	free(old_value);
-	free(value);
-	if (!new_value)
-		return (free(name), 1);
-	env_set_var(penvp, name, new_value);
-	free(name);
-	free(new_value);
-	return (0);
-}*/
-
 static int	needs_quotes(const char *val)
 {
 	size_t	i;
@@ -278,127 +242,6 @@ static char	*quote_value_single(const char *val)
 	return (build_quoted_value(val, extra));
 }
 
-/*static char	*quote_value_single(const char *val)
-{
-	size_t i, extra = 0, pos;
-	char *out;
-
-	if (!val)
-		return (ft_strdup(""));
-	if (!needs_quotes(val))
-		return (ft_strdup(val));
-	i = 0;
-	while (val[i])
-	{
-		if (val[i] == '\'')
-			extra += 3;
-		i++;
-	}
-	out = malloc(ft_strlen(val) + extra + 3);
-	if (!out)
-		return (NULL);
-	pos = 0;
-	out[pos++] = '\'';
-	i = 0;
-	while (val[i])
-	{
-		if (val[i] == '\'')
-		{
-			out[pos++] = '\'';
-			out[pos++] = '\\';
-			out[pos++] = '\'';
-			out[pos++] = '\'';
-		}
-		else
-			out[pos++] = val[i];
-		i++;
-	}
-	out[pos++] = '\'';
-	out[pos] = '\0';
-	return (out);
-}*/
-
-/*static void	print_exported_env(char **envp)
-{
-	int		i, n;
-	char	**copy;
-
-	if (!envp)
-		return ;
-	n = 0;
-	while (envp[n])
-		n++;
-	copy = malloc(sizeof(char *) * (n + 1));
-	if (!copy)
-		return ;
-	i = 0;
-	while (i < n)
-	{
-		copy[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	copy[n] = NULL;
-	qsort(copy, n, sizeof(char *), cmp_env);
-	i = 0;
-	while (i < n)
-	{
-		char *eq = ft_strchr(copy[i], '=');
-		if (!eq)
-		{
-			printf("declare -x %s\n", copy[i]);
-		}
-		else if (*(eq + 1) == '\0')
-		{
-			size_t name_len = eq - copy[i];
-			printf("declare -x %.*s=\"\"\n", (int)name_len, copy[i]);
-		}
-		else
-		{
-			size_t name_len = eq - copy[i];
-			char *name = ft_strndup(copy[i], name_len);
-			char *val = eq + 1;
-			if (!(ft_strlen(name) == 1 && name[0] == '_'))
-			{
-				char *q = quote_value_single(val);
-				printf("declare -x %s=%s\n", name, q ? q : val);
-				free(q);
-			}
-			free(name);
-		}
-		i++;
-	}
-	i = 0;
-	while (i < n)
-		free(copy[i++]);
-	free(copy);
-}*/
-
-/*static char	**duplicate_env(char **envp, int *out_size)
-{
-	int		i;
-	int		n;
-	char	**copy;
-
-	if (!envp)
-		return (NULL);
-	n = 0;
-	while (envp[n])
-		n++;
-	copy = malloc(sizeof(char *) * (n + 1));
-	if (!copy)
-		return (NULL);
-	i = 0;
-	while (i < n)
-	{
-		copy[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	copy[n] = NULL;
-	if (out_size)
-		*out_size = n;
-	return (copy);
-}*/
-
 static void	handle_export_value(char *name, char *val)
 {
 	char	*q;
@@ -443,99 +286,6 @@ static void	print_env_entry(char *entry)
 	handle_export_value(name, val);
 	free(name);
 }
-
-/*static void	print_env_entry(char *entry)
-{
-	char	*eq;
-	char	*name;
-	char	*val;
-	char	*q;
-	size_t	name_len;
-
-	eq = ft_strchr(entry, '=');
-	if (!eq)
-	{
-		printf("declare -x %s\n", entry);
-		return ;
-	}
-	name_len = eq - entry;
-	if (*(eq + 1) == '\0')
-	{
-		printf("declare -x %.*s=\"\"\n", (int)name_len, entry);
-		return ;
-	}
-	name = ft_strndup(entry, name_len);
-	if (!name)
-		return ;
-	val = eq + 1;
-	if (ft_strlen(name) != 1 || name[0] != '_')
-	{
-		q = quote_value_single(val);
-		if (q)
-		{
-			printf("declare -x %s=%s\n", name, q);
-			free(q);
-		}
-		else
-		{
-			printf("declare -x %s=%s\n", name, val);
-		}
-	}
-	free(name);
-}*/
-
-/*static void	print_env_entry(char *entry)
-{
-	char	*eq;
-	char	*name;
-	char	*val;
-	char	*q;
-	size_t	name_len;
-
-	eq = ft_strchr(entry, '=');
-	if (!eq)
-	{
-		printf("declare -x %s\n", entry);
-		return ;
-	}
-	name_len = eq - entry;
-	if (*(eq + 1) == '\0')
-	{
-		printf("declare -x %.*s=\"\"\n", (int)name_len, entry);
-		return ;
-	}
-	name = ft_strndup(entry, name_len);
-	val = eq + 1;
-	if (!(ft_strlen(name) == 1 && name[0] == '_'))
-	{
-		q = quote_value_single(val);
-		printf("declare -x %s=%s\n", name, q ? q : val);
-		free(q);
-	}
-	free(name);
-}*/
-
-/*static void	print_exported_env(char **envp)
-{
-	int		i;
-	int		n;
-	char	**copy;
-
-	copy = duplicate_env(envp, &n);
-	if (!copy)
-		return ;
-	qsort(copy, n, sizeof(char *), cmp_env);
-	i = 0;
-	while (i < n)
-	{
-		print_env_entry(copy[i]);
-		i++;
-	}
-	i = 0;
-	while (i < n)
-		free(copy[i++]);
-	free(copy);
-}*/
 
 static char	**duplicate_env(char **envp, int *out_size)
 {
