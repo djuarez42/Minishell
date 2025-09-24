@@ -73,9 +73,19 @@ int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n",
-			STDERR_FILENO);
-		return (2);
+		/* If argv[0] is empty string, treat as command not found (127).
+		   Only NULL cmd is a parser-level syntax error which should not
+		   reach here. */
+		if (!cmd || !cmd->argv)
+		{
+			ft_putstr_fd("[EXEC_UTIL ERR] minishell: syntax error near unexpected token `|'\n",
+				STDERR_FILENO);
+			return (2);
+		}
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0] ? cmd->argv[0] : "", STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		return (127);
 	}
 	exec_path = find_executable(cmd->argv[0], envp);
 	if (!exec_path)

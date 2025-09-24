@@ -93,9 +93,14 @@ void	copy_fragment_to_buffer(t_fragment *frag, t_word_builder *wb)
 
 int	validate_redirection(t_token *cur)
 {
+	if (getenv("MINISHELL_DEBUG_TOKENS") && cur)
+	{
+		fprintf(stderr, "[VALIDATE_RED] cur_type=%d next_type=%d\n",
+			cur->type, cur->next ? cur->next->type : -1);
+	}
 	if (!cur->next || cur->next->type != TOKEN_WORD)
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+		ft_putstr_fd("[PARSER_UTIL ERR] minishell: syntax error near unexpected token `", 2);
 		if (cur->type == TOKEN_HEREDOC)
 			ft_putstr_fd("<<", 2);
 		else if (cur->type == TOKEN_REDIRECT_OUT)

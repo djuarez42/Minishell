@@ -36,6 +36,8 @@ static char	*search_in_path_dirs(char *cmd, char **paths)
 
 char	*find_executable(char *cmd, char **envp)
 {
+	if (!cmd || cmd[0] == '\0')
+		return (NULL);
 	char	*path_env;
 	char	**paths;
 

@@ -78,6 +78,13 @@ static void	run_non_interactive_shell(char ***envp_copy, t_exec_state *state)
 		if (!input)
 			break ;
 		process_input(input, envp_copy, state);
+		/* if parser reported a syntax error, stop processing further lines so
+		   the shell exits with the syntax error status (bash returns 2) */
+		if (state->last_status == 2)
+		{
+			free(input);
+			break ;
+		}
 		free(input);
 		read_len = getline(&line, &len, stdin);
 	}

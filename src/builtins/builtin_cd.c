@@ -43,6 +43,9 @@ static const char	*resolve_cd_target(char **argv, char ***penvp)
 
 	if (!argv[1])
 		return (env_get_value(*penvp, "HOME"));
+	/* Treat a single "--" argument as no-argument (go to HOME). */
+	if (ft_strncmp(argv[1], "--", 3) == 0)
+		return (env_get_value(*penvp, "HOME"));
 	if (ft_strncmp(argv[1], "-", 2) == 0)
 	{
 		path = env_get_value(*penvp, "OLDPWD");
