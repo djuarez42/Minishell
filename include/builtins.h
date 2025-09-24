@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:20:50 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/24 17:02:56 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/24 17:13:16 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ int	env_append_assignment(char ***penvp, const char *arg);
 int	needs_quotes(const char *val);
 size_t	calc_extra_quotes(const char *val);
 char	*build_quoted_value(const char *val, size_t extra);
-
+char	*get_name_from_plus_equal(const char *arg);
+void	print_export_ident_error(const char *s);
+char	*dup_name(const char *env);
 /* Individual builtins */
 int	bi_echo(t_cmd *cmd);
 int	bi_pwd(void);

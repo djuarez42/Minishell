@@ -83,6 +83,8 @@ SRC = main.c \
 		src/builtins/export_utils1.c\
 		src/builtins/export_utils2.c\
 		src/builtins/export_utils3.c\
+		src/builtins/export_utils4.c\
+		src/builtins/export_utils5.c\
 		src/builtins/builtin_unset_exit.c
 
 OBJ_DIR = obj
