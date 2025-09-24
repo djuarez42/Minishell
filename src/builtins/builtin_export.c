@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/24 16:30:41 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/24 16:35:22 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,39 +337,6 @@ static char	**duplicate_env(char **envp, int *out_size)
 		*out_size = n;
 	return (copy);
 }
-
-/*static char	**duplicate_env(char **envp, int *out_size)
-{
-	int		i;
-	int		n;
-	char	**copy;
-
-	if (!envp)
-		return (NULL);
-	n = 0;
-	while (envp[n])
-		n++;
-	copy = malloc(sizeof(char *) * (n + 1));
-	if (!copy)
-		return (NULL);
-	i = 0;
-	while (i < n)
-	{
-		copy[i] = ft_strdup(envp[i]);
-		if (!copy[i])
-		{
-			while (i > 0)
-				free(copy[--i]);
-			free(copy);
-			return (NULL);
-		}
-		i++;
-	}
-	copy[n] = NULL;
-	if (out_size)
-		*out_size = n;
-	return (copy);
-}*/
 
 static void	sort_env_array(char **arr, int n)
 {

@@ -3,20 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
+#    By: djuarez <djuarez@student.42.fr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/24 00:41:02 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/24 14:41:32 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
 
 NAME = minishell
 
 CC = cc 
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
-#LDFLAGS = -fsanitize=address
-
+CFLAGS = -Wall -Wextra -Werror -g
 
 INCLUDES = -Iinclude -Ilibft
 
@@ -25,11 +22,9 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-	# macOS (Homebrew usually provides readline in default search paths)
 	READLINE_LIBS = -lreadline
 	READLINE_INC  =
 else
-	# Linux/Ubuntu: readline commonly requires ncurses (or tinfo)
 	READLINE_LIBS = -lreadline -lncurses -ltinfo
 	READLINE_INC  =
 endif
@@ -85,29 +80,33 @@ SRC = main.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \
 		src/builtins/builtin_export.c \
-		src/builtins/builtin_unset_exit.c \
+		src/builtins/builtin_unset_exit.c
 
-OBJ = $(SRC:.c=.o)
+OBJ_DIR = obj
+OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
-%.o: %.c Makefile 
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+# ----------------- RULES ----------------- #
 
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
-	
+
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) $(LIBS) $(INCLUDES) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) $(LIBS) $(INCLUDES)
+
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f $(OBJ)
+	rm -rf $(OBJ_DIR)
 	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
 	rm -f $(NAME)
 	$(MAKE) fclean -C $(LIBFT_DIR)
-	
+
 re: fclean all
 
 .PHONY: all clean fclean re
