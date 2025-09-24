@@ -17,7 +17,7 @@
 # include "lexer.h"       
 # include "exec_state.h"
 
-# define MAX_ARGS 1024
+# define MAX_ARGS 3000
 
 /*        Structures          */
 

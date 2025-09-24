@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/27 12:48:24 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/24 16:30:20 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/24 18:02:15 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRC = ft_strlen.c ft_isalpha.c ft_isalnum.c ft_isascii.c ft_isdigit.c \
       ft_strtrim.c ft_split.c ft_itoa.c ft_strmapi.c ft_striteri.c \
       ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
       ft_isspace.c ft_strjoin_free.c ft_strndup.c ft_strstr.c ft_strcmp.c \
+      ft_realloc.c \
 
 OBJ = $(SRC:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 23:25:54 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/24 16:31:58 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/24 18:04:49 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LIBFT_H
 
 # include <stddef.h>
+# include <stdlib.h>
 
 typedef struct s_list
 {
@@ -64,5 +65,6 @@ void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
 char				*ft_strndup(const char *s, size_t n);
 char				*ft_strstr(const char *big, const char *little);
+char				*ft_realloc(char *old, size_t old_size, size_t new_size);
 
 #endif
