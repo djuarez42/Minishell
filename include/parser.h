@@ -17,7 +17,7 @@
 # include "lexer.h"       
 # include "exec_state.h"
 
-# define MAX_ARGS 3000
+# define MAX_ARGS 1024
 
 /*        Structures          */
 
@@ -76,7 +76,6 @@ typedef struct s_word_builder
 void			free_cmds(t_cmd *cmd);
 void			free_redirs(t_redir *redir);
 void			free_str_array(char **arr);
-void			free_partial_cmd(t_cmd *cmd, int argc);
 void			free_cmd_arrays(t_cmd *cmd);
 
 /*     Main parser        */
