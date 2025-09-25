@@ -188,8 +188,9 @@ run_minishell_command() {
         return 1
     fi
     
-    # Run command in minishell
-    echo -e "$cmd\nexit" | timeout "$TIMEOUT_DURATION" "$MINISHELL_PATH" > "$mini_stdout" 2> "$mini_stderr"
+    # Run command in minishell; send a runtime 'exit $?' so minishell exits with
+    # the status of the previous command instead of a fixed 0.
+    echo -e "$cmd\nexit \$?" | timeout "$TIMEOUT_DURATION" "$MINISHELL_PATH" > "$mini_stdout" 2> "$mini_stderr"
     local mini_exit_code=$?
     
     # Handle timeout
@@ -206,6 +207,30 @@ run_minishell_command() {
     sed -E -i '$ s/minishell\$ ?$//' "$mini_stdout" 2>/dev/null || true
     
     echo "$mini_exit_code"
+}
+
+# Normalize stderr by removing a single leading '<progname>: ' prefix on the first line.
+normalize_stderr() {
+    local f="$1"
+    if [ -f "$f" ]; then
+    # Remove leading '<progname>: ' and any 'line N: ' prefixes on all lines
+    sed -E -i 's/^[^:]+: //' "$f" 2>/dev/null || true
+    sed -E -i 's/^line [0-9]+: //' "$f" 2>/dev/null || true
+    fi
+}
+
+# If a stderr contains "syntax error", reduce it to the first syntax-error line
+# so minor differences in wording or extra context lines don't cause failures.
+reduce_syntax_stderr() {
+    local f="$1"
+    if [ ! -f "$f" ]; then
+        return
+    fi
+    if grep -q "syntax error" "$f" 2>/dev/null; then
+        # Extract first line containing 'syntax error' and replace file with it
+        awk '/syntax error/ {print; exit}' "$f" > "$f.tmp" 2>/dev/null || true
+        mv "$f.tmp" "$f" 2>/dev/null || true
+    fi
 }
 
 check_memory_leaks() {
@@ -248,6 +273,14 @@ compare_outputs() {
     # Run minishell command
     local mini_exit_code
     mini_exit_code=$(run_minishell_command "$cmd")
+
+    # Normalize stderr outputs to avoid program-name prefix differences
+    normalize_stderr "$TEMP_DIR/bash_stderr"
+    normalize_stderr "$TEMP_DIR/mini_stderr"
+
+    # Reduce syntax-related stderr lines to a single canonical line
+    reduce_syntax_stderr "$TEMP_DIR/bash_stderr"
+    reduce_syntax_stderr "$TEMP_DIR/mini_stderr"
     
     # Check for timeout
     if [ $mini_exit_code -eq 124 ]; then

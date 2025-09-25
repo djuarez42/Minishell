@@ -27,12 +27,6 @@ t_token	*create_operator_token(t_fragment **cur, bool *space_before)
 	append_fragment(&tok->fragments, frag_copy);
 	tok->final_text = concat_fragments(tok->fragments);
 	*cur = (*cur)->next;
-	if (getenv("MINISHELL_DEBUG_TOKENS"))
-	{
-		fprintf(stderr, "[OP_TOKEN] type=%d text='%s' has_space_before=%d\n",
-			tok->type, tok->final_text ? tok->final_text : "(null)",
-			tok->has_space_before);
-	}
 	return (tok);
 }
 
@@ -62,12 +56,6 @@ t_token	*create_word_token(t_fragment **cur, bool *space_before)
 	tok->type = determine_token_type(tok->fragments->text,
 			tok->fragments->quote_type);
 	tok->final_text = concat_fragments(tok->fragments);
-		if (getenv("MINISHELL_DEBUG_TOKENS"))
-		{
-			fprintf(stderr, "[TOKEN] type=%d text='%s' has_space_before=%d\n",
-				tok->type, tok->final_text ? tok->final_text : "(null)",
-				tok->has_space_before);
-		}
 	return (tok);
 }
 
@@ -114,7 +102,14 @@ t_token	*tokenize_input(const char *input)
 	t_token		*tokens;
 
 	if (check_unmatched_quotes(input))
+	{
+		/* Print the syntax error exactly once here and return NULL */
+		if (!isatty(STDIN_FILENO))
+			print_error(NULL, "syntax error: unexpected end of file");
+		else
+			print_error(NULL, "syntax error: unmatched quotes");
 		return (NULL);
+	}
 	frags = parse_mixed_fragments(input);
 	if (!frags)
 		return (NULL);

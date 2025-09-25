@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 16:30:48 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/25 21:11:55 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ int	check_unmatched_quotes(const char *input)
 	}
 	if (single_open || double_open)
 	{
-		ft_putstr_fd("minishell: syntax error: unmatched quotes\n",
-			STDERR_FILENO);
+		/* Do not print here; caller will print exactly once and set exit status */
 		return (1);
 	}
 	return (0);

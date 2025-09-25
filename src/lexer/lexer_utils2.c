@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/19 19:15:40 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 18:02:28 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,14 @@ t_fragment	*handle_generic_text(const char *text, int *i)
 
 	frag = NULL;
 	start = *i;
-	while (text[*i] && !ft_isspace((unsigned char)text[*i]) && text[*i] != '\''
-		&& text[*i] != '"' && text[*i] != '|'
-		&& text[*i] != '<' && text[*i] != '>')
-	{
-		(*i)++;
-	}
+       // Treat consecutive slashes as part of the same argument
+       while (text[*i] && !ft_isspace((unsigned char)text[*i]) && text[*i] != '\''
+	       && text[*i] != '"' && text[*i] != '|'
+	       && text[*i] != '<' && text[*i] != '>')
+       {
+	       // Do not split on slashes
+	       (*i)++;
+       }
 	len = *i - start;
 	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
 	frag = new_fragment(&text[start], (size_t)len, QUOTE_NONE, space_after);

@@ -242,7 +242,13 @@ test_from_file() {
 				((line_count++))
 			done
 			# INPUT=${INPUT%?}
-		echo -n "$INPUT" | $MINISHELL_PATH/$EXECUTABLE 2>tmp_err_minishell >tmp_out_minishell
+			# Ensure tmp capture files exist before either run so both shells see the same
+			# directory contents (prevents `ls` test flakiness caused by tester-created files).
+			: > tmp_out_minishell
+			: > tmp_err_minishell
+			: > tmp_out_bash
+			: > tmp_err_bash
+			echo -n "$INPUT" | $MINISHELL_PATH/$EXECUTABLE 2>tmp_err_minishell >tmp_out_minishell
 			exit_minishell=$?
 			echo -n "enable -n .$NL$INPUT" | bash 2>tmp_err_bash >tmp_out_bash
 			exit_bash=$?

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 16:32:53 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/25 20:02:58 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,13 @@ void	redirect_stdin_heredoc(const char *filepath)
 
 void	print_error_file(const char *context)
 {
-	ft_putstr_fd((char *)"minishell: line 1: ", STDERR_FILENO);
-	ft_putstr_fd((char *)context, STDERR_FILENO);
-	ft_putstr_fd((char *)": ", STDERR_FILENO);
-	ft_putstr_fd((char *)strerror(errno), STDERR_FILENO);
-	ft_putstr_fd((char *)"\n", STDERR_FILENO);
+	char buf[512];
+
+	buf[0] = '\0';
+	ft_strlcat(buf, "minishell: ", sizeof(buf));
+	if (context)
+		ft_strlcat(buf, context, sizeof(buf));
+	ft_strlcat(buf, ": ", sizeof(buf));
+	ft_strlcat(buf, strerror(errno), sizeof(buf));
+	print_error(NULL, buf);
 }

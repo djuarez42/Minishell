@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 16:30:08 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/25 17:44:07 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@ static int	run_pipeline(t_cmd *start, size_t n_cmds, char **envp,
 
 static int	handle_empty_command(t_exec_state *state)
 {
-	ft_putstr_fd("minishell: syntax error near unexpected token `|'\n",
-		STDERR_FILENO);
+	print_error(NULL, "syntax error near unexpected token `|'");
 	state->last_status = 2;
 	return (0);
 }
 
-static int	apply_redirections_and_run_builtin(t_cmd *cur, char ***envp,
+static int	apply_redir_handle_bi(t_cmd *cur, char ***envp,
 		t_exec_state *state)
 {
 	int	res;
@@ -42,11 +41,11 @@ static int	apply_redirections_and_run_builtin(t_cmd *cur, char ***envp,
 	else if (res == 1)
 		status = 1;
 	else
-		status = run_builtin_in_parent(cur, envp);
+		status = run_bi_in_parent(cur, envp);
 	return (status);
 }
 
-static int	run_parent_builtin(t_cmd *cur, char ***envp, t_exec_state *state)
+static int	run_parent_bi(t_cmd *cur, char ***envp, t_exec_state *state)
 {
 	int	save_in;
 	int	save_out;
@@ -56,7 +55,7 @@ static int	run_parent_builtin(t_cmd *cur, char ***envp, t_exec_state *state)
 	save_in = dup(STDIN_FILENO);
 	save_out = dup(STDOUT_FILENO);
 	save_err = dup(STDERR_FILENO);
-	status = apply_redirections_and_run_builtin(cur, envp, state);
+	status = apply_redir_handle_bi(cur, envp, state);
 	if (save_in != -1)
 		dup2(save_in, STDIN_FILENO);
 	if (save_out != -1)
@@ -72,31 +71,60 @@ static int	run_parent_builtin(t_cmd *cur, char ***envp, t_exec_state *state)
 	return (status);
 }
 
+static t_cmd	*hndle_emptargs(t_cmd *cur, char ***penvp, t_exec_state *state)
+{
+	char	**envp;
+	int		res;
+	int		status;
+
+	envp = *penvp;
+	if (cur->redirs)
+	{
+		res = handle_redirections_and_quotes(cur->redirs, envp, state);
+		if (res == 130 || res == 1)
+			status = res;
+		else
+			status = 0;
+		state->last_status = status;
+		return (cur->next);
+	}
+	if (cur->pipe)
+	{
+		handle_empty_command(state);
+		return (cur->next);
+	}
+	state->last_status = 0;
+	return (cur->next);
+}
+
+static t_cmd	*handle_cmd(t_cmd *cur, char ***penvp, t_exec_state *state)
+{
+	char	**envp;
+	size_t	n;
+	int		status;
+
+	envp = *penvp;
+	n = count_pipeline_cmds(cur);
+	if (n == 1 && is_builtin(cur->argv[0]) && cur->pipe == 0)
+		status = run_parent_bi(cur, penvp, state);
+	else
+		status = run_pipeline(cur, n, envp, state);
+	state->last_status = status;
+	while (n-- > 0 && cur)
+		cur = cur->next;
+	return (cur);
+}
+
 void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 {
 	t_cmd	*cur;
-	size_t	n;
-	int		status;
-	char	**envp;
 
-	envp = *penvp;
 	cur = cmd_list;
 	while (cur)
 	{
 		if (!cur->argv || !cur->argv[0])
-		{
-			handle_empty_command(state);
-			cur = cur->next;
-			continue ;
-		}
-		n = count_pipeline_cmds(cur);
-		if (n == 1 && is_builtin(cur->argv[0]) && cur->pipe == 0)
-			status = run_parent_builtin(cur, &envp, state);
+			cur = hndle_emptargs(cur, penvp, state);
 		else
-			status = run_pipeline(cur, n, envp, state);
-		state->last_status = status;
-		while (n-- > 0 && cur)
-			cur = cur->next;
+			cur = handle_cmd(cur, penvp, state);
 	}
-	*penvp = envp;
 }

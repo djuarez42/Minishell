@@ -3,18 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/17 17:22:53 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 17:55:34 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include "libft.h"
-#include "executor.h"
-#include "builtins.h"
+#include "minishell.h"
+
 
 static void	update_pwd_vars(char ***penvp)
 {
@@ -43,7 +40,6 @@ static const char	*resolve_cd_target(char **argv, char ***penvp)
 
 	if (!argv[1])
 		return (env_get_value(*penvp, "HOME"));
-	/* Treat a single "--" argument as no-argument (go to HOME). */
 	if (ft_strncmp(argv[1], "--", 3) == 0)
 		return (env_get_value(*penvp, "HOME"));
 	if (ft_strncmp(argv[1], "-", 2) == 0)
@@ -60,19 +56,26 @@ static const char	*resolve_cd_target(char **argv, char ***penvp)
 		}
 		return (path);
 	}
-	return (argv[1]);
+       /* Normalize path: treat multiple slashes as a single slash */
+       if (argv[1]) {
+	       int i = 0;
+	       while (argv[1][i] == '/') i++;
+	       if (argv[1][i] == '\0')
+		       return "/";
+       }
+       return (argv[1]);
 }
 
 static int	change_dir_and_update(const char *path, char ***penvp)
 {
 	if (!path)
 	{
-		ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO);
+		print_error("cd", "OLDPWD not set");
 		return (1);
 	}
 	if (chdir(path) == -1)
 	{
-		perror("cd");
+		print_error("cd", strerror(errno));
 		return (1);
 	}
 	update_pwd_vars(penvp);
@@ -85,7 +88,7 @@ int	bi_cd(char **argv, char ***penvp)
 
 	if (argv[1] && argv[2])
 	{
-		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
+		print_error("cd", "too many arguments");
 		return (1);
 	}
 	path = resolve_cd_target(argv, penvp);

@@ -16,6 +16,7 @@
 # include "exec_state.h"
 # include "lexer.h"
 # include <stdbool.h>
+# include "lexer.h"
 
 # define MAX_ARGS 1024
 
@@ -138,5 +139,9 @@ char				*read_heredoc_line(int interactive);
 int					is_delimiter(const char *line, const char *delimiter);
 char				**expand_lines_array(char **lines, int *capacity,
 						int count);
-
+						
+// ...existing code...
+typedef struct s_token t_token;
+// ...existing code...
+void free_token_list(t_token *tokens);
 #endif

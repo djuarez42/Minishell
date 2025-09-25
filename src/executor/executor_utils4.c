@@ -6,11 +6,12 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:52:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 16:32:53 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/25 21:05:37 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "error_format.h"
 
 /*
 static void	process_unquoted_filename(t_redir *redir)
@@ -73,26 +74,21 @@ int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 	{
-		/* If argv[0] is empty string, treat as command not found (127).
-		   Only NULL cmd is a parser-level syntax error which should not
-		   reach here. */
 		if (!cmd || !cmd->argv)
 		{
-			ft_putstr_fd("[EXEC_UTIL ERR] minishell: syntax error near unexpected token `|'\n",
-				STDERR_FILENO);
+			print_error(NULL, "syntax error near unexpected token `|'");
 			return (2);
 		}
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->argv[0] ? cmd->argv[0] : "", STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		if (cmd->argv[0])
+			print_error(cmd->argv[0], "command not found");
+		else
+			print_error(NULL, "command not found");
 		return (127);
 	}
 	exec_path = find_executable(cmd->argv[0], envp);
 	if (!exec_path)
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		print_error(cmd->argv[0], "command not found");
 		return (127);
 	}
 	return (execute_execve(exec_path, cmd->argv, envp));

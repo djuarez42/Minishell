@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:47:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 21:22:15 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/25 22:06:50 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,24 +93,29 @@ void	copy_fragment_to_buffer(t_fragment *frag, t_word_builder *wb)
 
 int	validate_redirection(t_token *cur)
 {
-	if (getenv("MINISHELL_DEBUG_TOKENS") && cur)
-	{
-		fprintf(stderr, "[VALIDATE_RED] cur_type=%d next_type=%d\n",
-			cur->type, cur->next ? cur->next->type : -1);
-	}
-	if (!cur->next || cur->next->type != TOKEN_WORD)
-	{
-		ft_putstr_fd("[PARSER_UTIL ERR] minishell: syntax error near unexpected token `", 2);
-		if (cur->type == TOKEN_HEREDOC)
-			ft_putstr_fd("<<", 2);
-		else if (cur->type == TOKEN_REDIRECT_OUT)
-			ft_putstr_fd(">", 2);
-		else if (cur->type == TOKEN_APPEND)
-			ft_putstr_fd(">>", 2);
-		else if (cur->type == TOKEN_REDIRECT_IN)
-			ft_putstr_fd("<", 2);
-		ft_putendl_fd("'", 2);
-		return (0);
-	}
-	return (1);
+       if (!cur->next || cur->next->type != TOKEN_WORD)
+       {
+	       // Check if expansion of variable is empty
+	       if (cur->next && cur->next->fragments && cur->next->fragments->expanded_text && cur->next->fragments->expanded_text[0] != '\0')
+		       return (1); // Suppress error if expansion is valid
+	       if (!isatty(STDIN_FILENO))
+	       {
+		       ft_putendl_fd("minishell: syntax error near unexpected token `newline'", 2);
+	       }
+	       else
+	       {
+		       ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+		       if (cur->type == TOKEN_HEREDOC)
+			       ft_putstr_fd("<<", 2);
+		       else if (cur->type == TOKEN_REDIRECT_OUT)
+			       ft_putstr_fd(">", 2);
+		       else if (cur->type == TOKEN_APPEND)
+			       ft_putstr_fd(">>", 2);
+		       else if (cur->type == TOKEN_REDIRECT_IN)
+			       ft_putstr_fd("<", 2);
+		       ft_putendl_fd("'", 2);
+	       }
+	       return (0);
+       }
+       return (1);
 }

@@ -6,7 +6,7 @@
 #    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/23 21:26:33 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/09/25 12:24:01 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,6 +91,7 @@ SRC = main.c \
 		src/builtins/export_utils_names.c \
 		src/builtins/export_utils_print.c \
 		src/builtins/builtin_unset_exit.c \
+	src/error_format.c \
 
 OBJ = $(SRC:.c=.o)
 

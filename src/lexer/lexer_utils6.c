@@ -1,3 +1,4 @@
+#include <stdio.h>
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -87,16 +88,17 @@ t_token_type	determine_token_type(char *str, t_quote_type quote)
 		return (TOKEN_WORD);
 	if (quote != QUOTE_NONE)
 		return (TOKEN_WORD);
-	if (str[0] == '<' && str[1] == '<' && str[2] == '\0')
-		return (TOKEN_HEREDOC);
-	else if (str[0] == '>' && str[1] == '>' && str[2] == '\0')
-		return (TOKEN_APPEND);
-	else if (str[0] == '<' && str[1] == '\0')
-		return (TOKEN_REDIRECT_IN);
-	else if (str[0] == '>' && str[1] == '\0')
-		return (TOKEN_REDIRECT_OUT);
-	else if (str[0] == '|' && str[1] == '\0')
-		return (TOKEN_PIPE);
+       if (str[0] == '<' && str[1] == '<' && str[2] == '\0') {
+	       return (TOKEN_HEREDOC);
+       } else if (str[0] == '>' && str[1] == '>' && str[2] == '\0') {
+	       return (TOKEN_APPEND);
+       } else if (str[0] == '<' && str[1] == '\0') {
+	       return (TOKEN_REDIRECT_IN);
+       } else if (str[0] == '>' && str[1] == '\0') {
+	       return (TOKEN_REDIRECT_OUT);
+       } else if (str[0] == '|' && str[1] == '\0') {
+	       return (TOKEN_PIPE);
+       }
 	else
 		return (TOKEN_WORD);
 }

@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:21:10 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/17 17:17:55 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 21:41:28 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include <stdio.h>
-#include <string.h>
+#include "minishell.h"
+
 
 static const char	*get_base_cmd(const char *argv0)
 {
@@ -32,12 +30,9 @@ int	is_builtin(const char *cmd)
 	if (!cmd)
 		return (0);
 	base = get_base_cmd(cmd);
-	return (!ft_strncmp(base, "echo", 5)
-		|| !ft_strncmp(base, "cd", 3)
-		|| !ft_strncmp(base, "pwd", 4)
-		|| !ft_strncmp(base, "export", 7)
-		|| !ft_strncmp(base, "unset", 6)
-		|| !ft_strncmp(base, "env", 4)
+	return (!ft_strncmp(base, "echo", 5) || !ft_strncmp(base, "cd", 3)
+		|| !ft_strncmp(base, "pwd", 4) || !ft_strncmp(base, "export", 7)
+		|| !ft_strncmp(base, "unset", 6) || !ft_strncmp(base, "env", 4)
 		|| !ft_strncmp(base, "exit", 5));
 }
 
@@ -68,12 +63,22 @@ int	run_builtin_in_child(t_cmd *cmd, char ***penvp)
 	return (dispatch_builtin(cmd, penvp));
 }
 
-int	run_builtin_in_parent(t_cmd *cmd, char ***penvp)
+/* Minimal implementation for the dot (.) builtin: when no filename is
+   provided, print usage similar to bash and return status 2. A full
+   implementation (sourcing) is out of scope for tests that expect the
+   usage message. */
+/* bi_dot removed: defer to external command execution for '.' */
+
+int	run_bi_in_parent(t_cmd *cmd, char ***penvp)
 {
 	int	status;
 
 	status = dispatch_builtin(cmd, penvp);
 	if (!ft_strncmp(get_base_cmd(cmd->argv[0]), "exit", 5))
+	{
+		if (isatty(STDIN_FILENO))
+			ft_putendl_fd("exit", STDERR_FILENO);
 		exit(status);
+	}
 	return (status);
 }
