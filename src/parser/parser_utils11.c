@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 22:11:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 14:35:14 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 18:02:51 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,14 @@ char	*expand_fragment(const char *text, t_quote_type quote,
 	tmp = expand_variables(result, envp, state, quote);
 	free(result);
 	return (tmp);
+}
+
+int	is_delimiter(const char *line, const char *delimiter)
+{
+	if (!line)
+		return (0);
+	if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+		&& line[ft_strlen(delimiter)] == '\0')
+		return (1);
+	return (0);
 }

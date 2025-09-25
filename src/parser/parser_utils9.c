@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 21:13:01 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/17 19:11:00 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 17:49:17 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static char	**init_heredoc_lines(int *capacity)
 {
 	char	**lines;
 
-	*capacity = 1000;
+	*capacity = 666;
 	lines = malloc(sizeof(char *) * (*capacity));
 	if (!lines)
 		return (NULL);

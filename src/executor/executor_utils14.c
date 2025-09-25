@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 04:44:30 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 17:12:28 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,14 @@ void	redirect_stdin_heredoc(const char *filepath)
 
 void	print_error_file(const char *context)
 {
-	fprintf(stderr, "minishell: line 1: %s: %s\n", context, strerror(errno));
+	char	*err_msg;
+
+	write(2, "minishell: line 1: ", 20);
+	if (context)
+		write(2, context, strlen(context));
+	write(2, ": ", 2);
+	err_msg = strerror(errno);
+	if (err_msg)
+		write(2, err_msg, strlen(err_msg));
+	write(2, "\n", 1);
 }

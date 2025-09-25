@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:28:43 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 16:15:42 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 17:41:14 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,22 @@ static void	handle_execve_error(char *exec_path, char **argv)
 
 	if (errno == ENOENT)
 	{
-		fprintf(stderr, "minishell: %s: command not found\n", argv[0]);
+		print_execve_error(argv[0], "command not found");
 		code = 127;
 	}
-	else if (errno == EACCES || errno == EPERM
-		|| errno == EISDIR || errno == ENOEXEC)
+	else if (errno == EACCES || errno == EPERM || errno == ENOEXEC)
 	{
-		if (errno == EISDIR)
-			fprintf(stderr, "minishell: %s: Is a directory\n", exec_path);
-		else
-			fprintf(stderr, "minishell: %s: Permission denied\n", exec_path);
+		print_execve_error(exec_path, "Permission denied");
+		code = 126;
+	}
+	else if (errno == EISDIR)
+	{
+		print_execve_error(exec_path, "Is a directory");
 		code = 126;
 	}
 	else
 	{
-		fprintf(stderr, "minishell: %s: %s\n", exec_path, strerror(errno));
+		print_execve_error(exec_path, strerror(errno));
 		code = 1;
 	}
 	_exit(code);
@@ -100,18 +101,3 @@ int	execute_execve(char *exec_path, char **argv, char **envp)
 		handle_execve_error(exec_path, argv);
 	return (0);
 }
-
-/*void	free_split(char **arr)
-{
-    int	i;
-
-    if (!arr)
-        return ;
-    i = 0;
-    while (arr[i])
-    {
-        free(arr[i]);
-        i++;
-    }
-    free(arr);
-}*/

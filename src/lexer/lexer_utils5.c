@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 18:12:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 17:37:21 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	check_unmatched_quotes(const char *input)
 	}
 	if (single_open || double_open)
 	{
-		fprintf(stderr, "minishell: syntax error: unmatched quotes\n");
+		write(2, "minishell: syntax error: unmatched quotes\n", 43);
 		return (1);
 	}
 	return (0);

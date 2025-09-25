@@ -6,14 +6,11 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:21:10 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/17 17:17:55 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 16:37:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include <stdio.h>
-#include <string.h>
+#include "minishell.h"
 
 static const char	*get_base_cmd(const char *argv0)
 {
