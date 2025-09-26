@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils4.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:06:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 20:48:07 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 21:15:36 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,52 +32,67 @@ void	count_words(t_word_builder *wb)
 	wb->count = 0;
 	while (i < wb->len)
 	{
-		while (i < wb->len
-			&& ft_isspace((unsigned char)wb->buf[i])
+		while (i < wb->len && ft_isspace((unsigned char)wb->buf[i])
 			&& wb->splittable[i])
 			i++;
 		if (i >= wb->len)
 			break ;
 		wb->count++;
-		while (i < wb->len
-			&& !(ft_isspace((unsigned char)wb->buf[i])
+		while (i < wb->len && !(ft_isspace((unsigned char)wb->buf[i])
 				&& wb->splittable[i]))
 			i++;
 	}
 }
 
-int	count_quoted_fragments(t_fragment *frag)
+static int	count_quoted_groups(t_fragment *frag)
 {
-	t_fragment	*cur;
 	int			count;
+	int			in_group;
+	t_fragment	*cur;
 
-	cur = frag;
 	count = 0;
+	in_group = 0;
+	cur = frag;
 	while (cur)
 	{
-		if (cur->quote_type == QUOTE_SINGLE
-			|| cur->quote_type == QUOTE_DOUBLE)
-			count++;
+		if (cur->quote_type == QUOTE_SINGLE || cur->quote_type == QUOTE_DOUBLE)
+		{
+			if (!in_group)
+			{
+				count++;
+				in_group = 1;
+			}
+		}
+		if (cur->has_space_after)
+			in_group = 0;
 		cur = cur->next;
 	}
 	return (count);
 }
 
-void	fill_quoted_words(t_fragment *frag, char **words)
+static void	fill_quoted_groups(t_fragment *frag, char **words)
 {
+	int			wi;
+	int			in_group;
 	t_fragment	*cur;
-	int			i;
 
+	wi = 0;
+	in_group = 0;
 	cur = frag;
-	i = 0;
 	while (cur)
 	{
-		if (cur->quote_type == QUOTE_SINGLE
-			|| cur->quote_type == QUOTE_DOUBLE)
+		if (cur->quote_type == QUOTE_SINGLE || cur->quote_type == QUOTE_DOUBLE)
 		{
-			words[i] = ft_strdup("");
-			i++;
+			if (!in_group)
+			{
+				words[wi++] = ft_strdup("");
+				in_group = 1;
+			}
+			if (cur->has_space_after)
+				in_group = 0;
 		}
+		if (cur->has_space_after)
+			in_group = 0;
 		cur = cur->next;
 	}
 }
@@ -85,22 +100,22 @@ void	fill_quoted_words(t_fragment *frag, char **words)
 char	**build_from_quoted_fragments(t_fragment *frag, int *out_count)
 {
 	char	**words;
-	int		frag_count;
+	int		groups;
 
-	frag_count = count_quoted_fragments(frag);
-	if (frag_count == 0)
+	groups = count_quoted_groups(frag);
+	if (groups == 0)
 	{
 		*out_count = 0;
 		return (NULL);
 	}
-	words = malloc(sizeof(char *) * (frag_count + 1));
+	words = malloc(sizeof(char *) * (groups + 1));
 	if (!words)
 	{
 		*out_count = 0;
 		return (NULL);
 	}
-	fill_quoted_words(frag, words);
-	words[frag_count] = NULL;
-	*out_count = frag_count;
+	fill_quoted_groups(frag, words);
+	words[groups] = NULL;
+	*out_count = groups;
 	return (words);
 }

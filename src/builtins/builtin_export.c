@@ -3,38 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/24 16:46:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 18:14:50 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**duplicate_env(char **envp, int *out_size)
-{
-	int		n;
-	char	**copy;
-
-	if (!envp)
-		return (NULL);
-	n = count_env_entries(envp);
-	copy = copy_env_entries(envp, n);
-	if (!copy)
-		return (NULL);
-	if (out_size)
-		*out_size = n;
-	return (copy);
-}
-
-static void	sort_env_array(char **arr, int n)
+static void	export_sort_entries(char **copy, int n)
 {
 	int		i;
 	int		j;
 	char	*tmp;
 
-	if (!arr || n <= 1)
+	if (!copy || n <= 1)
 		return ;
 	i = 0;
 	while (i < n - 1)
@@ -42,11 +26,11 @@ static void	sort_env_array(char **arr, int n)
 		j = i + 1;
 		while (j < n)
 		{
-			if (cmp_env(&arr[i], &arr[j]) > 0)
+			if (cmp_env(&copy[i], &copy[j]) > 0)
 			{
-				tmp = arr[i];
-				arr[i] = arr[j];
-				arr[j] = tmp;
+				tmp = copy[i];
+				copy[i] = copy[j];
+				copy[j] = tmp;
 			}
 			j++;
 		}
@@ -54,18 +38,38 @@ static void	sort_env_array(char **arr, int n)
 	}
 }
 
-static void	print_exported_env(char **envp)
+static char	**export_sorted_copy(char **envp, int *out_n)
 {
+	char	**copy;
+	int		n;
+
+	if (!envp)
+	{
+		*out_n = 0;
+		return (NULL);
+	}
+	copy = export_utils_copy_env(envp, &n);
+	if (!copy)
+	{
+		*out_n = 0;
+		return (NULL);
+	}
+	export_sort_entries(copy, n);
+	*out_n = n;
+	return (copy);
+}
+
+void	print_exported_env(char **envp)
+{
+	char	**copy;
 	int		i;
 	int		n;
-	char	**copy;
 
 	if (!envp)
 		return ;
-	copy = duplicate_env(envp, &n);
+	copy = export_sorted_copy(envp, &n);
 	if (!copy)
 		return ;
-	sort_env_array(copy, n);
 	i = 0;
 	while (i < n)
 	{
@@ -74,7 +78,10 @@ static void	print_exported_env(char **envp)
 	}
 	i = 0;
 	while (i < n)
-		free(copy[i++]);
+	{
+		free(copy[i]);
+		i++;
+	}
 	free(copy);
 }
 

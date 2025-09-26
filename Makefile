@@ -6,7 +6,7 @@
 #    By: djuarez <djuarez@student.42.fr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/24 14:41:32 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/25 12:24:01 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ SRC = main.c \
 		src/parser/parser_utils10.c \
 		src/parser/parser_utils11.c \
 		src/parser/parser_utils12.c \
+		src/parser/parser_utils13.c \
 		src/executor/executor.c \
 		src/executor/executor_utils.c \
 		src/executor/executor_utils1.c \
@@ -80,17 +81,20 @@ SRC = main.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \
 		src/builtins/builtin_export.c \
-		src/builtins/export_utils1.c\
-		src/builtins/export_utils2.c\
-		src/builtins/export_utils3.c\
-		src/builtins/export_utils4.c\
-		src/builtins/export_utils5.c\
-		src/builtins/builtin_unset_exit.c
+		src/builtins/builtin_unset_exit.c \
+		src/parser/parser_error_format.c \
+		src/builtins/export_utils3.c \
+		src/builtins/export_utils4.c \
+		src/builtins/export_utils1.c \
+		src/builtins/export_utils_names.c \
+		src/builtins/export_utils2.c \
+		src/builtins/export_utils5.c \
+		src/builtins/export_print_helpers.c \
 
-OBJ_DIR = obj
-OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
+OBJ = $(SRC:.c=.o)
 
-# ----------------- RULES ----------------- #
+%.o: %.c Makefile 
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 all: $(LIBFT) $(NAME)
 
@@ -105,11 +109,11 @@ $(OBJ_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ)
 	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(OBJ)
 	$(MAKE) fclean -C $(LIBFT_DIR)
 
 re: fclean all

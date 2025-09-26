@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 21:21:22 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 19:52:52 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/23 21:12:21 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,13 @@ static int	process_words_case(t_token *tok, t_proc_ctx *ctx, int idx)
 
 static int	process_assignment_or_words(t_token *tok, t_proc_ctx *ctx, int idx)
 {
-	t_fragment	*frag;
-	char		*text;
+	char	*eq;
 
-	frag = tok->fragments;
-	text = NULL;
-	if (frag && frag->text)
-		text = frag->text;
-	if (frag && ft_strchr(text, '='))
+	if (tok->final_text)
+		eq = ft_strchr(tok->final_text, '=');
+	else
+		eq = NULL;
+	if (eq)
 		idx = process_assignment_case(tok, ctx, idx);
 	else
 		idx = process_words_case(tok, ctx, idx);

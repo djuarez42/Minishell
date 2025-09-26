@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils8.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 21:06:03 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 21:11:20 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 17:43:07 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,11 @@ static t_redir	*init_redir(t_token *cur)
 	redir = malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL);
-	redir->type = cur->type;
+	if (cur->type == TOKEN_HEREDOC && cur->fragments && cur->fragments->text
+		&& ft_strncmp(cur->fragments->text, ">>", 3) == 0)
+		redir->type = TOKEN_APPEND;
+	else
+		redir->type = cur->type;
 	redir->fragments = cur->next->fragments;
 	frag = redir->fragments;
 	redir->quoted = is_quoted_fragments(frag);

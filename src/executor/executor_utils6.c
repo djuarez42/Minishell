@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils6.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:28:43 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 17:41:14 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 17:57:28 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,31 @@
 
 static char	*search_in_path_dirs(char *cmd, char **paths)
 {
-	char	*full_path;
-	int		i;
+	char		*full_path;
+	int			i;
+	struct stat	sb;
 
 	i = 0;
 	while (paths[i])
 	{
 		full_path = ft_strjoin(paths[i], "/");
 		full_path = ft_strjoin_free(full_path, cmd);
-		if (access(full_path, X_OK) == 0)
+		if (stat(full_path, &sb) == 0)
 		{
-			free_split(paths);
-			return (full_path);
+			if (S_ISDIR(sb.st_mode))
+			{
+				free(full_path);
+				i++;
+				continue ;
+			}
+			if (access(full_path, X_OK) == 0)
+			{
+				free_split(paths);
+				return (full_path);
+			}
 		}
-		free(full_path);
+		else
+			free(full_path);
 		i++;
 	}
 	free_split(paths);
@@ -39,6 +50,8 @@ char	*find_executable(char *cmd, char **envp)
 	char	*path_env;
 	char	**paths;
 
+	if (!cmd || cmd[0] == '\0')
+		return (NULL);
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
 	path_env = env_get_value(envp, "PATH");
@@ -73,22 +86,22 @@ static void	handle_execve_error(char *exec_path, char **argv)
 
 	if (errno == ENOENT)
 	{
-		print_execve_error(argv[0], "command not found");
+		print_execve_error(argv[0]);
 		code = 127;
 	}
 	else if (errno == EACCES || errno == EPERM || errno == ENOEXEC)
 	{
-		print_execve_error(exec_path, "Permission denied");
+		print_execve_error(exec_path);
 		code = 126;
 	}
 	else if (errno == EISDIR)
 	{
-		print_execve_error(exec_path, "Is a directory");
+		print_execve_error(exec_path);
 		code = 126;
 	}
 	else
 	{
-		print_execve_error(exec_path, strerror(errno));
+		print_execve_error(exec_path);
 		code = 1;
 	}
 	_exit(code);

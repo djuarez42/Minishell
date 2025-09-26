@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo_pwd_env.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/20 15:42:16 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 12:26:25 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include "libft.h"
 #include "builtins.h"
+#include "error_format.h"
+#include <errno.h>
 
 static int	is_n_flag(const char *s)
 {
@@ -59,7 +61,7 @@ int	bi_pwd(void)
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
-		perror("pwd");
+		print_error("pwd", strerror(errno));
 		return (1);
 	}
 	ft_putendl_fd(cwd, STDOUT_FILENO);
@@ -75,9 +77,7 @@ int	bi_env(char **argv, char **envp)
 		return (0);
 	if (argv && argv[1])
 	{
-		ft_putstr_fd("env: '", STDERR_FILENO);
-		ft_putstr_fd(argv[1], STDERR_FILENO);
-		ft_putstr_fd("': No such file or directory\n", STDERR_FILENO);
+		print_error("env", "No such file or directory");
 		return (127);
 	}
 	i = 0;

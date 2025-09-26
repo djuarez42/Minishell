@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 15:30:36 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 17:49:17 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-size_t	get_next_word_range(t_word_builder *wb, size_t start,
-				size_t *wlen)
+size_t	get_next_word_range(t_word_builder *wb, size_t start, size_t *wlen)
 {
 	size_t	i;
 
@@ -36,11 +35,11 @@ size_t	get_next_word_range(t_word_builder *wb, size_t start,
 
 char	**split_buffer_to_words(t_word_builder *wb)
 {
-	char		**words;
-	size_t		i;
-	int			wi;
-	size_t		start;
-	size_t		wlen;
+	char	**words;
+	size_t	i;
+	int		wi;
+	size_t	start;
+	size_t	wlen;
 
 	i = 0;
 	wi = 0;
@@ -60,9 +59,8 @@ char	**split_buffer_to_words(t_word_builder *wb)
 	return (words);
 }
 
-char	**build_words_from_buffer(t_fragment *frag,
-										t_word_builder *wb,
-										int *out_count)
+char	**build_words_from_buffer(t_fragment *frag, t_word_builder *wb,
+		int *out_count)
 {
 	char	**words;
 
@@ -106,7 +104,16 @@ char	**build_words_from_token(t_token *tok, int *out_count)
 
 void	update_final_text(t_token *tok, t_proc_ctx *ctx)
 {
+	t_token_type new_type;
+
 	expand_fragments(tok, ctx->envp, ctx->state);
 	free(tok->final_text);
 	tok->final_text = concat_final_text(tok);
+	if (tok->final_text && tok->fragments
+		&& detect_combined_quote(tok->fragments) == QUOTE_NONE)
+	{
+		new_type = determine_token_type(tok->final_text, QUOTE_NONE);
+		if (new_type != TOKEN_WORD)
+			tok->type = new_type;
+	}
 }

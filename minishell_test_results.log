@@ -1,0 +1,1354 @@
+MINISHELL TEST RESULTS v2 - Thu Sep 25 10:07:02 PM CEST 2025
+=================================================
+
+TEST: echo hello
+COMMAND: echo hello
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+
+STDERR:
+
+=================================================
+
+TEST: echo with spaces
+COMMAND: echo hello world
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello world
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello world
+
+STDERR:
+
+=================================================
+
+TEST: echo -n option
+COMMAND: echo -n hello
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+STDERR:
+
+=================================================
+
+TEST: pwd command
+COMMAND: pwd
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+/home/ekakhmad/minishell
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+/home/ekakhmad/minishell
+
+STDERR:
+
+=================================================
+
+TEST: env command
+COMMAND: env
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+SHELL=/bin/zsh
+LSCOLORS=Gxfxcxdxbxegedabagacad
+SESSION_MANAGER=local/car13s5.42barcelona.com:@/tmp/.ICE-unix/2263290,unix/car13s5.42barcelona.com:/tmp/.ICE-unix/2263290
+USER_ZDOTDIR=/home/ekakhmad
+QT_ACCESSIBILITY=1
+COLORTERM=truecolor
+XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+SSH_AGENT_LAUNCHER=gnome-keyring
+LESS=-R
+XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session5
+XDG_MENU_PREFIX=gnome-
+TERM_PROGRAM_VERSION=1.103.2
+GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+GTK_IM_MODULE=ibus
+LANGUAGE=en
+SSH_AUTH_SOCK=/run/user/101836/keyring/ssh
+XMODIFIERS=@im=ibus
+DESKTOP_SESSION=ubuntu
+FT_HOOK_NAME=login-user
+GTK_MODULES=gail:atk-bridge
+FT_HOOK_PATHNAME=login-user.d
+PWD=/home/ekakhmad/minishell
+KRB5CCNAME=FILE:/tmp/krb5cc_101836_WbGzxD
+XDG_SESSION_DESKTOP=ubuntu
+LOGNAME=ekakhmad
+XDG_SESSION_TYPE=x11
+MANPATH=/usr/local/man:/usr/local/share/man:/usr/share/man:/opt/rudder/share/man
+GPG_AGENT_INFO=/run/user/101836/gnupg/S.gpg-agent:0:1
+SYSTEMD_EXEC_PID=2263312
+_=/usr/bin/env
+XAUTHORITY=/home/ekakhmad/.Xauthority
+VSCODE_GIT_ASKPASS_NODE=/home/ekakhmad/.local/share/vscode/code
+XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/ekakhmad
+GJS_DEBUG_TOPICS=JS ERROR;JS LOG
+VSCODE_INJECTION=1
+GDM_LANG=en
+HOME=/home/ekakhmad
+IM_CONFIG_PHASE=1
+LANG=en_US.UTF-8
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+XDG_CURRENT_DESKTOP=Unity
+GIT_ASKPASS=/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass.sh
+XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+INVOCATION_ID=0121fc7c4b714d18942f83ea65d0e804
+MANAGERPID=2262695
+CHROME_DESKTOP=code.desktop
+GJS_DEBUG_OUTPUT=stderr
+VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+XDG_SESSION_CLASS=user
+TERM=xterm-256color
+ZSH=/home/ekakhmad/.oh-my-zsh
+ZDOTDIR=/home/ekakhmad
+LIBVIRT_DEFAULT_URI=qemu:///system
+USER=ekakhmad
+VSCODE_GIT_IPC_HANDLE=/run/user/101836/vscode-git-325b4ed684.sock
+DISPLAY=:0
+SHLVL=3
+PAGER=less
+QT_IM_MODULE=ibus
+XDG_RUNTIME_DIR=/run/user/101836
+DOCKER_HOST=unix:///run/user/101836/docker.sock
+VSCODE_GIT_ASKPASS_MAIN=/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass-main.js
+JOURNAL_STREAM=8:27134083
+XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+GDK_BACKEND=x11
+PATH=/home/ekakhmad/bin:/home/ekakhmad/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ekakhmad/.local/share/vscode/:/home/ekakhmad/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/ekakhmad/.local/share/vscode/
+MACADDRESS=18:7e:b9:07:fd:12
+GDMSESSION=ubuntu
+ORIGINAL_XDG_CURRENT_DESKTOP=ubuntu:GNOME
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/101836/bus
+MAIL=ekakhmad@student.42.fr
+GIO_LAUNCHED_DESKTOP_FILE_PID=2263836
+GIO_LAUNCHED_DESKTOP_FILE=/home/ekakhmad/.local/share/applications/vscode.desktop
+OLDPWD=/home/ekakhmad/minishell/42_minishell_tester
+TERM_PROGRAM=vscode
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+SHELL=/bin/zsh
+LSCOLORS=Gxfxcxdxbxegedabagacad
+SESSION_MANAGER=local/car13s5.42barcelona.com:@/tmp/.ICE-unix/2263290,unix/car13s5.42barcelona.com:/tmp/.ICE-unix/2263290
+USER_ZDOTDIR=/home/ekakhmad
+QT_ACCESSIBILITY=1
+COLORTERM=truecolor
+XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+SSH_AGENT_LAUNCHER=gnome-keyring
+LESS=-R
+XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session5
+XDG_MENU_PREFIX=gnome-
+TERM_PROGRAM_VERSION=1.103.2
+GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+GTK_IM_MODULE=ibus
+LANGUAGE=en
+SSH_AUTH_SOCK=/run/user/101836/keyring/ssh
+XMODIFIERS=@im=ibus
+DESKTOP_SESSION=ubuntu
+FT_HOOK_NAME=login-user
+GTK_MODULES=gail:atk-bridge
+FT_HOOK_PATHNAME=login-user.d
+KRB5CCNAME=FILE:/tmp/krb5cc_101836_WbGzxD
+PWD=/home/ekakhmad/minishell
+LOGNAME=ekakhmad
+XDG_SESSION_DESKTOP=ubuntu
+XDG_SESSION_TYPE=x11
+MANPATH=/usr/local/man:/usr/local/share/man:/usr/share/man:/opt/rudder/share/man
+GPG_AGENT_INFO=/run/user/101836/gnupg/S.gpg-agent:0:1
+SYSTEMD_EXEC_PID=2263312
+XAUTHORITY=/home/ekakhmad/.Xauthority
+VSCODE_GIT_ASKPASS_NODE=/home/ekakhmad/.local/share/vscode/code
+XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/ekakhmad
+GJS_DEBUG_TOPICS=JS ERROR;JS LOG
+VSCODE_INJECTION=1
+GDM_LANG=en
+HOME=/home/ekakhmad
+IM_CONFIG_PHASE=1
+LANG=en_US.UTF-8
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+XDG_CURRENT_DESKTOP=Unity
+GIT_ASKPASS=/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass.sh
+XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+INVOCATION_ID=0121fc7c4b714d18942f83ea65d0e804
+MANAGERPID=2262695
+CHROME_DESKTOP=code.desktop
+GJS_DEBUG_OUTPUT=stderr
+VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+XDG_SESSION_CLASS=user
+TERM=xterm-256color
+ZSH=/home/ekakhmad/.oh-my-zsh
+ZDOTDIR=/home/ekakhmad
+LIBVIRT_DEFAULT_URI=qemu:///system
+USER=ekakhmad
+VSCODE_GIT_IPC_HANDLE=/run/user/101836/vscode-git-325b4ed684.sock
+DISPLAY=:0
+SHLVL=2
+PAGER=less
+QT_IM_MODULE=ibus
+XDG_RUNTIME_DIR=/run/user/101836
+DOCKER_HOST=unix:///run/user/101836/docker.sock
+VSCODE_GIT_ASKPASS_MAIN=/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass-main.js
+JOURNAL_STREAM=8:27134083
+XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+GDK_BACKEND=x11
+PATH=/home/ekakhmad/bin:/home/ekakhmad/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ekakhmad/.local/share/vscode/:/home/ekakhmad/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/ekakhmad/.local/share/vscode/
+MACADDRESS=18:7e:b9:07:fd:12
+GDMSESSION=ubuntu
+ORIGINAL_XDG_CURRENT_DESKTOP=ubuntu:GNOME
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/101836/bus
+MAIL=ekakhmad@student.42.fr
+GIO_LAUNCHED_DESKTOP_FILE_PID=2263836
+GIO_LAUNCHED_DESKTOP_FILE=/home/ekakhmad/.local/share/applications/vscode.desktop
+OLDPWD=/home/ekakhmad/minishell/42_minishell_tester
+TERM_PROGRAM=vscode
+_=/usr/bin/timeout
+
+STDERR:
+
+=================================================
+
+TEST: exit command
+COMMAND: exit
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+
+=================================================
+
+TEST: exit with code
+COMMAND: exit 42
+RESULT: PASS
+DETAILS: Exit codes: bash=42, mini=42
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+
+=================================================
+
+TEST: single quotes
+COMMAND: echo 'hello world'
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello world
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello world
+
+STDERR:
+
+=================================================
+
+TEST: double quotes
+COMMAND: echo "hello world"
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello world
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello world
+
+STDERR:
+
+=================================================
+
+TEST: mixed quotes
+COMMAND: echo "hello 'world'"
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello 'world'
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello 'world'
+
+STDERR:
+
+=================================================
+
+TEST: quote with spaces
+COMMAND: echo 'hello    world'
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello    world
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello    world
+
+STDERR:
+
+=================================================
+
+TEST: empty quotes
+COMMAND: echo ''
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+
+STDERR:
+
+=================================================
+
+TEST: empty double quotes
+COMMAND: echo ""
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+
+STDERR:
+
+=================================================
+
+TEST: quotes with special chars
+COMMAND: echo 'hello|world'
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello|world
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello|world
+
+STDERR:
+
+=================================================
+
+TEST: dollar in single quotes
+COMMAND: echo '$HOME'
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+$HOME
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+$HOME
+
+STDERR:
+
+=================================================
+
+TEST: dollar in double quotes
+COMMAND: echo "$USER"
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+ekakhmad
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+ekakhmad
+
+STDERR:
+
+=================================================
+
+TEST: HOME variable
+COMMAND: echo $HOME
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+/home/ekakhmad
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+/home/ekakhmad
+
+STDERR:
+
+=================================================
+
+TEST: USER variable
+COMMAND: echo $USER
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+ekakhmad
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+ekakhmad
+
+STDERR:
+
+=================================================
+
+TEST: PATH variable
+COMMAND: echo $PATH
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+/home/ekakhmad/bin:/home/ekakhmad/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ekakhmad/.local/share/vscode/:/home/ekakhmad/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/ekakhmad/.local/share/vscode/
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+/home/ekakhmad/bin:/home/ekakhmad/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ekakhmad/.local/share/vscode/:/home/ekakhmad/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/ekakhmad/.local/share/vscode/
+
+STDERR:
+
+=================================================
+
+TEST: undefined variable
+COMMAND: echo $UNDEFINED_VAR_12345
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+
+STDERR:
+
+=================================================
+
+TEST: exit status variable
+COMMAND: echo $?
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+0
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+0
+
+STDERR:
+
+=================================================
+
+TEST: export new variable
+COMMAND: export TEST_VAR=hello
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+
+=================================================
+
+TEST: use exported variable
+COMMAND: export TEST_VAR=hello
+echo \$TEST_VAR
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+$TEST_VAR
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+$TEST_VAR
+
+STDERR:
+
+=================================================
+
+TEST: unset variable
+COMMAND: export TEST_VAR=hello
+unset TEST_VAR
+echo \$TEST_VAR
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+$TEST_VAR
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+$TEST_VAR
+
+STDERR:
+
+=================================================
+
+TEST: redirect output
+COMMAND: echo hello > /tmp/minishell_test/test_out.txt
+cat /tmp/minishell_test/test_out.txt
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+
+STDERR:
+
+=================================================
+
+TEST: append output
+COMMAND: echo hello > /tmp/minishell_test/test_append.txt
+echo world >> /tmp/minishell_test/test_append.txt
+cat /tmp/minishell_test/test_append.txt
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+world
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+world
+
+STDERR:
+
+=================================================
+
+TEST: redirect input
+COMMAND: cat < /tmp/minishell_test/input.txt
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+Hello World
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+Hello World
+
+STDERR:
+
+=================================================
+
+TEST: heredoc simple
+COMMAND: cat << EOF
+hello
+world
+EOF
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+world
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+world
+
+STDERR:
+
+=================================================
+
+TEST: multiple redirections
+COMMAND: cat < /tmp/minishell_test/input.txt > /tmp/minishell_test/test_multi.txt
+cat /tmp/minishell_test/test_multi.txt
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+Hello World
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+Hello World
+
+STDERR:
+
+=================================================
+
+TEST: simple pipe
+COMMAND: echo hello | cat
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+
+STDERR:
+
+=================================================
+
+TEST: pipe passthrough
+COMMAND: cat << EOF | cat
+hello
+world
+hello
+EOF
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+world
+hello
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+world
+hello
+
+STDERR:
+
+=================================================
+
+TEST: multiple pipes
+COMMAND: cat << EOF | cat | cat
+hello
+world
+test
+EOF
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+world
+test
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+world
+test
+
+STDERR:
+
+=================================================
+
+TEST: multiple pipes (no grep)
+COMMAND: cat << EOF | cat | cat
+hello
+world
+hello
+EOF
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+world
+hello
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+world
+hello
+
+STDERR:
+
+=================================================
+
+TEST: pipe with wc
+COMMAND: echo hello world | wc -w
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+2
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+2
+
+STDERR:
+
+=================================================
+
+TEST: pipe with sort
+COMMAND: cat << EOF | sort
+c
+a
+b
+EOF
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+a
+b
+c
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+a
+b
+c
+
+STDERR:
+
+=================================================
+
+TEST: cd to home
+COMMAND: cd ~
+pwd
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+/home/ekakhmad
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+/home/ekakhmad
+
+STDERR:
+
+=================================================
+
+TEST: cd to root
+COMMAND: cd /
+pwd
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+/
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+/
+
+STDERR:
+
+=================================================
+
+TEST: cd to temp
+COMMAND: cd /tmp/minishell_test
+pwd
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+/tmp/minishell_test
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+/tmp/minishell_test
+
+STDERR:
+
+=================================================
+
+TEST: cd to nonexistent
+COMMAND: cd /nonexistent/directory
+RESULT: PASS
+DETAILS: Exit codes: bash=1, mini=1
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+cd: /nonexistent/directory: No such file or directory
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+cd: No such file or directory
+
+=================================================
+
+TEST: export without args
+COMMAND: export
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+declare -x CHROME_DESKTOP="code.desktop"
+declare -x COLORTERM="truecolor"
+declare -x DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/101836/bus"
+declare -x DESKTOP_SESSION="ubuntu"
+declare -x DISPLAY=":0"
+declare -x DOCKER_HOST="unix:///run/user/101836/docker.sock"
+declare -x FT_HOOK_NAME="login-user"
+declare -x FT_HOOK_PATHNAME="login-user.d"
+declare -x GDK_BACKEND="x11"
+declare -x GDMSESSION="ubuntu"
+declare -x GDM_LANG="en"
+declare -x GIO_LAUNCHED_DESKTOP_FILE="/home/ekakhmad/.local/share/applications/vscode.desktop"
+declare -x GIO_LAUNCHED_DESKTOP_FILE_PID="2263836"
+declare -x GIT_ASKPASS="/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass.sh"
+declare -x GJS_DEBUG_OUTPUT="stderr"
+declare -x GJS_DEBUG_TOPICS="JS ERROR;JS LOG"
+declare -x GNOME_DESKTOP_SESSION_ID="this-is-deprecated"
+declare -x GPG_AGENT_INFO="/run/user/101836/gnupg/S.gpg-agent:0:1"
+declare -x GTK_IM_MODULE="ibus"
+declare -x GTK_MODULES="gail:atk-bridge"
+declare -x HOME="/home/ekakhmad"
+declare -x IM_CONFIG_PHASE="1"
+declare -x INVOCATION_ID="0121fc7c4b714d18942f83ea65d0e804"
+declare -x JOURNAL_STREAM="8:27134083"
+declare -x KRB5CCNAME="FILE:/tmp/krb5cc_101836_WbGzxD"
+declare -x LANG="en_US.UTF-8"
+declare -x LANGUAGE="en"
+declare -x LESS="-R"
+declare -x LIBVIRT_DEFAULT_URI="qemu:///system"
+declare -x LOGNAME="ekakhmad"
+declare -x LSCOLORS="Gxfxcxdxbxegedabagacad"
+declare -x LS_COLORS="rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:"
+declare -x MACADDRESS="18:7e:b9:07:fd:12"
+declare -x MAIL="ekakhmad@student.42.fr"
+declare -x MANAGERPID="2262695"
+declare -x MANPATH="/usr/local/man:/usr/local/share/man:/usr/share/man:/opt/rudder/share/man"
+declare -x OLDPWD="/home/ekakhmad/minishell/42_minishell_tester"
+declare -x ORIGINAL_XDG_CURRENT_DESKTOP="ubuntu:GNOME"
+declare -x PAGER="less"
+declare -x PATH="/home/ekakhmad/bin:/home/ekakhmad/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ekakhmad/.local/share/vscode/:/home/ekakhmad/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/ekakhmad/.local/share/vscode/"
+declare -x PWD="/home/ekakhmad/minishell"
+declare -x QT_ACCESSIBILITY="1"
+declare -x QT_IM_MODULE="ibus"
+declare -x SESSION_MANAGER="local/car13s5.42barcelona.com:@/tmp/.ICE-unix/2263290,unix/car13s5.42barcelona.com:/tmp/.ICE-unix/2263290"
+declare -x SHELL="/bin/zsh"
+declare -x SHLVL="3"
+declare -x SSH_AGENT_LAUNCHER="gnome-keyring"
+declare -x SSH_AUTH_SOCK="/run/user/101836/keyring/ssh"
+declare -x SYSTEMD_EXEC_PID="2263312"
+declare -x TERM="xterm-256color"
+declare -x TERM_PROGRAM="vscode"
+declare -x TERM_PROGRAM_VERSION="1.103.2"
+declare -x USER="ekakhmad"
+declare -x USER_ZDOTDIR="/home/ekakhmad"
+declare -x VSCODE_GIT_ASKPASS_EXTRA_ARGS=""
+declare -x VSCODE_GIT_ASKPASS_MAIN="/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass-main.js"
+declare -x VSCODE_GIT_ASKPASS_NODE="/home/ekakhmad/.local/share/vscode/code"
+declare -x VSCODE_GIT_IPC_HANDLE="/run/user/101836/vscode-git-325b4ed684.sock"
+declare -x VSCODE_INJECTION="1"
+declare -x XAUTHORITY="/home/ekakhmad/.Xauthority"
+declare -x XDG_CONFIG_DIRS="/etc/xdg/xdg-ubuntu:/etc/xdg"
+declare -x XDG_CURRENT_DESKTOP="Unity"
+declare -x XDG_DATA_DIRS="/usr/share/ubuntu:/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop"
+declare -x XDG_GREETER_DATA_DIR="/var/lib/lightdm-data/ekakhmad"
+declare -x XDG_MENU_PREFIX="gnome-"
+declare -x XDG_RUNTIME_DIR="/run/user/101836"
+declare -x XDG_SEAT_PATH="/org/freedesktop/DisplayManager/Seat0"
+declare -x XDG_SESSION_CLASS="user"
+declare -x XDG_SESSION_DESKTOP="ubuntu"
+declare -x XDG_SESSION_PATH="/org/freedesktop/DisplayManager/Session5"
+declare -x XDG_SESSION_TYPE="x11"
+declare -x XMODIFIERS="@im=ibus"
+declare -x ZDOTDIR="/home/ekakhmad"
+declare -x ZSH="/home/ekakhmad/.oh-my-zsh"
+declare -x _="/usr/bin/timeout"
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+declare -x CHROME_DESKTOP="code.desktop"
+declare -x COLORTERM="truecolor"
+declare -x DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/101836/bus"
+declare -x DESKTOP_SESSION="ubuntu"
+declare -x DISPLAY=":0"
+declare -x DOCKER_HOST="unix:///run/user/101836/docker.sock"
+declare -x FT_HOOK_NAME="login-user"
+declare -x FT_HOOK_PATHNAME="login-user.d"
+declare -x GDK_BACKEND="x11"
+declare -x GDMSESSION="ubuntu"
+declare -x GDM_LANG="en"
+declare -x GIO_LAUNCHED_DESKTOP_FILE="/home/ekakhmad/.local/share/applications/vscode.desktop"
+declare -x GIO_LAUNCHED_DESKTOP_FILE_PID="2263836"
+declare -x GIT_ASKPASS="/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass.sh"
+declare -x GJS_DEBUG_OUTPUT="stderr"
+declare -x GJS_DEBUG_TOPICS="JS ERROR;JS LOG"
+declare -x GNOME_DESKTOP_SESSION_ID="this-is-deprecated"
+declare -x GPG_AGENT_INFO="/run/user/101836/gnupg/S.gpg-agent:0:1"
+declare -x GTK_IM_MODULE="ibus"
+declare -x GTK_MODULES="gail:atk-bridge"
+declare -x HOME="/home/ekakhmad"
+declare -x IM_CONFIG_PHASE="1"
+declare -x INVOCATION_ID="0121fc7c4b714d18942f83ea65d0e804"
+declare -x JOURNAL_STREAM="8:27134083"
+declare -x KRB5CCNAME="FILE:/tmp/krb5cc_101836_WbGzxD"
+declare -x LANG="en_US.UTF-8"
+declare -x LANGUAGE="en"
+declare -x LESS="-R"
+declare -x LIBVIRT_DEFAULT_URI="qemu:///system"
+declare -x LOGNAME="ekakhmad"
+declare -x LSCOLORS="Gxfxcxdxbxegedabagacad"
+declare -x LS_COLORS="rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:"
+declare -x MACADDRESS="18:7e:b9:07:fd:12"
+declare -x MAIL="ekakhmad@student.42.fr"
+declare -x MANAGERPID="2262695"
+declare -x MANPATH="/usr/local/man:/usr/local/share/man:/usr/share/man:/opt/rudder/share/man"
+declare -x OLDPWD="/home/ekakhmad/minishell/42_minishell_tester"
+declare -x ORIGINAL_XDG_CURRENT_DESKTOP="ubuntu:GNOME"
+declare -x PAGER="less"
+declare -x PATH="/home/ekakhmad/bin:/home/ekakhmad/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ekakhmad/.local/share/vscode/:/home/ekakhmad/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/ekakhmad/.local/share/vscode/"
+declare -x PWD="/home/ekakhmad/minishell"
+declare -x QT_ACCESSIBILITY="1"
+declare -x QT_IM_MODULE="ibus"
+declare -x SESSION_MANAGER="local/car13s5.42barcelona.com:@/tmp/.ICE-unix/2263290,unix/car13s5.42barcelona.com:/tmp/.ICE-unix/2263290"
+declare -x SHELL="/bin/zsh"
+declare -x SHLVL="2"
+declare -x SSH_AGENT_LAUNCHER="gnome-keyring"
+declare -x SSH_AUTH_SOCK="/run/user/101836/keyring/ssh"
+declare -x SYSTEMD_EXEC_PID="2263312"
+declare -x TERM="xterm-256color"
+declare -x TERM_PROGRAM="vscode"
+declare -x TERM_PROGRAM_VERSION="1.103.2"
+declare -x USER="ekakhmad"
+declare -x USER_ZDOTDIR="/home/ekakhmad"
+declare -x VSCODE_GIT_ASKPASS_EXTRA_ARGS=""
+declare -x VSCODE_GIT_ASKPASS_MAIN="/home/ekakhmad/.local/share/vscode/resources/app/extensions/git/dist/askpass-main.js"
+declare -x VSCODE_GIT_ASKPASS_NODE="/home/ekakhmad/.local/share/vscode/code"
+declare -x VSCODE_GIT_IPC_HANDLE="/run/user/101836/vscode-git-325b4ed684.sock"
+declare -x VSCODE_INJECTION="1"
+declare -x XAUTHORITY="/home/ekakhmad/.Xauthority"
+declare -x XDG_CONFIG_DIRS="/etc/xdg/xdg-ubuntu:/etc/xdg"
+declare -x XDG_CURRENT_DESKTOP="Unity"
+declare -x XDG_DATA_DIRS="/usr/share/ubuntu:/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop"
+declare -x XDG_GREETER_DATA_DIR="/var/lib/lightdm-data/ekakhmad"
+declare -x XDG_MENU_PREFIX="gnome-"
+declare -x XDG_RUNTIME_DIR="/run/user/101836"
+declare -x XDG_SEAT_PATH="/org/freedesktop/DisplayManager/Seat0"
+declare -x XDG_SESSION_CLASS="user"
+declare -x XDG_SESSION_DESKTOP="ubuntu"
+declare -x XDG_SESSION_PATH="/org/freedesktop/DisplayManager/Session5"
+declare -x XDG_SESSION_TYPE="x11"
+declare -x XMODIFIERS="@im=ibus"
+declare -x ZDOTDIR="/home/ekakhmad"
+declare -x ZSH="/home/ekakhmad/.oh-my-zsh"
+
+STDERR:
+
+=================================================
+
+TEST: export with value
+COMMAND: export TEST=value
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+
+=================================================
+
+TEST: unset existing
+COMMAND: export TEST=value; unset TEST
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+
+=================================================
+
+TEST: unset nonexistent
+COMMAND: unset NONEXISTENT_VAR
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+
+=================================================
+
+TEST: command not found
+COMMAND: nonexistent_command_12345
+RESULT: PASS
+DETAILS: Exit codes: bash=127, mini=127
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+nonexistent_command_12345: command not found
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+nonexistent_command_12345: command not found
+
+=================================================
+
+TEST: permission denied
+COMMAND: cat /etc/shadow
+RESULT: PASS
+DETAILS: Exit codes: bash=1, mini=1
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+/etc/shadow: Permission denied
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+/etc/shadow: Permission denied
+
+=================================================
+
+TEST: syntax error pipes
+COMMAND: echo hello |
+RESULT: PASS
+DETAILS: Exit codes: bash=2, mini=2
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+syntax error: unexpected end of file
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+syntax error: unexpected end of file
+
+=================================================
+
+TEST: syntax error redirect
+COMMAND: echo hello >
+RESULT: PASS
+DETAILS: Exit codes: bash=2, mini=2
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+syntax error near unexpected token `newline'
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+syntax error near unexpected token `newline'
+
+=================================================
+
+TEST: unclosed quotes
+COMMAND: echo 'unclosed
+RESULT: PASS
+DETAILS: Exit codes: bash=2, mini=2
+
+--- BASH OUTPUT ---
+STDOUT:
+
+STDERR:
+syntax error: unexpected end of file
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+
+STDERR:
+syntax error: unexpected end of file
+
+=================================================
+
+TEST: pipes with redirections
+COMMAND: echo hello | cat > /tmp/minishell_test/pipe_redir.txt
+cat /tmp/minishell_test/pipe_redir.txt
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+
+STDERR:
+
+=================================================
+
+TEST: env vars in commands
+COMMAND: echo $USER | cat
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+ekakhmad
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+ekakhmad
+
+STDERR:
+
+=================================================
+
+TEST: quotes with pipes
+COMMAND: echo hello world | cat
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello world
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello world
+
+STDERR:
+
+=================================================
+
+TEST: multiple commands
+COMMAND: echo hello
+echo world
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+hello
+world
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+hello
+world
+
+STDERR:
+
+=================================================
+
+TEST: export and use
+COMMAND: export MY_VAR=test
+echo \$MY_VAR
+RESULT: PASS
+DETAILS: Exit codes: bash=0, mini=0
+
+--- BASH OUTPUT ---
+STDOUT:
+$MY_VAR
+
+STDERR:
+
+--- MINISHELL OUTPUT ---
+STDOUT:
+$MY_VAR
+
+STDERR:
+
+=================================================
+
+
+FINAL SUMMARY
+=============
+Total tests: 53
+Passed: 53
+Failed: 0
+Memory leaks: 0
+Pass rate: 100%
+Test completed: Thu Sep 25 10:07:38 PM CEST 2025

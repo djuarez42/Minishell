@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 14:35:37 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 18:09:53 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ t_fragment	*handle_double_quotes(const char *text, int *i)
 
 t_fragment	*handle_operators(const char *text, int *i)
 {
-	int			start;
-	int			len;
-	bool		space_after;
+	int		start;
+	int		len;
+	bool	space_after;
 
 	start = *i;
 	if (text[*i] == '<' && text[*i + 1] == '<')
@@ -68,11 +68,9 @@ t_fragment	*handle_generic_text(const char *text, int *i)
 	frag = NULL;
 	start = *i;
 	while (text[*i] && !ft_isspace((unsigned char)text[*i]) && text[*i] != '\''
-		&& text[*i] != '"' && text[*i] != '|'
-		&& text[*i] != '<' && text[*i] != '>')
-	{
+		&& text[*i] != '"' && text[*i] != '|' && text[*i] != '<'
+		&& text[*i] != '>')
 		(*i)++;
-	}
 	len = *i - start;
 	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);
 	frag = new_fragment(&text[start], (size_t)len, QUOTE_NONE, space_after);

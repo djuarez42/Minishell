@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils12.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 20:06:50 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 04:03:41 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 19:32:04 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static int	handle_single_redirection(t_redir *redir, char **envp,
 	else if (redir->type == TOKEN_REDIRECT_IN)
 		handle_redirections_in(redir->file, &err);
 	else if (redir->type == TOKEN_APPEND)
-		handle_redirections_append(redir->file, &err);
+		handle_redirections_append(redir->file, &err, state);
 	else if (redir->type == TOKEN_HEREDOC)
 		return (handle_single_heredoc(redir, envp, state, args));
 	return (err);

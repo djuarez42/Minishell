@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils5.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:56:44 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 17:40:28 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 17:40:41 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,4 @@ int	handle_redirections_and_quotes(t_redir *redirs, char **envp,
 	}
 	res = handle_redirections(redirs, envp, state);
 	return (res);
-}
-
-void	print_execve_error(const char *cmd, const char *msg)
-{
-	write(2, "minishell: ", 11);
-	write(2, cmd, ft_strlen(cmd));
-	write(2, ": ", 2);
-	write(2, msg, ft_strlen(msg));
-	write(2, "\n", 1);
 }

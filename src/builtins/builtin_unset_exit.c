@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset_exit.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/23 22:40:03 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 14:45:15 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
-#include "libft.h"
 #include "minishell.h"
+#include "error_format.h"
+#include "error_format.h"
 
 int	bi_unset(char **argv, char ***penvp)
 {
@@ -49,6 +49,34 @@ static int	is_valid_number(const char *s)
 	return (digits > 0);
 }
 
+static int	print_num_args(const char *arg)
+{
+	char	errbuf[512];
+	size_t	len;
+
+	len = 0;
+	if (arg)
+	{
+		while (arg[len] && len < sizeof(errbuf) - 32)
+		{
+			errbuf[len] = arg[len];
+			len++;
+		}
+		errbuf[len] = '\0';
+	}
+	else
+		errbuf[0] = '\0';
+	ft_strlcat(errbuf, ": numeric argument required", sizeof(errbuf));
+	print_error("exit", errbuf);
+	return (2);
+}
+
+static int	print_many_args(void)
+{
+	print_error("exit", "too many arguments");
+	return (1);
+}
+
 int	bi_exit(char **argv)
 {
 	long long	code;
@@ -60,16 +88,9 @@ int	bi_exit(char **argv)
 	if (argc == 1)
 		return (0);
 	if (!is_valid_number(argv[1]))
-	{
-		fprintf(stderr, "minishell: exit: %s: numeric argument required\n",
-			argv[1]);
-		return (2);
-	}
+		return (print_num_args(argv[1]));
 	if (argc > 2)
-	{
-		fprintf(stderr, "minishell: exit: too many arguments\n");
-		return (1);
-	}
+		return (print_many_args());
 	code = (long long)ft_atoi(argv[1]);
 	return ((int)(code & 0xFF));
 }

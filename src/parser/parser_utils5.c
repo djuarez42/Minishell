@@ -3,33 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils5.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:47:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/24 18:58:04 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 18:07:29 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	add_cmd_node(t_cmd **head, t_cmd **last, t_cmd *new_cmd)
+static t_token	*parse_redirections_loop(t_token *cur, t_cmd *cmd)
 {
-	if (!*head)
-		*head = new_cmd;
-	else
-		(*last)->next = new_cmd;
-	*last = new_cmd;
-}
-
-t_token	*parse_cmd_block(t_token *cur, t_cmd *cmd,
-						char **envp, t_exec_state *state)
-{
-	cur = parse_arguments(cur, cmd, envp, state);
-	if (!cur)
-		return (NULL);
 	while (cur && (cur->type == TOKEN_REDIRECT_OUT
-			|| cur->type == TOKEN_REDIRECT_IN
-			|| cur->type == TOKEN_APPEND
+			|| cur->type == TOKEN_REDIRECT_IN || cur->type == TOKEN_APPEND
 			|| cur->type == TOKEN_HEREDOC))
 	{
 		cur = parse_redirections(cur, cmd);
@@ -39,7 +25,33 @@ t_token	*parse_cmd_block(t_token *cur, t_cmd *cmd,
 			cmd->freed_by_parser = true;
 			return (NULL);
 		}
-		if (cur && cur->type == TOKEN_WORD)
+	}
+	return (cur);
+}
+
+t_token	*parse_cmd_block(t_token *cur, t_cmd *cmd, char **envp,
+		t_exec_state *state)
+{
+	t_proc_ctx	ctx;
+	int			argc_argv_local;
+	int			argc_final_text_local;
+
+	argc_argv_local = 0;
+	argc_final_text_local = 0;
+	ctx.cmd = cmd;
+	ctx.argc_argv = &argc_argv_local;
+	ctx.argc_final_text = &argc_final_text_local;
+	ctx.envp = envp;
+	ctx.state = state;
+	while (1)
+	{
+		cur = parse_arguments_ctx(cur, &ctx);
+		if (!cur)
+			return (NULL);
+		cur = parse_redirections_loop(cur, cmd);
+		if (!cur)
+			return (NULL);
+		if (!cur || cur->type != TOKEN_WORD)
 			break ;
 	}
 	return (cur);
@@ -64,9 +76,7 @@ void	copy_fragment_to_buffer(t_fragment *frag, t_word_builder *wb)
 
 	flen = ft_strlen(frag->expanded_text);
 	frag_splittable = 0;
-	if (frag->quote_type == QUOTE_NONE
-		&& frag->text
-		&& frag->text[0] == '$')
+	if (frag->quote_type == QUOTE_NONE && frag->text && frag->text[0] == '$')
 		frag_splittable = 1;
 	i = 0;
 	while (i < flen)
@@ -85,16 +95,27 @@ int	validate_redirection(t_token *cur)
 {
 	if (!cur->next || cur->next->type != TOKEN_WORD)
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-		if (cur->type == TOKEN_HEREDOC)
-			ft_putstr_fd("<<", 2);
-		else if (cur->type == TOKEN_REDIRECT_OUT)
-			ft_putstr_fd(">", 2);
-		else if (cur->type == TOKEN_APPEND)
-			ft_putstr_fd(">>", 2);
-		else if (cur->type == TOKEN_REDIRECT_IN)
-			ft_putstr_fd("<", 2);
-		ft_putendl_fd("'", 2);
+		if (cur->next && cur->next->fragments
+			&& cur->next->fragments->expanded_text
+			&& cur->next->fragments->expanded_text[0] != '\0')
+			return (1);
+		if (!isatty(STDIN_FILENO))
+			ft_putendl_fd("minishell: syntax error near unexpected \
+								token `newline'",
+				2);
+		else
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+			if (cur->type == TOKEN_HEREDOC)
+				ft_putstr_fd("<<", 2);
+			else if (cur->type == TOKEN_REDIRECT_OUT)
+				ft_putstr_fd(">", 2);
+			else if (cur->type == TOKEN_APPEND)
+				ft_putstr_fd(">>", 2);
+			else if (cur->type == TOKEN_REDIRECT_IN)
+				ft_putstr_fd("<", 2);
+			ft_putendl_fd("'", 2);
+		}
 		return (0);
 	}
 	return (1);

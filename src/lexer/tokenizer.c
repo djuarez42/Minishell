@@ -102,7 +102,13 @@ t_token	*tokenize_input(const char *input)
 	t_token		*tokens;
 
 	if (check_unmatched_quotes(input))
+	{
+		if (!isatty(STDIN_FILENO))
+			print_error(NULL, "syntax error: unexpected end of file");
+		else
+			print_error(NULL, "syntax error: unmatched quotes");
 		return (NULL);
+	}
 	frags = parse_mixed_fragments(input);
 	if (!frags)
 		return (NULL);

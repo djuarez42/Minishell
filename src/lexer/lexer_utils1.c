@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/20 13:42:08 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/25 17:08:04 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_token	*create_token(t_token_type type, bool space_before)
 	tok->next = NULL;
 	return (tok);
 }
-
+/* 
 void	print_fragments(t_fragment *fragments)
 {
 	int			i;
@@ -50,15 +50,25 @@ void	print_fragments(t_fragment *fragments)
 	i = 0;
 	while (fragments)
 	{
-		printf("Fragment %d:\n", i);
-		printf("  text           : \"%s\"\n", fragments->text);
-		printf("  quote_type     : %d\n", fragments->quote_type);
+		ft_putstr_fd("Fragment ", 1);
+		ft_putstr_fd(ft_itoa(i), 1);
+		ft_putendl_fd(":", 1);
+		ft_putstr_fd("  text           : \"", 1);
+		ft_putstr_fd(fragments->text, 1);
+		ft_putendl_fd("\"", 1);
+		ft_putstr_fd("  quote_type     : ", 1);
+		ft_putstr_fd(ft_itoa(fragments->quote_type), 1);
+		ft_putendl_fd("", 1);
 		if (fragments->has_space_after)
 			space_str = "true";
 		else
 			space_str = "false";
-		printf("  has_space_after: %s\n", space_str);
-		printf("  next           : %p\n\n", (void *)fragments->next);
+		ft_putstr_fd("  has_space_after: ", 1);
+		ft_putstr_fd((char *)space_str, 1);
+		ft_putendl_fd("", 1);
+		ft_putstr_fd("  next           : ", 1);
+		ft_putstr_fd(ft_itoa((long long)(fragments->next)), 1);
+		ft_putendl_fd("", 1);
 		fragments = fragments->next;
 		i++;
 	}
@@ -72,23 +82,33 @@ void	print_tokens_raw(t_token *tokens)
 	i = 0;
 	while (tokens)
 	{
-		printf("Token %d:\n", i);
-		printf("  type           : %d\n", tokens->type);
-		if (tokens->has_space_before)
-			printf("  has_space_before: true\n");
-		else
-			printf("  has_space_before: false\n");
+		ft_putstr_fd("Token ", 1);
+		ft_putstr_fd(ft_itoa(i), 1);
+		ft_putendl_fd(":", 1);
+		ft_putstr_fd("  type           : ", 1);
+		ft_putstr_fd(ft_itoa(tokens->type), 1);
+		ft_putendl_fd("", 1);
+		   if (tokens->has_space_before) {
+			   ft_putstr_fd("  has_space_before: true", 1);
+			   ft_putendl_fd("", 1);
+		   } else {
+			   ft_putstr_fd("  has_space_before: false", 1);
+			   ft_putendl_fd("", 1);
+		   }
 		if (tokens->final_text)
 			final_text = tokens->final_text;
 		else
 			final_text = "(null)";
-		printf("  final_text     : \"%s\"\n", final_text);
+		ft_putstr_fd("  final_text     : \"", 1);
+		ft_putstr_fd((char *)final_text, 1);
+		ft_putendl_fd("\"", 1);
 		print_fragments(tokens->fragments);
-		printf("\n");
+		ft_putendl_fd("", 1);
 		tokens = tokens->next;
 		i++;
 	}
 }
+ */
 
 t_fragment	*new_fragment(const char *start, size_t len, t_quote_type qtype,
 				bool space_after)

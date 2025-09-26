@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/23 21:50:32 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 18:10:36 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include "libft.h"
-#include "executor.h"
-#include "builtins.h"
+#include "minishell.h"
 
 static void	update_pwd_vars(char ***penvp)
 {
@@ -77,7 +73,7 @@ static int	change_dir_and_update(const char *path, char ***penvp, int type)
 	}
 	if (chdir(path) == -1)
 	{
-		perror("cd");
+		print_error("cd", strerror(errno));
 		return (1);
 	}
 	update_pwd_vars(penvp);
@@ -92,7 +88,7 @@ int	bi_cd(char **argv, char ***penvp)
 	type = -1;
 	if (argv[1] && argv[2])
 	{
-		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
+		print_error("cd", "too many arguments");
 		return (1);
 	}
 	path = resolve_cd_target(argv, penvp, &type);

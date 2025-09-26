@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 17:40:56 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 18:15:18 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include <stdbool.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-
 # include "lexer.h"
 # include "parser.h"
 # include "exec_state.h"
+# include <sys/stat.h>
 
 /* --------------------------- */
 /*        Structures           */
@@ -89,7 +89,8 @@ int				env_unset_var(char ***penvp, const char *name);
 
 void			handle_redirections_out(const char *filename, int *error);
 void			handle_redirections_in(const char *filename, int *error);
-void			handle_redirections_append(const char *filename, int *error);
+void			handle_redirections_append(const char *filename, int *error, \
+					t_exec_state *state);
 int				handle_redirections(t_redir *redir, char **envp,
 					t_exec_state *state);
 int				handle_redirections_and_quotes(t_redir *redirs,
@@ -155,6 +156,9 @@ int				wait_and_cleanup(pid_t *pids, size_t n_cmds);
 void			wire_child_pipes(size_t idx, size_t n_cmds, int (*pipes)[2]);
 int				wait_pipeline(pid_t *pids, size_t n);
 int				create_pipes(int (**pipes)[2], size_t n_pipes);
-void			print_execve_error(const char *cmd, const char *msg);
+
+/* fd guard helpers for parent-side redirs */
+int				fd_guard_begin(int saved[3]);
+void			fd_guard_end(int saved[3]);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils6.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:12:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 18:16:24 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 17:41:51 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,25 @@ t_token_type	determine_token_type(char *str, t_quote_type quote)
 	if (quote != QUOTE_NONE)
 		return (TOKEN_WORD);
 	if (str[0] == '<' && str[1] == '<' && str[2] == '\0')
+	{
 		return (TOKEN_HEREDOC);
+	}
 	else if (str[0] == '>' && str[1] == '>' && str[2] == '\0')
+	{
 		return (TOKEN_APPEND);
+	}
 	else if (str[0] == '<' && str[1] == '\0')
+	{
 		return (TOKEN_REDIRECT_IN);
+	}
 	else if (str[0] == '>' && str[1] == '\0')
+	{
 		return (TOKEN_REDIRECT_OUT);
+	}
 	else if (str[0] == '|' && str[1] == '\0')
+	{
 		return (TOKEN_PIPE);
+	}
 	else
 		return (TOKEN_WORD);
 }

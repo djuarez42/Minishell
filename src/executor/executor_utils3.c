@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils3.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:48:52 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 16:05:37 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 18:14:05 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	create_pipes(int (**pipes)[2], size_t n_pipes)
 		*pipes = NULL;
 		return (0);
 	}
-	*pipes = (int (*)[2])malloc(sizeof (int [2]) * n_pipes);
+	*pipes = (int (*)[2]) malloc (sizeof (int[2]) * n_pipes);
 	if (!*pipes)
 		return (-1);
 	if (create_pipes_loop(*pipes, n_pipes) == -1)
@@ -95,4 +95,30 @@ void	wire_child_pipes(size_t idx, size_t n_cmds, int (*pipes)[2])
 		if (dup2(pipes[idx][1], STDOUT_FILENO) == -1)
 			perror("dup2 stdout");
 	}
+}
+
+int	fd_guard_begin(int saved[3])
+{
+	saved[0] = dup(STDIN_FILENO);
+	saved[1] = dup(STDOUT_FILENO);
+	saved[2] = dup(STDERR_FILENO);
+	if (saved[0] == -1 || saved[1] == -1 || saved[2] == -1)
+		return (-1);
+	return (0);
+}
+
+void	fd_guard_end(int saved[3])
+{
+	if (saved[0] != -1)
+		dup2(saved[0], STDIN_FILENO);
+	if (saved[1] != -1)
+		dup2(saved[1], STDOUT_FILENO);
+	if (saved[2] != -1)
+		dup2(saved[2], STDERR_FILENO);
+	if (saved[0] != -1)
+		close(saved[0]);
+	if (saved[1] != -1)
+		close(saved[1]);
+	if (saved[2] != -1)
+		close(saved[2]);
 }
