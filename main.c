@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 20:28:10 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 15:18:32 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	run_interactive_shell(char ***envp_copy, t_exec_state *state)
 	}
 }
 
-int	main(int argc, char **argv, char **envp)
+/*int	main(int argc, char **argv, char **envp)
 {
 	char			**envp_copy;
 	t_exec_state	state;
@@ -74,9 +74,9 @@ int	main(int argc, char **argv, char **envp)
 	run_interactive_shell(&envp_copy, &state);
 	free_envp(envp_copy);
 	return (state.last_status);
-}
+}*/
 
-/*static void	run_non_interactive_shell(char ***envp_copy,
+static void	run_non_interactive_shell(char ***envp_copy,
 		t_exec_state *state)
 {
 	char	*line;
@@ -121,4 +121,4 @@ int	main(int argc, char **argv, char **envp)
 		run_non_interactive_shell(&envp_copy, &state);
 	free_envp(envp_copy);
 	return (state.last_status);
-}*/
+}
