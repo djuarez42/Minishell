@@ -6,12 +6,11 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 18:10:19 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/26 19:12:52 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "error_format.h"
 
 static int	check_initial_pipe(t_token *cur)
 {

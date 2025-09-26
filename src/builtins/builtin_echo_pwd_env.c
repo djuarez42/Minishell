@@ -6,17 +6,11 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/25 12:26:25 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/26 19:13:23 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "libft.h"
-#include "builtins.h"
-#include "error_format.h"
-#include <errno.h>
+#include "minishell.h"
 
 static int	is_n_flag(const char *s)
 {

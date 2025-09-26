@@ -6,13 +6,11 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/26 14:45:15 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/26 19:13:33 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "error_format.h"
-#include "error_format.h"
 
 int	bi_unset(char **argv, char ***penvp)
 {

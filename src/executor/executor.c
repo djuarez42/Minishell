@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 17:44:07 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/26 19:20:40 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,11 @@ void	executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state)
 	t_cmd	*cur;
 
 	cur = cmd_list;
-	while (cur)
-	{
-		if (!cur->argv || !cur->argv[0])
-			cur = hndle_emptargs(cur, penvp, state);
-		else
-			cur = handle_cmd(cur, penvp, state);
-	}
+	 while (cur)
+	 {
+	 	if (!cur->argv || !cur->argv[0] || cur->argv[0][0] == '\0')
+	 		cur = hndle_emptargs(cur, penvp, state);
+	 	else
+	 		cur = handle_cmd(cur, penvp, state);
+	 }
 }
