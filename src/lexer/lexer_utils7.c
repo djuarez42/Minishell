@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:14:41 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/20 13:27:23 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 16:54:05 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,14 +94,4 @@ char	*collect_double_quote_text(const char *text, int *i)
 		(*i)++;
 	}
 	return (buf);
-}
-
-bool	compute_space_after(const char *text, int i)
-{
-	if (text[i + 1])
-	{
-		if (ft_isspace((unsigned char)text[i + 1]))
-			return (true);
-	}
-	return (false);
 }

@@ -80,7 +80,6 @@ void			append_char_to_buf(char **buf, char c);
 void			handle_backslash_in_double(const char *text, int *i,
 					char **buf);
 char			*collect_double_quote_text(const char *text, int *i);
-bool			compute_space_after(const char *text, int i);
 
 /* ------------------------ Tokenization core -------------------------- */
 t_token_type	determine_token_type(char *str, t_quote_type quote);

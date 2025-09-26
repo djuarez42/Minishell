@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 14:35:37 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/26 16:52:26 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_fragment	*handle_double_quotes(const char *text, int *i)
 		len = strlen(buf);
 	else
 		len = 0;
-	space_after = compute_space_after(text, *i);
+	space_after = calc_space_after(text, *i);
 	frag = new_fragment(buf, len, QUOTE_DOUBLE, space_after);
 	if (buf)
 		free(buf);
