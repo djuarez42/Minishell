@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:21:32 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/25 22:06:50 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:24:32 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,7 @@ void	print_error(const char *context, const char *message)
 {
 	ft_putstr_fd("minishell: ", 2);
 	if (!isatty(STDIN_FILENO))
-	{
-		/* In non-interactive mode, mimic bash which prefixes messages with
-		   a "line 1: " context when commands are fed via stdin. */
 		ft_putstr_fd("line 1: ", 2);
-	}
 	if (context && *context)
 	{
 		ft_putstr_fd((char *)context, 2);
@@ -31,17 +27,41 @@ void	print_error(const char *context, const char *message)
 
 void	print_execve_error(const char *filename)
 {
+	int	saved_errno;
+
+	saved_errno = errno;
 	ft_putstr_fd("minishell: ", 2);
 	if (!isatty(STDIN_FILENO))
 		ft_putstr_fd("line 1: ", 2);
 	ft_putstr_fd((char *)filename, 2);
 	ft_putstr_fd(": ", 2);
-	if (errno == ENOENT)
-		ft_putendl_fd("command not found", 2);
-	else if (errno == EACCES)
+	if (saved_errno == ENOENT)
+	{
+		if (filename && ft_strchr(filename, '/'))
+			ft_putendl_fd("No such file or directory", 2);
+		else
+			ft_putendl_fd("command not found", 2);
+	}
+	else if (saved_errno == EACCES)
 		ft_putendl_fd("Permission denied", 2);
-	else if (errno == EISDIR)
+	else if (saved_errno == EISDIR)
 		ft_putendl_fd("Is a directory", 2);
 	else
-		ft_putendl_fd(strerror(errno), 2);
+		ft_putendl_fd(strerror(saved_errno), 2);
+}
+
+void	print_errno(const char *context)
+{
+	int	saved;
+
+	saved = errno;
+	ft_putstr_fd("minishell: ", 2);
+	if (!isatty(STDIN_FILENO))
+		ft_putstr_fd("line 1: ", 2);
+	if (context && *context)
+	{
+		ft_putstr_fd((char *)context, 2);
+		ft_putstr_fd(": ", 2);
+	}
+	ft_putendl_fd(strerror(saved), 2);
 }

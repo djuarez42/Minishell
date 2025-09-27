@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 18:27:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 19:07:23 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 18:59:58 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,10 @@
 
 //Global constants
 # define PROMPT "minishell$ "
+
+/* Error helpers */
+void	print_execve_error(const char *filename);
+void	print_errno(const char *context);
+/* Output helpers for builtins: use printf directly in code (no macros) */
 
 #endif

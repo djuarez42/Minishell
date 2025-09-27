@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 18:15:18 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:07:54 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,32 @@ int				wait_pipeline(pid_t *pids, size_t n);
 int				create_pipes(int (**pipes)[2], size_t n_pipes);
 
 /* fd guard helpers for parent-side redirs */
-int				fd_guard_begin(int saved[3]);
-void			fd_guard_end(int saved[3]);
+int				create_pipes_impl(int (*pipes)[2], size_t n_pipes);
+
+/* helpers for append redirections moved to a separate compilation unit */
+int		prepare_append_filename(const char *filename, char *expanded,
+			const char **target, t_exec_state *state);
+int		expand_home_marker(const char *filename, char *expanded,
+			const char **target);
+int		check_target_is_dir(const char *target, t_exec_state *state);
+int		attempt_append_target(const char *target, t_exec_state *state);
+
+/* helpers extracted to reduce function length */
+int		prepare_heredoc_delim(t_redir *redir, char **envp, t_exec_state *state);
+char	*search_in_path_dirs_helper(char *cmd, char **paths);
+void	handle_execve_error_helper(char *exec_path, char **argv);
+int		handle_empty_command(t_exec_state *state);
+
+/* heredoc helpers */
+int		is_heredoc_delimiter(const char *cmp, const char *delim);
+int		write_line_to_heredoc_fd(int fd, const char *line, const char *expanded);
+char		*process_heredoc_line(const char *line, t_heredoc_args *args);
+const char	*get_cmp_for_heredoc(char *line, char **expanded_line,
+								t_heredoc_args *args);
+int		handle_delimiter_and_cleanup(const char *cmp, const char *delim,
+						char *line, char *expanded_line);
+
+int		fd_guard_begin(int saved[3]);
+void		fd_guard_end(int saved[3]);
 
 #endif

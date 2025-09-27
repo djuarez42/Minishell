@@ -147,4 +147,9 @@ void					free_token_list(t_token *tokens);
 void					print_error(const char *context, const char *message);
 void					print_execve_error(const char *filename);
 
+/* Parser helpers extracted to reduce function size */
+int					parse_loop_helper(t_parse_ctx *ctx);
+int					check_trailing_pipe(t_parse_ctx *ctx);
+int					check_invalid_pipe(t_token *cur);
+
 #endif

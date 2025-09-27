@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils15.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:15 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/22 04:44:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/27 20:02:12 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,19 @@ int	open_heredoc_file(t_heredoc_args *args)
 	fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		perror("open heredoc");
-		args->heredoc_path = NULL;
-		return (-1);
+		free(path);
+		itoa_buffer_int(getpid(), count_str);
+		path = ft_strjoin(".heredoc_", count_str);
+		itoa_buffer_int(counter++, count_str);
+		path = ft_strjoin_free(ft_strjoin_free(path, "_"), count_str);
+		args->heredoc_path = path;
+		fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd == -1)
+		{
+			print_errno("open heredoc");
+			args->heredoc_path = NULL;
+			return (-1);
+		}
 	}
 	return (fd);
 }

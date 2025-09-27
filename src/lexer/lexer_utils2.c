@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 16:45:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 18:09:53 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 18:51:48 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ t_fragment	*handle_operators(const char *text, int *i)
 		*i += 2;
 	}
 	else if (text[*i] == '>' && text[*i + 1] == '>')
+	{
+		*i += 2;
+	}
+	else if (text[*i] == '>' && text[*i + 1] == '|')
 	{
 		*i += 2;
 	}

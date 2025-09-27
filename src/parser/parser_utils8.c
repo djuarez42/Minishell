@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 21:06:03 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 17:43:07 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:20:46 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,6 @@ static char	*build_redir_file(t_fragment *frag)
 	if (!file)
 		return (NULL);
 	return (file);
-}
-
-static char	**build_heredoc_content(const char *file, bool quoted)
-{
-	char	**content;
-
-	content = collect_heredoc_content(file, quoted);
-	if (!content)
-		return (NULL);
-	return (content);
 }
 
 static t_redir	*init_redir(t_token *cur)
@@ -82,16 +72,5 @@ t_redir	*create_redir(t_token *cur)
 	redir = init_redir(cur);
 	if (!redir)
 		return (NULL);
-	if (redir->type == TOKEN_HEREDOC)
-	{
-		redir->heredoc_content = build_heredoc_content(redir->file,
-				redir->quoted);
-		if (!redir->heredoc_content)
-		{
-			free(redir->file);
-			free(redir);
-			return (NULL);
-		}
-	}
 	return (redir);
 }

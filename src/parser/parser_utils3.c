@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 02:39:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 17:49:17 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:32:15 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	**build_words_from_token(t_token *tok, int *out_count)
 
 void	update_final_text(t_token *tok, t_proc_ctx *ctx)
 {
-	t_token_type new_type;
+	t_token_type	new_type;
 
 	expand_fragments(tok, ctx->envp, ctx->state);
 	free(tok->final_text);

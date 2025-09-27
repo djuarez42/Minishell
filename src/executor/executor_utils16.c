@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 19:53:41 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 20:27:06 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:55:54 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	env_set_assignment(char ***penvp, const char *assignment)
 	int		ok;
 
 	if (!assignment)
-		return (0);
+		return (1);
 	eq = ft_strchr((char *)assignment, '=');
 	if (!eq)
 	{
@@ -27,10 +27,12 @@ int	env_set_assignment(char ***penvp, const char *assignment)
 	}
 	name = ft_substr(assignment, 0, eq - assignment);
 	if (!name)
-		return (0);
+		return (1);
 	ok = env_set_var(penvp, name, eq + 1);
 	free(name);
-	return (ok);
+	if (ok == 0)
+		return (0);
+	return (1);
 }
 
 int	env_unset_var(char ***penvp, const char *name)
@@ -39,7 +41,7 @@ int	env_unset_var(char ***penvp, const char *name)
 	int	i;
 
 	if (!env_identifier_valid(name))
-		return (0);
+		return (1);
 	idx = env_find_index(*penvp, name);
 	if (idx < 0)
 		return (1);
@@ -50,7 +52,7 @@ int	env_unset_var(char ***penvp, const char *name)
 		(*penvp)[i] = (*penvp)[i + 1];
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 char	**new_envp(char **envp)

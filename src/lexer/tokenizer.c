@@ -19,8 +19,8 @@ t_token	*create_operator_token(t_fragment **cur, bool *space_before)
 	t_token		*tok;
 	t_fragment	*frag_copy;
 
-	tok = create_token(determine_token_type((*cur)->text,
-				(*cur)->quote_type), *space_before);
+	tok = create_token(determine_token_type((*cur)->text, (*cur)->quote_type),
+			*space_before);
 	*space_before = (*cur)->has_space_after;
 	frag_copy = new_fragment((*cur)->text, ft_strlen((*cur)->text),
 			(*cur)->quote_type, (*cur)->has_space_after);
@@ -70,10 +70,10 @@ void	skip_empty_fragments(t_fragment **cur)
 
 t_token	*build_tokens_from_fragments(t_fragment *cur)
 {
-	t_token		*tokens;
-	t_token		*last_token;
-	t_token		*tok;
-	bool		space_before;
+	t_token	*tokens;
+	t_token	*last_token;
+	t_token	*tok;
+	bool	space_before;
 
 	tokens = NULL;
 	last_token = NULL;
@@ -103,10 +103,7 @@ t_token	*tokenize_input(const char *input)
 
 	if (check_unmatched_quotes(input))
 	{
-		if (!isatty(STDIN_FILENO))
-			print_error(NULL, "syntax error: unexpected end of file");
-		else
-			print_error(NULL, "syntax error: unmatched quotes");
+		print_error(NULL, "syntax error: unexpected end of file");
 		return (NULL);
 	}
 	frags = parse_mixed_fragments(input);

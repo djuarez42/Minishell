@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:21:10 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/26 14:23:34 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:07:13 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	is_builtin(const char *cmd)
 	const char	*base;
 
 	if (!cmd)
+		return (0);
+	if (ft_strchr(cmd, '/'))
 		return (0);
 	base = get_base_cmd(cmd);
 	return (!ft_strncmp(base, "echo", 5) || !ft_strncmp(base, "cd", 3)
@@ -61,12 +63,6 @@ int	run_builtin_in_child(t_cmd *cmd, char ***penvp)
 {
 	return (dispatch_builtin(cmd, penvp));
 }
-
-/* Minimal implementation for the dot (.) builtin: when no filename is
-   provided, print usage similar to bash and return status 2. A full
-   implementation (sourcing) is out of scope for tests that expect the
-   usage message. */
-/* bi_dot removed: defer to external command execution for '.' */
 
 int	run_bi_in_parent(t_cmd *cmd, char ***penvp)
 {

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:51:04 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 19:22:23 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:21:07 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ static t_cmd	*alloc_cmd_struct(void)
 	cmd->argv_final_text = malloc(sizeof(char *) * MAX_ARGS);
 	cmd->argv_first_word = malloc(sizeof(bool) * MAX_ARGS);
 	cmd->freed_by_parser = false;
-	if (!cmd->argv || !cmd->argv_quote
-		|| !cmd->argv_final_text || !cmd->argv_first_word)
+	if (!cmd->argv || !cmd->argv_quote || !cmd->argv_final_text
+		|| !cmd->argv_first_word)
 	{
 		free(cmd->argv);
 		free(cmd->argv_quote);
@@ -115,16 +115,10 @@ t_cmd	*create_cmd_node(t_token **cur, char **envp, t_exec_state *state)
 		free(cmd);
 		return (NULL);
 	}
-	 // Prevent command nodes with only empty argv[0]
-	 if (!cmd->argv[0] || cmd->argv[0][0] == '\0') {
-	 	free_cmd_arrays(cmd);
-	 	free(cmd);
-	 	return (NULL);
-	 }
-	 if ((*cur)->type == TOKEN_PIPE)
-	 {
-	 	cmd->pipe = 1;
-	 	*cur = (*cur)->next;
-	 }
-	 return (cmd);
+	if ((*cur)->type == TOKEN_PIPE)
+	{
+		cmd->pipe = 1;
+		*cur = (*cur)->next;
+	}
+	return (cmd);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils17.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 05:02:16 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/23 20:31:41 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/27 19:45:12 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	realloc_env(char ***penvp, int new_count)
 
 	new = (char **)malloc(sizeof(char *) * (new_count + 1));
 	if (!new)
-		return (0);
+		return (1);
 	i = 0;
 	while ((*penvp)[i] && i < new_count)
 	{
@@ -29,7 +29,7 @@ static int	realloc_env(char ***penvp, int new_count)
 	new[new_count] = NULL;
 	free(*penvp);
 	*penvp = new;
-	return (1);
+	return (0);
 }
 
 static char	*build_env_entry(const char *name, const char *value)
@@ -49,15 +49,15 @@ static char	*build_env_entry(const char *name, const char *value)
 
 static int	insert_new_env_var(char ***penvp, char *entry)
 {
-	int		count;
+	int	count;
 
 	count = 0;
 	while ((*penvp)[count])
 		count++;
-	if (!realloc_env(penvp, count + 1))
+	if (realloc_env(penvp, count + 1) != 0)
 	{
 		free(entry);
-		return (0);
+		return (1);
 	}
 	while (count > 0)
 	{
@@ -65,7 +65,7 @@ static int	insert_new_env_var(char ***penvp, char *entry)
 		count--;
 	}
 	(*penvp)[0] = entry;
-	return (1);
+	return (0);
 }
 
 int	update_env(char ***envp_copy, char *new_var)
@@ -100,14 +100,18 @@ int	update_env(char ***envp_copy, char *new_var)
 int	env_set_var(char ***penvp, const char *name, const char *value)
 {
 	char	*entry;
+	int		res;
 
 	if (!env_identifier_valid(name))
-		return (0);
+		return (1);
 	entry = build_env_entry(name, value);
 	if (!entry)
-		return (0);
+		return (1);
 	if (update_env(penvp, entry) == 1)
-		return (insert_new_env_var(penvp, entry));
+	{
+		res = insert_new_env_var(penvp, entry);
+		return (res);
+	}
 	free(entry);
-	return (1);
+	return (0);
 }

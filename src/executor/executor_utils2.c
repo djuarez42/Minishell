@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:36:38 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 21:59:10 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 18:52:04 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	wait_single_process(t_wait_ctx *ctx)
 	{
 		if (errno == EINTR)
 			return (-2);
-		perror("waitpid");
+		print_errno("waitpid");
 		return (-1);
 	}
 	if (ctx->w == ctx->last_pid)
@@ -69,7 +69,7 @@ int	init_pipes_and_n(int n_cmds, int (**pipes)[2], size_t *n_pipes)
 		*n_pipes = 0;
 	if (create_pipes(pipes, *n_pipes) == -1)
 	{
-		perror("pipe");
+		print_errno("pipe");
 		return (1);
 	}
 	return (0);

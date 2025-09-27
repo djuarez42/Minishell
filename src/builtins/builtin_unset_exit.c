@@ -6,24 +6,45 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/26 19:13:33 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:00:39 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	print_unset_invalid_option(const char *arg)
+{
+	char	opt[3];
+
+	opt[0] = '-';
+	opt[1] = 0;
+	opt[2] = 0;
+	if (arg && arg[0] == '-' && arg[1])
+		opt[1] = arg[1];
+	else
+		opt[1] = '?';
+	ft_putstr_fd("minishell: unset: ", STDERR_FILENO);
+	ft_putstr_fd(opt, STDERR_FILENO);
+	ft_putendl_fd(": invalid option", STDERR_FILENO);
+	return (2);
+}
+
 int	bi_unset(char **argv, char ***penvp)
 {
 	int	i;
+	int	status;
 
 	i = 1;
+	status = 0;
+	if (argv[i] && argv[i][0] == '-')
+		return (print_unset_invalid_option(argv[i]));
 	while (argv[i])
 	{
 		if (env_identifier_valid(argv[i]))
 			(void)env_unset_var(penvp, argv[i]);
 		i++;
 	}
-	return (0);
+	return (status);
 }
 
 static int	is_valid_number(const char *s)
@@ -92,96 +113,3 @@ int	bi_exit(char **argv)
 	code = (long long)ft_atoi(argv[1]);
 	return ((int)(code & 0xFF));
 }
-
-/*static int	is_valid_number(const char *s)
-{
-	int	i;
-	int	digits;
-
-	if (!s || !*s)
-		return (0);
-	i = 0;
-	if (s[i] == '+' || s[i] == '-')
-		i++;
-	digits = 0;
-	while (s[i])
-	{
-		if (!ft_isdigit((unsigned char)s[i]))
-			return (0);
-		digits++;
-		i++;
-	}
-	return (digits > 0);
-}
-
-int	bi_exit(char **argv)
-{
-	long long	code;
-	int			argc;
-
-	argc = 0;
-	while (argv[argc])
-		argc++;
-	if (argc == 1)
-		return (0);
-	if (!is_valid_number(argv[1]))
-	{
-		fprintf(stderr, "minishell: exit: %s: numeric argument required\n",
-			argv[1]);
-		return (2);
-	}
-	if (argc > 2)
-	{
-		fprintf(stderr, "minishell: exit: too many arguments\n");
-		return (1);
-	}
-	code = (long long)ft_atoi(argv[1]);
-	return ((int)(code & 0xFF));
-}*/
-
-/*static int	is_valid_number(const char *s)
-{
-	int	i;
-	int	digits;
-
-	if (!s || !*s)
-		return (0);
-	i = 0;
-	if (s[i] == '+' || s[i] == '-')
-		i++;
-	digits = 0;
-	while (s[i])
-	{
-		if (!ft_isdigit((unsigned char)s[i]))
-			return (0);
-		digits++;
-		i++;
-	}
-	return (digits > 0);
-}
-
-int	bi_exit(char **argv)
-{
-	long long	code;
-	int			argc;
-
-	argc = 0;
-	while (argv[argc])
-		argc++;
-	if (argc == 1)
-		exit(0);
-	if (!is_valid_number(argv[1]))
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(argv[1], 2);
-		ft_putendl_fd(": numeric argument required", 2);
-		exit(255);
-	}
-	if (argc > 2)
-	{
-		ft_putendl_fd("minishell: exit: too many arguments", 2);
-		return (1);
-	}
-	code = (long long)ft_atoi(argv[1]);
-	exit((unsigned char)code);
-}*/

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:47:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 18:07:29 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:08:30 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,23 +99,8 @@ int	validate_redirection(t_token *cur)
 			&& cur->next->fragments->expanded_text
 			&& cur->next->fragments->expanded_text[0] != '\0')
 			return (1);
-		if (!isatty(STDIN_FILENO))
-			ft_putendl_fd("minishell: syntax error near unexpected \
-								token `newline'",
-				2);
-		else
-		{
-			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-			if (cur->type == TOKEN_HEREDOC)
-				ft_putstr_fd("<<", 2);
-			else if (cur->type == TOKEN_REDIRECT_OUT)
-				ft_putstr_fd(">", 2);
-			else if (cur->type == TOKEN_APPEND)
-				ft_putstr_fd(">>", 2);
-			else if (cur->type == TOKEN_REDIRECT_IN)
-				ft_putstr_fd("<", 2);
-			ft_putendl_fd("'", 2);
-		}
+		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
+			2);
 		return (0);
 	}
 	return (1);

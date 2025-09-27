@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/26 18:10:36 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:32:24 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static const char	*resolve_cd_target(char **argv, char ***penvp, int *type)
 	const char	*path;
 	char		*temp;
 
-	if (!argv[1])
+	if (!argv[1] || (argv[1] && ft_strcmp(argv[1], "--") == 0))
 	{
 		*type = 0;
 		return (env_get_value(*penvp, "HOME"));

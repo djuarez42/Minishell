@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:52:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 14:26:21 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:27:52 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,20 @@ int	execute_command(char *exec_path, t_cmd *cmd, char **envp)
 	exec_path = find_executable(cmd->argv[0], envp);
 	if (!exec_path)
 	{
-		write(2, "minishell: ", 11);
-		write(2, cmd->argv[0], ft_strlen(cmd->argv[0]));
-		write(2, ": command not found\n", 20);
+		if (ft_strchr(cmd->argv[0], '/'))
+		{
+			ft_putstr_fd("minishell: ", 2);
+			if (!isatty(STDIN_FILENO))
+				ft_putstr_fd("line 1: ", 2);
+			ft_putstr_fd((char *)cmd->argv[0], 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
+		}
+		else
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd((char *)cmd->argv[0], 2);
+			ft_putstr_fd(": command not found\n", 2);
+		}
 		return (127);
 	}
 	return (execute_execve(exec_path, cmd->argv, envp));

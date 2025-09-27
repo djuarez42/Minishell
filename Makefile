@@ -3,17 +3,20 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: djuarez <djuarez@student.42.fr>           +#+  +:+       +#+         #
+#    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/25 12:24:01 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/09/27 20:25:23 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 NAME = minishell
 
 CC = cc 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+#LDFLAGS = -fsanitize=address
+
 
 INCLUDES = -Iinclude -Ilibft
 
@@ -22,9 +25,11 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
+	# macOS (Homebrew usually provides readline in default search paths)
 	READLINE_LIBS = -lreadline
 	READLINE_INC  =
 else
+	# Linux/Ubuntu: readline commonly requires ncurses (or tinfo)
 	READLINE_LIBS = -lreadline -lncurses -ltinfo
 	READLINE_INC  =
 endif
@@ -58,6 +63,7 @@ SRC = main.c \
 		src/parser/parser_utils13.c \
 		src/executor/executor.c \
 		src/executor/executor_utils.c \
+		src/parser/parser_helpers.c \
 		src/executor/executor_utils1.c \
 		src/executor/executor_utils2.c \
 		src/executor/executor_utils3.c \
@@ -72,6 +78,12 @@ SRC = main.c \
 		src/executor/executor_utils12.c \
 		src/executor/executor_utils13.c \
 		src/executor/executor_utils14.c \
+			src/executor/executor_helpers.c \
+			src/executor/executor_pipe_helpers.c \
+			src/executor/executor_redir_helpers.c \
+			src/executor/executor_heredoc_helpers.c \
+			src/executor/executor_utils5_helpers.c \
+			src/executor/executor_utils6_helpers.c \
 		src/executor/executor_utils15.c \
 		src/executor/executor_utils16.c \
 		src/executor/executor_utils17.c \
@@ -80,16 +92,19 @@ SRC = main.c \
 		src/builtins/builtins.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \
-		src/builtins/builtin_export.c \
-		src/builtins/builtin_unset_exit.c \
-		src/parser/parser_error_format.c \
+	src/builtins/builtin_export.c \
+		src/builtins/export_print_helpers.c \
+		src/builtins/export_utils_print_helpers.c \
+		src/builtins/export_utils_names.c \
+		src/builtins/export_utils_print.c \
+		src/builtins/export_utils_print2.c \
+		src/builtins/export_utils1.c \
+		src/builtins/export_utils2.c \
 		src/builtins/export_utils3.c \
 		src/builtins/export_utils4.c \
-		src/builtins/export_utils1.c \
-		src/builtins/export_utils_names.c \
-		src/builtins/export_utils2.c \
 		src/builtins/export_utils5.c \
-		src/builtins/export_print_helpers.c \
+		src/builtins/builtin_unset_exit.c \
+	src/error_format.c \
 
 OBJ = $(SRC:.c=.o)
 
@@ -100,22 +115,18 @@ all: $(LIBFT) $(NAME)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
-
+	
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) $(LIBS) $(INCLUDES)
-
-$(OBJ_DIR)/%.o: %.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) $(LIBS) $(INCLUDES) $(LDFLAGS)
 
 clean:
-	rm -rf $(OBJ)
+	rm -f $(OBJ)
 	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
-	rm -f $(NAME) $(OBJ)
+	rm -f $(NAME)
 	$(MAKE) fclean -C $(LIBFT_DIR)
-
+	
 re: fclean all
 
 .PHONY: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 22:11:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 19:18:10 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:27:19 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,24 +46,27 @@ void	expand_fragments(t_token *tok, char **envp, t_exec_state *state)
 	t_fragment	*frag;
 
 	frag = tok->fragments;
-	 while (frag)
-	 {
-	 	if (should_expand_fragment(frag)) {
-	 		frag->expanded_text = expand_fragment(frag->text,
-	 				frag->quote_type, envp, state);
-	 		if (!frag->expanded_text)
-	 			frag->expanded_text = ft_strdup("");
-	 	} else {
-	 		frag->expanded_text = ft_strdup(frag->text);
-	 		if (!frag->expanded_text)
-	 			frag->expanded_text = ft_strdup("");
-	 	}
-	 	frag = frag->next;
-	 }
+	while (frag)
+	{
+		if (should_expand_fragment(frag))
+		{
+			frag->expanded_text = expand_fragment(frag->text, frag->quote_type,
+					envp, state);
+			if (!frag->expanded_text)
+				frag->expanded_text = ft_strdup("");
+		}
+		else
+		{
+			frag->expanded_text = ft_strdup(frag->text);
+			if (!frag->expanded_text)
+				frag->expanded_text = ft_strdup("");
+		}
+		frag = frag->next;
+	}
 }
 
-char	*expand_fragment(const char *text, t_quote_type quote,
-			char **envp, t_exec_state *state)
+char	*expand_fragment(const char *text, t_quote_type quote, char **envp,
+		t_exec_state *state)
 {
 	char	*result;
 	char	*tmp;

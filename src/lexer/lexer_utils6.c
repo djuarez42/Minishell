@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:12:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 17:41:51 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:37:26 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,10 @@ t_token_type	determine_token_type(char *str, t_quote_type quote)
 		return (TOKEN_REDIRECT_IN);
 	}
 	else if (str[0] == '>' && str[1] == '\0')
+	{
+		return (TOKEN_REDIRECT_OUT);
+	}
+	else if (str[0] == '>' && str[1] == '|' && str[2] == '\0')
 	{
 		return (TOKEN_REDIRECT_OUT);
 	}

@@ -6,11 +6,13 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:55:21 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/23 22:24:04 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 18:59:58 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* export_print removed — use macro in header to map to printf */
 
 void	export_utils_print_no_value(const char *name)
 {

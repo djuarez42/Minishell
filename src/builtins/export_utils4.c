@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils4.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 17:07:21 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/24 17:15:51 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/27 18:52:04 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	print_export_ident_error(const char *s)
 
 int	assign_or_error(char ***penvp, const char *arg)
 {
-	if (!env_set_assignment(penvp, arg))
+	if (env_set_assignment(penvp, arg) != 0)
 	{
 		print_export_ident_error(arg);
 		return (1);

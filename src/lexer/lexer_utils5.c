@@ -30,10 +30,7 @@ int	check_unmatched_quotes(const char *input)
 		i++;
 	}
 	if (single_open || double_open)
-	{
-		fprintf(stderr, "minishell: syntax error: unmatched quotes\n");
 		return (1);
-	}
 	return (0);
 }
 

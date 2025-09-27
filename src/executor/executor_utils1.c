@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 16:15:03 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 21:58:59 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:47:30 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,12 @@ static void	run_child_process_with_ctx(t_fork_ctx *ctx)
 		exit(130);
 	if (res == 1)
 		exit(1);
-	if (!ctx->cur->argv || !ctx->cur->argv[0])
+	if (!ctx->cur->argv || !ctx->cur->argv[0] || ctx->cur->argv[0][0] == '\0')
+	{
+		if (ctx->cur->redirs)
+			exit(0);
 		exit(2);
+	}
 	if (is_builtin(ctx->cur->argv[0]))
 		exit(run_builtin_in_child(ctx->cur, &ctx->envp));
 	code = execute_command(NULL, ctx->cur, ctx->envp);
@@ -45,7 +49,7 @@ static int	handle_fork_error(pid_t *pids, size_t i, int (*pipes)[2],
 	close_all_pipes(pipes, n_pipes);
 	free(pipes);
 	free(pids);
-	perror("fork");
+	print_errno("fork");
 	return (1);
 }
 
@@ -90,6 +94,6 @@ int	setup_pipes(t_fork_ctx *ctx, size_t n_cmds)
 	else
 		ctx->n_pipes = 0;
 	if (create_pipes(&ctx->pipes, ctx->n_pipes) == -1)
-		return (perror("pipe"), 1);
+		return (print_errno("pipe"), 1);
 	return (0);
 }

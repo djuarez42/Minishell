@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 16:46:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/24 17:00:31 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/27 18:59:58 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ static void	handle_export_value(char *name, char *val)
 		free(q);
 	}
 	else
-	{
 		printf("declare -x %s=%s\n", name, val);
-	}
 }
 
 void	print_env_entry(char *entry)

@@ -6,64 +6,34 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 14:25:58 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:51:45 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*process_heredoc_line(const char *line, t_heredoc_args *args)
-{
-	char	*expanded;
-
-	if (!args->quoted)
-		expanded = expand_variables(line, args->envp, args->state, QUOTE_NONE);
-	else
-		expanded = ft_strdup(line);
-	return (expanded);
-}
+/* helpers moved to executor_heredoc_helpers.c */
 
 static int	write_single_line(t_heredoc_args *args)
 {
-	char	*line;
-	char	*expanded_line;
+	char		*line;
+	char		*expanded_line;
 	const char	*cmp;
-	int		interactive;
+	int			interactive;
 
 	interactive = isatty(STDIN_FILENO);
 	line = read_heredoc_line(interactive);
 	if (!line)
 		return (130);
-	/* For unquoted heredoc, bash expands the body. The delimiter match
-	   is done against the expanded line; for quoted, match raw line. */
-	if (!args->quoted)
-	{
-		expanded_line = process_heredoc_line(line, args);
-		cmp = expanded_line ? expanded_line : line;
-	}
-	else
-	{
-		expanded_line = NULL;
-		cmp = line;
-	}
-	if (ft_strncmp(cmp, args->delimiter, ft_strlen(args->delimiter)) == 0
-		&& cmp[ft_strlen(args->delimiter)] == '\0')
-	{
-		free(line);
-		if (expanded_line)
-			free(expanded_line);
+	cmp = get_cmp_for_heredoc(line, &expanded_line, args);
+	if (handle_delimiter_and_cleanup(cmp, args->delimiter,
+			line, expanded_line) == 0)
 		return (0);
-	}
-	/* Not a delimiter: write the (possibly expanded) line */
 	if (!args->quoted)
 	{
+		write_line_to_heredoc_fd(args->fd, line, expanded_line);
 		if (expanded_line)
-		{
-			write(args->fd, expanded_line, ft_strlen(expanded_line));
 			free(expanded_line);
-		}
-		else
-			write(args->fd, line, ft_strlen(line));
 	}
 	else
 		write(args->fd, line, ft_strlen(line));
@@ -103,7 +73,7 @@ void	redirect_stdin_heredoc(const char *filepath)
 	fd = open(filepath, O_RDONLY);
 	if (fd == -1 || dup2(fd, STDIN_FILENO) == -1)
 	{
-		perror("heredoc redirect");
+		print_errno("heredoc redirect");
 		if (fd != -1)
 			close(fd);
 		return ;

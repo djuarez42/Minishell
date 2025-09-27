@@ -6,83 +6,38 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:50:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/26 18:14:50 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:26:24 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	export_sort_entries(char **copy, int n)
+static int	print_invalid_option(const char *arg)
 {
-	int		i;
-	int		j;
-	char	*tmp;
+	char	opt[3];
 
-	if (!copy || n <= 1)
-		return ;
-	i = 0;
-	while (i < n - 1)
-	{
-		j = i + 1;
-		while (j < n)
-		{
-			if (cmp_env(&copy[i], &copy[j]) > 0)
-			{
-				tmp = copy[i];
-				copy[i] = copy[j];
-				copy[j] = tmp;
-			}
-			j++;
-		}
-		i++;
-	}
+	opt[0] = '-';
+	opt[1] = 0;
+	opt[2] = 0;
+	if (arg && arg[0] == '-' && arg[1])
+		opt[1] = arg[1];
+	else
+		opt[1] = '?';
+	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
+	ft_putstr_fd(opt, STDERR_FILENO);
+	ft_putendl_fd(": invalid option", STDERR_FILENO);
+	return (2);
 }
 
-static char	**export_sorted_copy(char **envp, int *out_n)
+static int	is_invalid_option_token(const char *arg)
 {
-	char	**copy;
-	int		n;
-
-	if (!envp)
-	{
-		*out_n = 0;
-		return (NULL);
-	}
-	copy = export_utils_copy_env(envp, &n);
-	if (!copy)
-	{
-		*out_n = 0;
-		return (NULL);
-	}
-	export_sort_entries(copy, n);
-	*out_n = n;
-	return (copy);
-}
-
-void	print_exported_env(char **envp)
-{
-	char	**copy;
-	int		i;
-	int		n;
-
-	if (!envp)
-		return ;
-	copy = export_sorted_copy(envp, &n);
-	if (!copy)
-		return ;
-	i = 0;
-	while (i < n)
-	{
-		print_env_entry(copy[i]);
-		i++;
-	}
-	i = 0;
-	while (i < n)
-	{
-		free(copy[i]);
-		i++;
-	}
-	free(copy);
+	if (!arg || arg[0] != '-')
+		return (0);
+	if (arg[1] == '\0')
+		return (1);
+	if (arg[1] == '-' && arg[2] == '\0')
+		return (0);
+	return (1);
 }
 
 static int	handle_export_arg(char ***penvp, char *arg)
@@ -116,6 +71,10 @@ int	bi_export(char **argv, char ***penvp)
 	}
 	status = 0;
 	i = 1;
+	if (is_invalid_option_token(argv[i]))
+		return (print_invalid_option(argv[i]));
+	if (argv[i] && argv[i][0] == '-' && argv[i][1] == '-' && argv[i][2] == '\0')
+		i++;
 	while (argv[i])
 	{
 		status |= handle_export_arg(penvp, argv[i]);
