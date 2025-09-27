@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:20:50 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/26 14:10:23 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 21:16:17 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,12 @@ int		bi_exit(char **argv);
 
 /* helpers used across export implementation */
 void	print_exported_env(char **envp);
+
+/* helpers moved to separate compilation unit */
+int		unset_print_invalid_option(const char *arg);
+int		exit_is_valid_number(const char *s);
+int		exit_print_num_args(const char *arg);
+int		exit_print_many_args(void);
 
 /* export utils (shared within builtins) */
 int		export_utils_count_env(char **envp);

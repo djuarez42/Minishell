@@ -6,7 +6,7 @@
 #    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/27 20:25:23 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/09/27 21:31:40 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,7 @@ SRC = main.c \
 		src/lexer/lexer_utils5.c \
 		src/lexer/lexer_utils6.c \
 		src/lexer/lexer_utils7.c \
+		src/lexer/lexer_utils8.c \
 		src/parser/parser.c \
 		src/parser/parser_utils.c \
 		src/parser/parser_utils1.c \
@@ -78,12 +79,13 @@ SRC = main.c \
 		src/executor/executor_utils12.c \
 		src/executor/executor_utils13.c \
 		src/executor/executor_utils14.c \
-			src/executor/executor_helpers.c \
-			src/executor/executor_pipe_helpers.c \
-			src/executor/executor_redir_helpers.c \
-			src/executor/executor_heredoc_helpers.c \
-			src/executor/executor_utils5_helpers.c \
-			src/executor/executor_utils6_helpers.c \
+		src/executor/executor_helpers.c \
+		src/executor/executor_pipe_helpers.c \
+		src/executor/executor_redir_helpers.c \
+		src/executor/executor_heredoc_helpers.c \
+		src/executor/executor_utils5_helpers.c \
+		src/executor/executor_utils6_helpers.c \
+		src/executor/executor_itoa_helpers.c \
 		src/executor/executor_utils15.c \
 		src/executor/executor_utils16.c \
 		src/executor/executor_utils17.c \
@@ -104,6 +106,7 @@ SRC = main.c \
 		src/builtins/export_utils4.c \
 		src/builtins/export_utils5.c \
 		src/builtins/builtin_unset_exit.c \
+		src/builtins/unset_exit_helpers.c \
 	src/error_format.c \
 
 OBJ = $(SRC:.c=.o)

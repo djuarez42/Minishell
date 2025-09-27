@@ -3,105 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils7.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:14:41 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/20 13:27:23 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/27 21:27:16 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	copy_fragments_to_buffer(t_fragment *frag, char *res)
-{
-	size_t		pos;
-	size_t		i;
-	t_fragment	*cur;
+static t_token_type	check_simple_tokens(char *str);
 
-	pos = 0;
-	cur = frag;
-	while (cur)
-	{
-		if (cur->text)
-		{
-			i = 0;
-			while (cur->text[i])
-			{
-				res[pos] = cur->text[i];
-				pos++;
-				i++;
-			}
-		}
-		cur = cur->next;
-	}
-	res[pos] = '\0';
-}
-
-void	append_char_to_buf(char **buf, char c)
+char	*concat_fragments(t_fragment *frag)
 {
-	char	*tmp;
 	size_t	len;
+	char	*res;
 
-	len = 0;
-	if (*buf)
-		len = ft_strlen(*buf);
-	tmp = malloc(len + 2);
-	if (!tmp)
-		return ;
-	if (*buf)
-	{
-		ft_strlcpy(tmp, *buf, len + 1);
-		free(*buf);
-	}
-	tmp[len] = c;
-	tmp[len + 1] = '\0';
-	*buf = tmp;
+	if (!frag)
+		return (NULL);
+	len = calc_total_length(frag);
+	res = malloc(len + 1);
+	if (!res)
+		return (NULL);
+	copy_fragments_to_buffer(frag, res);
+	return (res);
 }
 
-void	handle_backslash_in_double(const char *text, int *i, char **buf)
+// helper functions moved to lexer_utils6.c to satisfy Norminette function count
+
+t_token_type	determine_token_type(char *str, t_quote_type quote)
 {
-	if (text[*i + 1] == '"' || text[*i + 1] == '\\' || text[*i + 1] == '`')
-	{
-		append_char_to_buf(buf, text[*i + 1]);
-		(*i) += 2;
-	}
-	else if (text[*i + 1] == '$')
-	{
-		append_char_to_buf(buf, '\\');
-		append_char_to_buf(buf, '$');
-		(*i) += 2;
-	}
-	else
-	{
-		append_char_to_buf(buf, '\\');
-		(*i)++;
-	}
+	if (!str)
+		return (TOKEN_WORD);
+	if (quote != QUOTE_NONE)
+		return (TOKEN_WORD);
+	return (check_simple_tokens(str));
 }
 
-char	*collect_double_quote_text(const char *text, int *i)
+static t_token_type	check_simple_tokens(char *str)
 {
-	char	*buf;
-
-	buf = NULL;
-	while (text[*i] && text[*i] != '"')
-	{
-		if (text[*i] == '\\' && text[*i + 1])
-		{
-			handle_backslash_in_double(text, i, &buf);
-			continue ;
-		}
-		append_char_to_buf(&buf, text[*i]);
-		(*i)++;
-	}
-	return (buf);
-}
-
-bool	compute_space_after(const char *text, int i)
-{
-	if (text[i + 1])
-	{
-		if (ft_isspace((unsigned char)text[i + 1]))
-			return (true);
-	}
-	return (false);
+	if (str[0] == '<' && str[1] == '<' && str[2] == '\0')
+		return (TOKEN_HEREDOC);
+	if (str[0] == '>' && str[1] == '>' && str[2] == '\0')
+		return (TOKEN_APPEND);
+	if (str[0] == '<' && str[1] == '\0')
+		return (TOKEN_REDIRECT_IN);
+	if (str[0] == '>' && str[1] == '\0')
+		return (TOKEN_REDIRECT_OUT);
+	if (str[0] == '>' && str[1] == '|' && str[2] == '\0')
+		return (TOKEN_REDIRECT_OUT);
+	if (str[0] == '|' && str[1] == '\0')
+		return (TOKEN_PIPE);
+	return (TOKEN_WORD);
 }

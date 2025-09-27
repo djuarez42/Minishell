@@ -6,26 +6,11 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:12:20 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/27 19:37:26 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 21:28:22 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*concat_fragments(t_fragment *frag)
-{
-	size_t	len;
-	char	*res;
-
-	if (!frag)
-		return (NULL);
-	len = calc_total_length(frag);
-	res = malloc(len + 1);
-	if (!res)
-		return (NULL);
-	copy_fragments_to_buffer(frag, res);
-	return (res);
-}
 
 t_token	*append_token_eof(t_token *head)
 {
@@ -79,38 +64,4 @@ void	free_token_list(t_token *tokens)
 		free(tokens);
 		tokens = tmp;
 	}
-}
-
-t_token_type	determine_token_type(char *str, t_quote_type quote)
-{
-	if (!str)
-		return (TOKEN_WORD);
-	if (quote != QUOTE_NONE)
-		return (TOKEN_WORD);
-	if (str[0] == '<' && str[1] == '<' && str[2] == '\0')
-	{
-		return (TOKEN_HEREDOC);
-	}
-	else if (str[0] == '>' && str[1] == '>' && str[2] == '\0')
-	{
-		return (TOKEN_APPEND);
-	}
-	else if (str[0] == '<' && str[1] == '\0')
-	{
-		return (TOKEN_REDIRECT_IN);
-	}
-	else if (str[0] == '>' && str[1] == '\0')
-	{
-		return (TOKEN_REDIRECT_OUT);
-	}
-	else if (str[0] == '>' && str[1] == '|' && str[2] == '\0')
-	{
-		return (TOKEN_REDIRECT_OUT);
-	}
-	else if (str[0] == '|' && str[1] == '\0')
-	{
-		return (TOKEN_PIPE);
-	}
-	else
-		return (TOKEN_WORD);
 }
