@@ -27,24 +27,48 @@ static int	write_single_line(t_heredoc_args *args)
 {
 	char	*line;
 	char	*expanded_line;
+	const char	*cmp;
+	int		interactive;
 
-	line = readline("> ");
+	interactive = isatty(STDIN_FILENO);
+	line = read_heredoc_line(interactive);
 	if (!line)
 		return (130);
-	if (ft_strncmp(line, args->delimiter, ft_strlen(args->delimiter)) == 0
-		&& line[ft_strlen(args->delimiter)] == '\0')
+	/* For unquoted heredoc, bash expands the body. The delimiter match
+	   is done against the expanded line; for quoted, match raw line. */
+	if (!args->quoted)
+	{
+		expanded_line = process_heredoc_line(line, args);
+		cmp = expanded_line ? expanded_line : line;
+	}
+	else
+	{
+		expanded_line = NULL;
+		cmp = line;
+	}
+	if (ft_strncmp(cmp, args->delimiter, ft_strlen(args->delimiter)) == 0
+		&& cmp[ft_strlen(args->delimiter)] == '\0')
 	{
 		free(line);
+		if (expanded_line)
+			free(expanded_line);
 		return (0);
 	}
-	expanded_line = process_heredoc_line(line, args);
-	if (expanded_line)
+	/* Not a delimiter: write the (possibly expanded) line */
+	if (!args->quoted)
 	{
-		write(args->fd, expanded_line, ft_strlen(expanded_line));
-		write(args->fd, "\n", 1);
-		free(expanded_line);
+		if (expanded_line)
+		{
+			write(args->fd, expanded_line, ft_strlen(expanded_line));
+			free(expanded_line);
+		}
+		else
+			write(args->fd, line, ft_strlen(line));
 	}
+	else
+		write(args->fd, line, ft_strlen(line));
 	free(line);
+	write(args->fd, "\n", 1);
 	return (-1);
 }
 

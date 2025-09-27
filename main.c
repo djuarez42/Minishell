@@ -71,31 +71,29 @@ static void	process_input(char *input, char ***envp_copy, t_exec_state *state)
 	if (!tokens)
 		return ;
 	cmds = parser_tokens(tokens, *envp_copy, state);
-	if (cmds)
-	{
-		// Check if there is at least one argv (command) in the cmds list
-		t_cmd *tmp = cmds;
-		bool has_command = false;
-		while (tmp)
-		{
-			if (tmp->argv && tmp->argv[0] && tmp->argv[0][0] != '\0') {
-				has_command = true;
-				break;
-			}
-			tmp = tmp->next;
-		}
-		if (has_command) {
-			executor(cmds, envp_copy, state);
-		} else {
-			int err = 1;
-			handle_redirections_append(cmds->redirs->file, &err, state);
-			// Error and exit code handled by redirection handler
-			// Only redirections, no command: match bash, do nothing and return to prompt
-			// Do nothing, let redirection handler print error and set exit code if needed
-		}
-		
-		free_cmds(cmds);
-	}
+    if (cmds)
+    {
+        // Check if there is at least one argv (command) in the cmds list
+        t_cmd *tmp = cmds;
+        bool has_command = false;
+        while (tmp)
+        {
+            if (tmp->argv && tmp->argv[0] && tmp->argv[0][0] != '\0') {
+                has_command = true;
+                break;
+            }
+            tmp = tmp->next;
+        }
+        if (has_command) {
+            executor(cmds, envp_copy, state);
+        } else {
+            // No actual command in the line. If there are redirections-only,
+            // apply them; otherwise do nothing (bash keeps last status).
+            if (cmds->redirs)
+                (void)handle_redirections(cmds->redirs, *envp_copy, state);
+        }
+        free_cmds(cmds);
+    }
 	free_token_list(tokens);
 }
 
