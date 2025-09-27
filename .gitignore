@@ -1,0 +1,60 @@
+# Compiled objects and binaries
+*.o
+**/*.o
+main.o
+minishell
+obj/
+obj/**
+src/*/*.o
+
+# libft build
+libft/libft.a
+libft/*.o
+
+# Build artifacts from tests and tools
+out*
+out0
+bash_*.txt
+minishell_*.txt
+ms_diag.log
+minishell_test_results.log
+minishell_tester_v2.sh
+# 42 tester and related artifacts
+42_minishell_tester/
+Criterion/
+
+# Tester / helper scripts
+**/*tester*.sh
+**/tester.sh
+**/test.sh
+**/fix_tester*.sh
+**/improve_filter.sh
+**/install.sh
+**/tester.png
+**/grep
+tests/Makefile
+tests/test_hello_world.c
+tests/test_lexer_utils5.c
+tests/test_minishell.c
+# IDE / Editor
+.vscode/
+*.swp
+*.swx
+*~
+
+# Explicit entries requested
+.vscode/c_cpp_properties.json
+.vscode/settings.json
+tatus
+"\357\277\275"
+D "\357\277\275"
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+*.tmp
