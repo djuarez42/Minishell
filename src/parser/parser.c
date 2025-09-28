@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/27 20:25:23 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/28 18:08:15 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,24 @@ int	check_invalid_pipe(t_token *cur)
 	return (0);
 }
 
-int	parse_loop_helper(t_parse_ctx *ctx);
+int	parse_loop_helper(t_parse_ctx *ctx)
+{
+	t_cmd	*new_cmd;
+
+	while (ctx->cur && ctx->cur->type != TOKEN_EOF)
+	{
+		if (check_invalid_pipe(ctx->cur))
+			return (1);
+		new_cmd = create_cmd_node(&ctx->cur, ctx->envp, ctx->state);
+		if (!new_cmd)
+		{
+			free_cmds(ctx->head);
+			return (1);
+		}
+		add_cmd_node(&ctx->head, &ctx->last, new_cmd);
+	}
+	return (0);
+}
 
 t_cmd	*parser_tokens(t_token *tokens, char **envp, t_exec_state *state)
 {

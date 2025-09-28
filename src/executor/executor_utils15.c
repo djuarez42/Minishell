@@ -3,19 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils15.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:15 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/27 21:29:46 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/28 18:17:00 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* itoa helpers moved to executor_itoa_helpers.c to satisfy style rules */
+static char	*try_open_heredoc(int *out_fd, int *counter, char *count_str)
+{
+	char	*path;
 
-static char	*try_open_heredoc(int *out_fd, int *counter, char *count_str);
-static char	*try_open_heredoc_fallback(int *out_fd, int *counter, char *count_str);
+	itoa_buffer_int(getpid(), count_str);
+	path = ft_strjoin("/tmp/.heredoc_", count_str);
+	itoa_buffer_int((*counter)++, count_str);
+	path = ft_strjoin_free(path, "_");
+	path = ft_strjoin_free(path, count_str);
+	*out_fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (*out_fd != -1)
+		return (path);
+	free(path);
+	return (NULL);
+}
+
+static char	*try_open_heredoc_fallback(int *out_fd, int *counter,
+			char *count_str)
+{
+	char	*path;
+	char	*tmp;
+
+	itoa_buffer_int(getpid(), count_str);
+	path = ft_strjoin(".heredoc_", count_str);
+	itoa_buffer_int((*counter)++, count_str);
+	tmp = ft_strjoin_free(path, "_");
+	path = ft_strjoin_free(tmp, count_str);
+	*out_fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (*out_fd == -1)
+	{
+		free(path);
+		return (NULL);
+	}
+	return (path);
+}
 
 int	open_heredoc_file(t_heredoc_args *args)
 {
@@ -40,39 +71,4 @@ int	open_heredoc_file(t_heredoc_args *args)
 	}
 	args->heredoc_path = path;
 	return (fd);
-}
-
-static char	*try_open_heredoc(int *out_fd, int *counter, char *count_str)
-{
-	char	*path;
-
-	itoa_buffer_int(getpid(), count_str);
-	path = ft_strjoin("/tmp/.heredoc_", count_str);
-	itoa_buffer_int((*counter)++, count_str);
-	path = ft_strjoin_free(path, "_");
-	path = ft_strjoin_free(path, count_str);
-	*out_fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (*out_fd != -1)
-		return (path);
-	free(path);
-	return (NULL);
-}
-
-static char	*try_open_heredoc_fallback(int *out_fd, int *counter, char *count_str)
-{
-	char	*path;
-	char	*tmp;
-
-	itoa_buffer_int(getpid(), count_str);
-	path = ft_strjoin(".heredoc_", count_str);
-	itoa_buffer_int((*counter)++, count_str);
-	tmp = ft_strjoin_free(path, "_");
-	path = ft_strjoin_free(tmp, count_str);
-	*out_fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (*out_fd == -1)
-	{
-		free(path);
-		return (NULL);
-	}
-	return (path);
 }

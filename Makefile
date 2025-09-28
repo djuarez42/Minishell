@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/27 21:31:40 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/09/28 18:07:28 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,8 @@ LIBS = $(READLINE_LIBS)
 INCLUDES += $(READLINE_INC)
 
 SRC = main.c \
+		src/main/error_format.c \
+		src/main/process_input.c \
 		src/lexer/tokenizer.c \
 		src/lexer/lexer_utils1.c \
 		src/lexer/lexer_utils2.c \
@@ -65,6 +67,7 @@ SRC = main.c \
 		src/executor/executor.c \
 		src/executor/executor_utils.c \
 		src/parser/parser_helpers.c \
+		src/executor/shell_level_utils.c \
 		src/executor/executor_utils1.c \
 		src/executor/executor_utils2.c \
 		src/executor/executor_utils3.c \
@@ -94,7 +97,7 @@ SRC = main.c \
 		src/builtins/builtins.c \
 		src/builtins/builtin_echo_pwd_env.c \
 		src/builtins/builtin_cd.c \
-	src/builtins/builtin_export.c \
+		src/builtins/builtin_export.c \
 		src/builtins/export_print_helpers.c \
 		src/builtins/export_utils_print_helpers.c \
 		src/builtins/export_utils_names.c \
@@ -107,7 +110,6 @@ SRC = main.c \
 		src/builtins/export_utils5.c \
 		src/builtins/builtin_unset_exit.c \
 		src/builtins/unset_exit_helpers.c \
-	src/error_format.c \
 
 OBJ = $(SRC:.c=.o)
 

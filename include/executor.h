@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/27 21:29:47 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/28 17:58:05 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,10 @@ char				*expand_ansi_c_string(const char *input);
 int					is_dollar_string(const char *input, int pos);
 char				*handle_dollar_string(const char *input, int *i);
 // para ordenar
+void				signal_handler(int signo);
+void				update_shlvl(char **envp);
+void				process_input(char *input, char ***envp_copy,
+						t_exec_state *state);
 int					init_pipes_and_n(int n_cmds, int (**pipes)[2],
 						size_t *n_pipes);
 int					fork_and_run_pipeline(t_cmd *start, size_t n_cmds,
