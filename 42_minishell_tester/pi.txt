@@ -1,0 +1,10 @@
+usage: mstest [m,vm,ne,b,a] {builtins,b,parsing,pa,redirections,r,pipelines,pi,cmds,c,variables,v,corrections,co,path,syntax,s}...
+m: mandatory tests
+vm: mandatory tests with valgrind
+ne: tests without environment
+b: bonus tests
+a: mandatory and bonus tests
+d: mandatory pipe segfault test (BRUTAL)
+Starting from the second argument, their can be any number of argument specified between brackets.
+You can test a specific part of your minishell by writing mstest vm builtins redirections
+If the part list is empty, everything will be tested.
