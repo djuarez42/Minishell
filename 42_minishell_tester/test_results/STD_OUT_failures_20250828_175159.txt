@@ -1,0 +1,425 @@
+=== List of All Failing Tests ===
+
+Test #: > (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:5)
+Test #: < (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:7)
+Test #: << (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:9)
+Test #: > > > > > (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:11)
+Test #: >> >> >> >> (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:13)
+Test #: >>>>>>>>> (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:15)
+Test #: <<<<<<<<< (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:17)
+Test #: ~ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:19)
+Test #: < < < < < < (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:21)
+Test #: /bin/cat >< (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:23)
+Test #: /bin/cat <Makefile > (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:25)
+Test #: cat 42 42 (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:27)
+Test #: echo > (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:29)
+Test #: echo > < (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:31)
+Test #: . (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:33)
+Test #: .. (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:35)
+Test #: echo | | (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:37)
+Test #: EechoE (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:39)
+Test #: .echo. (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:41)
+Test #: >echo> (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:43)
+Test #: <echo< (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:46)
+Test #: >>echo>> (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:49)
+Test #: |echo| (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:52)
+Test #: trying to destroy your minishell (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:54)
+Test #: | (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:56)
+Test #: | test (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:58)
+Test #: | | | (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:60)
+Test #: | | | | test (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:62)
+Test #: | test (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:64)
+Test #: echo > < (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:66)
+Test #: hello world (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:68)
+Test #: > > > > (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:74)
+Test #: >> >> >> >> (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:76)
+Test #: << (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:78)
+Test #: / (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:80)
+Test #: \\\ (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:82)
+Test #: | echo -n oui (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:86)
+Test #: trying to destroy your minishell (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:88)
+Test #: <<| echo wtf (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:96)
+Test #: >>| echo wtf (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:98)
+Test #: <| echo wtf (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:103)
+Test #: <> (/home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:113)
+
+=== Detailed Test Results ===
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:5
+=== Test command ===
+    
+    >
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:7
+=== Test command ===
+    
+    <
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:9
+=== Test command ===
+    
+    <<
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:11
+=== Test command ===
+    
+    > > > > >
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:13
+=== Test command ===
+    
+    >> >> >> >>
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:15
+=== Test command ===
+    
+    >>>>>>>>>
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:17
+=== Test command ===
+    
+    <<<<<<<<<
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:19
+=== Test command ===
+    
+    ~
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:21
+=== Test command ===
+    
+    < < < < < <
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:23
+=== Test command ===
+    
+    /bin/cat ><
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:25
+=== Test command ===
+    
+    /bin/cat <Makefile >
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:27
+=== Test command ===
+    
+    cat 42 42
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:29
+=== Test command ===
+    
+    echo >
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:31
+=== Test command ===
+    
+    echo > <
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:33
+=== Test command ===
+    
+    .
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:35
+=== Test command ===
+    
+    ..
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:37
+=== Test command ===
+    
+    echo | |
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:39
+=== Test command ===
+    
+    EechoE
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:41
+=== Test command ===
+    
+    .echo.
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:43
+=== Test command ===
+    
+    >echo>
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:46
+=== Test command ===
+    
+    <echo<
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:49
+=== Test command ===
+    
+    >>echo>>
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:52
+=== Test command ===
+    
+    |echo|
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:54
+=== Test command ===
+    
+    trying to destroy your minishell
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:56
+=== Test command ===
+    
+    |
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:58
+=== Test command ===
+    
+    | test
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:60
+=== Test command ===
+    
+    | | |
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:62
+=== Test command ===
+    
+    | | | | test
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:64
+=== Test command ===
+    
+    | test
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:66
+=== Test command ===
+    
+    echo > <
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:68
+=== Test command ===
+    
+    hello world
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:74
+=== Test command ===
+    
+    > > > >
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:76
+=== Test command ===
+    
+    >> >> >> >>
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:78
+=== Test command ===
+    
+    <<
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:80
+=== Test command ===
+    
+    /
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:82
+=== Test command ===
+    
+    \\\
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:86
+=== Test command ===
+    
+    | echo -n oui
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+oui
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:88
+=== Test command ===
+    
+    trying to destroy your minishell
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:96
+=== Test command ===
+    
+    <<| echo wtf
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:98
+=== Test command ===
+    
+    >>| echo wtf
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:103
+=== Test command ===
+    
+    <| echo wtf
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
+Test # failed STD_OUT test at /home/ekakhmad/Minishell/42_minishell_tester/cmds/mand/8_syntax_errors.sh:113
+=== Test command ===
+    
+    <>
+    
+BASH OUTPUT:
+
+MINISHELL OUTPUT:
+
