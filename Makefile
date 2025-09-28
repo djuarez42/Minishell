@@ -6,17 +6,14 @@
 #    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/28 18:07:28 by djuarez          ###   ########.fr        #
+#    Updated: 2025/09/28 19:33:33 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-
 NAME = minishell
 
-CC = cc 
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
-#LDFLAGS = -fsanitize=address
-
+CC = cc
+CFLAGS = -Wall -Wextra -Werror -g
 
 INCLUDES = -Iinclude -Ilibft
 
@@ -25,11 +22,9 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-	# macOS (Homebrew usually provides readline in default search paths)
 	READLINE_LIBS = -lreadline
 	READLINE_INC  =
 else
-	# Linux/Ubuntu: readline commonly requires ncurses (or tinfo)
 	READLINE_LIBS = -lreadline -lncurses -ltinfo
 	READLINE_INC  =
 endif
@@ -111,18 +106,20 @@ SRC = main.c \
 		src/builtins/builtin_unset_exit.c \
 		src/builtins/unset_exit_helpers.c \
 
-OBJ = $(SRC:.c=.o)
-
-%.o: %.c Makefile 
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+OBJ_DIR = obj
+OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
-	
+
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) $(LIBS) $(INCLUDES) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) $(LIBS) $(INCLUDES)
+
+$(OBJ_DIR)/%.o: %.c Makefile
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -f $(OBJ)
@@ -131,7 +128,7 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 	$(MAKE) fclean -C $(LIBFT_DIR)
-	
+
 re: fclean all
 
 .PHONY: all clean fclean re

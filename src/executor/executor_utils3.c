@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils3.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 18:48:52 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/27 19:57:36 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/28 19:22:49 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,3 @@ void	wire_child_pipes(size_t idx, size_t n_cmds, int (*pipes)[2])
 			print_errno("dup2 stdout");
 	}
 }
-
-/* fd guard helpers are implemented in executor_pipe_helpers.c */
