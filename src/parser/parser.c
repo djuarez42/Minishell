@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/28 18:08:15 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/29 19:32:46 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,39 @@ int	check_invalid_pipe(t_token *cur)
 	return (0);
 }
 
+static int	validate_pipe_syntax(t_token *cur, t_token_type prev_type,
+	t_exec_state *state)
+{
+	if (cur->type != TOKEN_PIPE)
+		return (0);
+	if (prev_type == TOKEN_NONE || prev_type == TOKEN_PIPE)
+	{
+		print_error(NULL, "syntax error near unexpected token `|'");
+		if (state)
+			state->last_status = 2;
+		return (1);
+	}
+	if (!cur->next || cur->next->type == TOKEN_PIPE)
+	{
+		print_error(NULL, "syntax error near unexpected token `|'");
+		if (state)
+			state->last_status = 2;
+		return (1);
+	}
+
+	return (0);
+}
+
 int	parse_loop_helper(t_parse_ctx *ctx)
 {
-	t_cmd	*new_cmd;
+	t_cmd			*new_cmd;
+	t_token_type	prev_type;
 
+	prev_type = TOKEN_NONE;
 	while (ctx->cur && ctx->cur->type != TOKEN_EOF)
 	{
+		if (validate_pipe_syntax(ctx->cur, prev_type, ctx->state))
+			return (1);
 		if (check_invalid_pipe(ctx->cur))
 			return (1);
 		new_cmd = create_cmd_node(&ctx->cur, ctx->envp, ctx->state);

@@ -30,7 +30,8 @@ typedef enum e_token_type
 	TOKEN_APPEND,
 	TOKEN_EOF,
 	TOKEN_IN_FILE,
-	TOKEN_OUT_FILE
+	TOKEN_OUT_FILE,
+	TOKEN_NONE
 }	t_token_type;
 
 /* ---------------------------- Quote types ---------------------------- */
