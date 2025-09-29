@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/29 19:32:46 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/29 20:12:02 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,15 @@ int	parse_loop_helper(t_parse_ctx *ctx)
 	while (ctx->cur && ctx->cur->type != TOKEN_EOF)
 	{
 		if (validate_pipe_syntax(ctx->cur, prev_type, ctx->state))
+		{
+			free_cmds(ctx->head);
 			return (1);
+		}
 		if (check_invalid_pipe(ctx->cur))
+		{
+			free_cmds(ctx->head);
 			return (1);
+		}
 		new_cmd = create_cmd_node(&ctx->cur, ctx->envp, ctx->state);
 		if (!new_cmd)
 		{
