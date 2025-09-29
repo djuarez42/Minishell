@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/28 18:29:45 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/29 17:56:16 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static t_cmd	*handle_cmd(t_cmd *cur, char ***penvp, t_exec_state *state)
 	if (n == 1 && is_builtin(cur->argv[0]) && cur->pipe == 0)
 		status = run_parent_bi(cur, penvp, state);
 	else
-		status = run_pipeline(cur, n, envp, state);
+		status = run_pipeline(cur, n, *penvp, state);
 	state->last_status = status;
 	while (n-- > 0 && cur)
 		cur = cur->next;
