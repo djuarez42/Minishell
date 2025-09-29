@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils6.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:28:43 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/27 20:07:54 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/29 18:24:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ char	*find_executable(char *cmd, char **envp)
 		return (ft_strdup(cmd));
 	path_env = env_get_value(envp, "PATH");
 	if (!path_env || path_env[0] == '\0')
-		paths = ft_split("/usr/bin:/bin", ':');
+		return (NULL);
+		/*paths = ft_split("/usr/bin:/bin", ':');*/
 	else
 		paths = ft_split(path_env, ':');
 	if (!paths)
