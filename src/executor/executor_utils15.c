@@ -6,16 +6,18 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:15 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/27 21:29:46 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/09/27 21:33:22 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* itoa helpers moved to executor_itoa_helpers.c to satisfy style rules */
+/* Small itoa helpers were moved to a separate unit to satisfy style rules. */
 
-static char	*try_open_heredoc(int *out_fd, int *counter, char *count_str);
-static char	*try_open_heredoc_fallback(int *out_fd, int *counter, char *count_str);
+static char	*try_open_heredoc(int *out_fd, int *counter,
+				char *count_str);
+static char	*try_open_heredoc_fallback(int *out_fd, int *counter,
+				char *count_str);
 
 int	open_heredoc_file(t_heredoc_args *args)
 {
@@ -58,7 +60,8 @@ static char	*try_open_heredoc(int *out_fd, int *counter, char *count_str)
 	return (NULL);
 }
 
-static char	*try_open_heredoc_fallback(int *out_fd, int *counter, char *count_str)
+static char	*try_open_heredoc_fallback(int *out_fd, int *counter,
+		char *count_str)
 {
 	char	*path;
 	char	*tmp;
