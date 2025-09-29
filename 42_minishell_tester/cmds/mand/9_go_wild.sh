@@ -43,7 +43,7 @@ unset PATH HOME
 echo $PATH
 echo $HOME
 
-echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
+syntax error near unexpected token `|'echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
 
 echo "ls" | env -i $MINISHELL_PATH"/"$EXECUTABLE
