@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/29 17:13:12 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/30 16:12:35 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ static void	run_interactive_shell(char ***envp_copy, t_exec_state *state)
 	return (state.last_status);
 }*/
 
-static void	run_non_interactive_shell(char ***envp_copy, 
-	t_exec_state *state)
+static void	run_non_interactive_shell(char ***envp_copy,
+					t_exec_state *state)
 {
 	char	*line;
 	char	*input;

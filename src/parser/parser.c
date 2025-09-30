@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 17:00:07 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/29 20:12:02 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/30 16:09:43 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static int	validate_pipe_syntax(t_token *cur, t_token_type prev_type,
 			state->last_status = 2;
 		return (1);
 	}
-
 	return (0);
 }
 

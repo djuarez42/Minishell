@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/28 17:58:05 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/09/30 17:15:59 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-/* --------------------------- */
-/*        Structures           */
-/* --------------------------- */
+/* ************************************************************************** */
+/*                                Structures                                  */
+/* ************************************************************************** */
 
 typedef struct s_heredoc_args
 {
@@ -63,148 +63,150 @@ typedef struct s_dollar_ctx
 	t_quote_type	quote;
 }					t_dollar_ctx;
 
-/* --------------------------- */
-/*     Main function           */
-/* --------------------------- */
+/* ************************************************************************** */
+/*                              Main Executor                                 */
+/* ************************************************************************** */
 
-void				executor(t_cmd *cmd_list, char ***penvp,
-						t_exec_state *state);
+void		executor(t_cmd *cmd_list, char ***penvp, t_exec_state *state);
 
-/* --------------------------- */
-/*    ENV managment            */
-/* --------------------------- */
+/* ************************************************************************** */
+/*                          Environment Management                            */
+/* ************************************************************************** */
 
-void				free_split(char **split);
-char				**new_envp(char **envp);
-void				free_envp(char **envp_copy);
-int					env_identifier_valid(const char *name);
-int					env_find_index(char **envp, const char *name);
-char				*env_get_value(char **envp, const char *name);
-int					env_set_var(char ***penvp, const char *name,
-						const char *value);
-int					env_set_assignment(char ***penvp, const char *assignment);
-int					env_unset_var(char ***penvp, const char *name);
+void		free_split(char **split);
+char		**new_envp(char **envp);
+void		free_envp(char **envp_copy);
+int			env_identifier_valid(const char *name);
+int			env_find_index(char **envp, const char *name);
+char		*env_get_value(char **envp, const char *name);
+int			env_set_var(char ***penvp, const char *name, const char *value);
+int			env_set_assignment(char ***penvp, const char *assignment);
+int			env_unset_var(char ***penvp, const char *name);
+void		update_shlvl(char **envp);
 
-/* --------------------------- */
-/*       Redirections          */
-/* --------------------------- */
+/* ************************************************************************** */
+/*                           Redirections Handling                            */
+/* ************************************************************************** */
 
-void				handle_redirections_out(const char *filename, int *error);
-void				handle_redirections_in(const char *filename, int *error);
-void				handle_redirections_append(const char *filename, int *error,
-						t_exec_state *state);
-int					handle_redirections(t_redir *redir, char **envp,
-						t_exec_state *state);
-int					handle_redirections_and_quotes(t_redir *redirs, char **envp,
-						t_exec_state *state);
+void		handle_redirections_out(const char *filename, int *error);
+void		handle_redirections_in(const char *filename, int *error);
+void		handle_redirections_append(const char *filename, int *error,
+				t_exec_state *state);
+int			handle_redirections(t_redir *redir, char **envp,
+				t_exec_state *state);
+int			handle_redirections_and_quotes(t_redir *redirs, char **envp,
+				t_exec_state *state);
 
-/* --------------------------- */
-/*  Command execution          */
-/* --------------------------- */
+/* Append helpers */
+int			prepare_append_filename(const char *filename, char *expanded,
+				const char **target, t_exec_state *state);
+int			expand_home_marker(const char *filename, char *expanded,
+				const char **target);
+int			check_target_is_dir(const char *target, t_exec_state *state);
+int			attempt_append_target(const char *target, t_exec_state *state);
 
-int					execute_command(char *exec_path, t_cmd *cmd, char **envp);
-int					execute_execve(char *exec_path, char **argv, char **envp);
-char				*find_executable(char *cmd, char **envp);
-char				*execute_command_substitution(const char *cmd, char **envp);
+/* ************************************************************************** */
+/*                          Command Execution                                 */
+/* ************************************************************************** */
 
-/* --------------------------- */
-/*   Variables expansion       */
-/* --------------------------- */
+int			execute_command(char *exec_path, t_cmd *cmd, char **envp);
+int			execute_execve(char *exec_path, char **argv, char **envp);
+char		*find_executable(char *cmd, char **envp);
+char		*execute_command_substitution(const char *cmd, char **envp);
 
-char				*str_append(char *dest, const char *src);
-int					is_var_start(int c);
-int					is_var_char(int c);
-int					skip_variable_name(const char *s);
-char				*expand_exit_status(t_exec_state *state);
-char				*expand_env_var(const char *name, char **envp);
-char				*handle_dollar_quotes_fix(const char *input, int *i,
-						char **envp, t_exec_state *state);
-char				*expand_variables(const char *input, char **envp,
-						t_exec_state *state, t_quote_type quote);
+/* helpers */
+char		*search_in_path_dirs_helper(char *cmd, char **paths);
+void		handle_execve_error_helper(char *exec_path, char **argv);
+int			handle_empty_command(t_exec_state *state);
 
-/* --------------------------- */
-/*          Heredocs           */
-/* --------------------------- */
+/* ************************************************************************** */
+/*                        Variables Expansion                                 */
+/* ************************************************************************** */
 
-int					open_heredoc_file(t_heredoc_args *args);
-void				redirect_stdin_heredoc(const char *filepath);
-int					write_heredoc_lines(t_heredoc_args *args);
-int					handle_redirections_heredoc(const char *delimiter,
-						bool quoted, char **envp, t_heredoc_args *args);
-int					handle_redir_with_content(char **heredoc_content,
-						t_heredoc_args *args);
-char				*build_heredoc_delimiter(const char *text);
+char		*str_append(char *dest, const char *src);
+int			is_var_start(int c);
+int			is_var_char(int c);
+int			skip_variable_name(const char *s);
+char		*expand_exit_status(t_exec_state *state);
+char		*expand_env_var(const char *name, char **envp);
+char		*handle_dollar_quotes_fix(const char *input, int *i,
+				char **envp, t_exec_state *state);
+char		*expand_variables(const char *input, char **envp,
+				t_exec_state *state, t_quote_type quote);
 
-/* --------------------------- */
-/*      Utils / Errors         */
-/* --------------------------- */
+/* ************************************************************************** */
+/*                              Heredocs                                      */
+/* ************************************************************************** */
 
-void				print_error_file(const char *context);
-char				*interpret_ansi_c_escapes(const char *str);
-char				*expand_ansi_c_string(const char *input);
-int					is_dollar_string(const char *input, int pos);
-char				*handle_dollar_string(const char *input, int *i);
-// para ordenar
-void				signal_handler(int signo);
-void				update_shlvl(char **envp);
-void				process_input(char *input, char ***envp_copy,
-						t_exec_state *state);
-int					init_pipes_and_n(int n_cmds, int (**pipes)[2],
-						size_t *n_pipes);
-int					fork_and_run_pipeline(t_cmd *start, size_t n_cmds,
-						char **envp, t_exec_state *state);
-size_t				count_pipeline_cmds(t_cmd *start);
-void				close_all_pipes(int (*pipes)[2], size_t n_pipes);
-int					setup_pipes(t_fork_ctx *ctx, size_t n_cmds);
-int					fork_and_init_children(t_cmd *start, size_t n_cmds,
-						t_fork_ctx *ctx, pid_t *pids);
-int					wait_and_cleanup(pid_t *pids, size_t n_cmds);
-void				wire_child_pipes(size_t idx, size_t n_cmds,
-						int (*pipes)[2]);
-int					wait_pipeline(pid_t *pids, size_t n);
-int					create_pipes(int (**pipes)[2], size_t n_pipes);
+int			open_heredoc_file(t_heredoc_args *args);
+void		redirect_stdin_heredoc(const char *filepath);
+int			write_heredoc_lines(t_heredoc_args *args);
+int			handle_redirections_heredoc(const char *delimiter, bool quoted,
+				char **envp, t_heredoc_args *args);
+int			handle_redir_with_content(char **heredoc_content,
+				t_heredoc_args *args);
+char		*build_heredoc_delimiter(const char *text);
 
-/* fd guard helpers for parent-side redirs */
-int					create_pipes_impl(int (*pipes)[2], size_t n_pipes);
+/* helpers */
+int			prepare_heredoc_delim(t_redir *redir, char **envp,
+				t_exec_state *state);
+int			is_heredoc_delimiter(const char *cmp, const char *delim);
+int			write_line_to_heredoc_fd(int fd, const char *line,
+				const char *expanded);
+char		*process_heredoc_line(const char *line, t_heredoc_args *args);
+const char	*get_cmp_for_heredoc(char *line, char **expanded_line,
+				t_heredoc_args *args);
+int			handle_delimiter_and_cleanup(const char *cmp, const char *delim,
+				char *line, char *expanded_line);
 
-/* helpers for append redirections moved to a separate compilation unit */
+/* ************************************************************************** */
+/*                              Pipes / Forks                                 */
+/* ************************************************************************** */
 
-int					prepare_append_filename(const char *filename,
-						char *expanded, const char **target,
-						t_exec_state *state);
-int					expand_home_marker(const char *filename, char *expanded,
-						const char **target);
-int					check_target_is_dir(const char *target,
-						t_exec_state *state);
-int					attempt_append_target(const char *target,
-						t_exec_state *state);
+int			init_pipes_and_n(int n_cmds, int (**pipes)[2], size_t *n_pipes);
+int			fork_and_run_pipeline(t_cmd *start, size_t n_cmds,
+				char **envp, t_exec_state *state);
+size_t		count_pipeline_cmds(t_cmd *start);
 
-/* helpers extracted to reduce function length */
+void		close_all_pipes(int (*pipes)[2], size_t n_pipes);
+int			setup_pipes(t_fork_ctx *ctx, size_t n_cmds);
+int			fork_and_init_children(t_cmd *start, size_t n_cmds,
+				t_fork_ctx *ctx, pid_t *pids);
+int			wait_and_cleanup(pid_t *pids, size_t n_cmds);
+void		wire_child_pipes(size_t idx, size_t n_cmds, int (*pipes)[2]);
+int			wait_pipeline(pid_t *pids, size_t n);
 
-int					prepare_heredoc_delim(t_redir *redir, char **envp,
-						t_exec_state *state);
-char				*search_in_path_dirs_helper(char *cmd, char **paths);
-void				handle_execve_error_helper(char *exec_path, char **argv);
-int					handle_empty_command(t_exec_state *state);
+int			create_pipes(int (**pipes)[2], size_t n_pipes);
+int			create_pipes_impl(int (*pipes)[2], size_t n_pipes);
 
-/* small itoa helpers (moved to separate unit to satisfy style rules) */
-int					compute_int_len(int n);
-void				fill_number_buffer(unsigned int nb, char *buffer, int len);
-void				itoa_buffer_int(int n, char *buffer);
+/* ************************************************************************** */
+/*                         Misc Utils / Errors                                */
+/* ************************************************************************** */
 
-/* heredoc helpers */
+void		print_error_file(const char *context);
 
-int					is_heredoc_delimiter(const char *cmp, const char *delim);
-int					write_line_to_heredoc_fd(int fd, const char *line,
-						const char *expanded);
-char				*process_heredoc_line(const char *line,
-						t_heredoc_args *args);
-const char			*get_cmp_for_heredoc(char *line, char **expanded_line,
-						t_heredoc_args *args);
-int					handle_delimiter_and_cleanup(const char *cmp,
-						const char *delim, char *line, char *expanded_line);
+char		*interpret_ansi_c_escapes(const char *str);
+char		*expand_ansi_c_string(const char *input);
 
-int					fd_guard_begin(int saved[3]);
-void				fd_guard_end(int saved[3]);
+int			is_dollar_string(const char *input, int pos);
+char		*handle_dollar_string(const char *input, int *i);
+
+void		signal_handler(int signo);
+void		process_input(char *input, char ***envp_copy, t_exec_state *state);
+
+/* ************************************************************************** */
+/*                         Small itoa helpers                                 */
+/* ************************************************************************** */
+
+int			compute_int_len(int n);
+void		fill_number_buffer(unsigned int nb, char *buffer, int len);
+void		itoa_buffer_int(int n, char *buffer);
+
+/* ************************************************************************** */
+/*                        File descriptor guards                              */
+/* ************************************************************************** */
+
+int			fd_guard_begin(int saved[3]);
+void		fd_guard_end(int saved[3]);
 
 #endif
