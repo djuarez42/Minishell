@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/20 13:42:52 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/01 17:30:17 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ int	count_consecutive_backslashes(const char *text, int *i)
 	return (count);
 }
 
-t_fragment	*handle_backslashes_dispatch(int count, const char *text,
-					int *i, int start)
+t_fragment	*handle_backslashes_dispatch(int count, const char *text, int *i)
 {
 	int		half;
 	char	next;
@@ -45,17 +44,16 @@ t_fragment	*handle_backslashes_dispatch(int count, const char *text,
 		}
 		return (handle_backslashes_odd_dollar(half, text, i));
 	}
-	return (handle_backslashes_literal(start, count, text, i));
+	return (handle_backslashes_literal(count, text, i));
 }
+
 
 t_fragment	*handle_backslashes(const char *text, int *i)
 {
-	int	start;
 	int	count;
 
-	start = *i;
 	count = count_consecutive_backslashes(text, i);
-	return (handle_backslashes_dispatch(count, text, i, start));
+	return (handle_backslashes_dispatch(count, text, i));
 }
 
 t_fragment	*handle_spaces(const char *text, int *i)
