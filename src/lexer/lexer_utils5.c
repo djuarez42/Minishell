@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 00:22:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/01 17:29:16 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/01 17:57:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ t_fragment	*handle_backslashes_odd_dollar(int keep, const char *text, int *i)
 char	*reduce_backslashes_literal(int count, char next_char)
 {
 	char	*buf;
-	int		i; 
+	int		i;
 	int		keep;
 	int		bufsize;
 
