@@ -95,6 +95,7 @@ void			copy_fragments_to_buffer(t_fragment *frag, char *res);
 void			append_char_to_buf(char **buf, char c);
 void			handle_backslash_in_double(const char *text, int *i,
 					char **buf);
+char			*reduce_backslashes_literal(int count, char next_char);
 char			*collect_double_quote_text(const char *text, int *i);
 bool			compute_space_after(const char *text, int i);
 
@@ -132,11 +133,10 @@ t_fragment		*handle_backslashes_even_dollar(int keep,
 					const char *text, int *i);
 t_fragment		*handle_backslashes_odd_dollar(int keep,
 					const char *text, int *i);
-t_fragment		*handle_backslashes_literal(int start, int count,
-					const char *text, int *i);
+t_fragment	*handle_backslashes_literal(int count, const char *text, int *i);
+
 int				count_consecutive_backslashes(const char *text, int *i);
-t_fragment		*handle_backslashes_dispatch(int count,
-					const char *text, int *i, int start);
+t_fragment		*handle_backslashes_dispatch(int count, const char *text, int *i);
 t_fragment		*handle_spaces(const char *text, int *i);
 t_fragment		*handle_dollar_string_lexer(const char *text, int *i);
 t_fragment		*make_dollar_fragment(const char *text,

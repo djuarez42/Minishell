@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils7.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:14:41 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/27 21:27:16 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/01 17:31:09 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ char	*concat_fragments(t_fragment *frag)
 	copy_fragments_to_buffer(frag, res);
 	return (res);
 }
-
-// helper functions moved to lexer_utils6.c to satisfy Norminette function count
 
 t_token_type	determine_token_type(char *str, t_quote_type quote)
 {
@@ -55,4 +53,21 @@ static t_token_type	check_simple_tokens(char *str)
 	if (str[0] == '|' && str[1] == '\0')
 		return (TOKEN_PIPE);
 	return (TOKEN_WORD);
+}
+
+void	append_fragment(t_fragment **head, t_fragment *frag)
+{
+	t_fragment	*tmp;
+
+	tmp = *head;
+	if (!frag)
+		return ;
+	if (!*head)
+	{
+		*head = frag;
+		return ;
+	}
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = frag;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 17:08:04 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/01 17:17:17 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ t_token	*create_token(t_token_type type, bool space_before)
 	tok->next = NULL;
 	return (tok);
 }
-/* 
+
+/*
 void	print_fragments(t_fragment *fragments)
 {
 	int			i;
@@ -89,7 +90,7 @@ void	print_tokens_raw(t_token *tokens)
 		ft_putstr_fd(ft_itoa(tokens->type), 1);
 		ft_putendl_fd("", 1);
 		   if (tokens->has_space_before) {
-			   ft_putstr_fd("  has_space_before: true", 1);
+				ft_putstr_fd("  has_space_before: true", 1);
 			   ft_putendl_fd("", 1);
 		   } else {
 			   ft_putstr_fd("  has_space_before: false", 1);
@@ -108,7 +109,7 @@ void	print_tokens_raw(t_token *tokens)
 		i++;
 	}
 }
- */
+*/
 
 t_fragment	*new_fragment(const char *start, size_t len, t_quote_type qtype,
 				bool space_after)
