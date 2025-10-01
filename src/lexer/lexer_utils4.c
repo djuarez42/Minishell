@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:11:26 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/01 17:30:17 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/01 17:57:05 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ t_fragment	*handle_backslashes_dispatch(int count, const char *text, int *i)
 	}
 	return (handle_backslashes_literal(count, text, i));
 }
-
 
 t_fragment	*handle_backslashes(const char *text, int *i)
 {

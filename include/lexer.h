@@ -133,10 +133,11 @@ t_fragment		*handle_backslashes_even_dollar(int keep,
 					const char *text, int *i);
 t_fragment		*handle_backslashes_odd_dollar(int keep,
 					const char *text, int *i);
-t_fragment	*handle_backslashes_literal(int count, const char *text, int *i);
-
+t_fragment		*handle_backslashes_literal(int count, const char *text,
+					int *i);
 int				count_consecutive_backslashes(const char *text, int *i);
-t_fragment		*handle_backslashes_dispatch(int count, const char *text, int *i);
+t_fragment		*handle_backslashes_dispatch(int count, const char *text,
+					int *i);
 t_fragment		*handle_spaces(const char *text, int *i);
 t_fragment		*handle_dollar_string_lexer(const char *text, int *i);
 t_fragment		*make_dollar_fragment(const char *text,
