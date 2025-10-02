@@ -13,13 +13,21 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Configuration
-TESTER_DIR="42_minishell_tester"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TESTER_DIR="$SCRIPT_DIR/42_minishell_tester"
 RESULTS_DIR="$TESTER_DIR/test_results"
-LOG_DIR="error_logs"
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+LOG_DIR="$SCRIPT_DIR/error_logs"
+
 
 # Create log directory if it doesn't exist
 mkdir -p "$LOG_DIR"
+
+# sanity: tester must exist
+if [[ ! -x "$TESTER_DIR/tester.sh" ]]; then
+    echo "Error: tester not found or not executable at: $TESTER_DIR/tester.sh" >&2
+    echo "Make sure the tester is present and executable, or set TESTER_DIR correctly." >&2
+fi
 
 echo -e "${BLUE}🔍 Minishell Error Log Aggregator${NC}"
 echo -e "${BLUE}====================================${NC}"
@@ -42,12 +50,12 @@ run_comprehensive_test() {
     
     # Test all mandatory features
     echo "=== MANDATORY TESTS ===" >> "$COMPREHENSIVE_LOG"
-    ./$TESTER_DIR/tester.sh m 2>&1 | tee -a "$COMPREHENSIVE_LOG"
+    (cd "$TESTER_DIR" && ./tester.sh m) 2>&1 | tee -a "$COMPREHENSIVE_LOG"
     
     echo "" >> "$COMPREHENSIVE_LOG"
     echo "=== BONUS TESTS ===" >> "$COMPREHENSIVE_LOG"
-    ./$TESTER_DIR/tester.sh bonus 2>&1 | tee -a "$COMPREHENSIVE_LOG"
-    
+    (cd "$TESTER_DIR" && ./tester.sh bonus) 2>&1 | tee -a "$COMPREHENSIVE_LOG"
+
     echo -e "${GREEN}✅ Comprehensive test completed${NC}"
     echo -e "${BLUE}📄 Log saved to: $COMPREHENSIVE_LOG${NC}"
 }

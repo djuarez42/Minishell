@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils9.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 02:34:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/22 05:14:58 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/02 17:14:30 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,9 @@ int	is_dollar_string(const char *input, int pos)
 			|| input[pos + 1] == '\''));
 }
 
-static char	*handle_escaped_dollar(int *i, char *tmp)
-{
-	char	*piece;
-
-	piece = ft_strdup("\\$");
-	if (!piece)
-	{
-		free(tmp);
-		return (NULL);
-	}
-	tmp = str_append(tmp, piece);
-	free(piece);
-	*i += 2;
-	return (tmp);
-}
+/* handle_escaped_dollar removed: parity-aware handling implemented inline in
+	expand_variables (counts backslashes and decides whether to expand $ or
+	emit a literal '$'). */
 
 static char	*handle_dollar(const char *input, int *i,
 		char *tmp, t_dollar_ctx *ctx)
@@ -76,6 +64,7 @@ char	*expand_variables(const char *input, char **envp,
 	int				i;
 	char			*tmp;
 	t_dollar_ctx	ctx;
+	/* parity temporaries removed */
 
 	if (!input)
 		return (NULL);
@@ -88,8 +77,30 @@ char	*expand_variables(const char *input, char **envp,
 	ctx.quote = quote;
 	while (input[i])
 	{
-		if (input[i] == '\\' && input[i + 1] == '$')
-			tmp = handle_escaped_dollar(&i, tmp);
+		if (input[i] == '\\')
+		{
+			/* simple behavior: if next char exists, consume the backslash
+			   and append the next char literally (escape); otherwise emit
+			   the backslash */
+			if (input[i + 1])
+			{
+				char esc[2];
+
+				esc[0] = input[i + 1];
+				esc[1] = '\0';
+				tmp = str_append(tmp, esc);
+				i += 2;
+				if (!tmp)
+					return (NULL);
+				continue;
+			}
+			/* trailing backslash */
+			tmp = str_append(tmp, "\\");
+			i++;
+			if (!tmp)
+				return (NULL);
+			continue;
+		}
 		else if (input[i] == '$')
 			tmp = handle_dollar(input, &i, tmp, &ctx);
 		else

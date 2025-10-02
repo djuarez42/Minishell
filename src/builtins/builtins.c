@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 14:21:10 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/27 20:07:13 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/02 16:32:51 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,15 @@ int	run_bi_in_parent(t_cmd *cmd, char ***penvp)
 {
 	int	status;
 
-	status = dispatch_builtin(cmd, penvp);
 	if (!ft_strncmp(get_base_cmd(cmd->argv[0]), "exit", 5))
 	{
 		if (isatty(STDIN_FILENO))
 			ft_putendl_fd("exit", STDERR_FILENO);
-		exit(status);
+		status = dispatch_builtin(cmd, penvp);
+		if (status != 1)
+			exit(status);
+		return (status);
 	}
+	status = dispatch_builtin(cmd, penvp);
 	return (status);
 }

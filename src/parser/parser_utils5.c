@@ -6,19 +6,20 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:47:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/27 20:08:30 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/02 16:47:02 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_token	*parse_redirections_loop(t_token *cur, t_cmd *cmd)
+static t_token	*parse_redirections_loop(t_token *cur, t_cmd *cmd,
+			char **envp, t_exec_state *state)
 {
 	while (cur && (cur->type == TOKEN_REDIRECT_OUT
 			|| cur->type == TOKEN_REDIRECT_IN || cur->type == TOKEN_APPEND
 			|| cur->type == TOKEN_HEREDOC))
 	{
-		cur = parse_redirections(cur, cmd);
+		cur = parse_redirections(cur, cmd, envp, state);
 		if (!cur)
 		{
 			free_cmd_arrays(cmd);
@@ -48,7 +49,7 @@ t_token	*parse_cmd_block(t_token *cur, t_cmd *cmd, char **envp,
 		cur = parse_arguments_ctx(cur, &ctx);
 		if (!cur)
 			return (NULL);
-		cur = parse_redirections_loop(cur, cmd);
+		cur = parse_redirections_loop(cur, cmd, envp, state);
 		if (!cur)
 			return (NULL);
 		if (!cur || cur->type != TOKEN_WORD)

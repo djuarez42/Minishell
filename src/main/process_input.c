@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_input.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 17:42:00 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/28 17:54:22 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/02 16:47:02 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@ void	signal_handler(int signo)
 		(void)signo;
 }
 
-static void	debug_tokens(t_token *tokens)
+/* static void	debug_tokens(t_token *tokens)
 {
 	t_token		*tmp_tok;
 	const char	*tok_text;
+	t_cmd		*tmp_cmd;
 
 	tmp_tok = tokens;
 	while (tmp_tok)
@@ -42,11 +43,10 @@ static void	debug_tokens(t_token *tokens)
 			tmp_tok->type, tok_text, tmp_tok->has_space_before);
 		tmp_tok = tmp_tok->next;
 	}
-}
-
+} */
 static bool	has_valid_command(t_cmd *cmds)
 {
-	t_cmd	*tmp_cmd;
+	t_cmd *tmp_cmd;
 
 	tmp_cmd = cmds;
 	while (tmp_cmd)
@@ -75,8 +75,8 @@ void	process_input(char *input, char ***envp_copy, t_exec_state *state)
 	tokens = tokenize_input(input);
 	if (!tokens)
 		return ;
-	if (getenv("MINISHELL_DEBUG_TOKENS"))
-		debug_tokens(tokens);
+	/* 	if (getenv("MINISHELL_DEBUG_TOKENS"))
+	debug_tokens(tokens); */
 	cmds = parser_tokens(tokens, *envp_copy, state);
 	if (cmds)
 	{

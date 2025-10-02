@@ -96,11 +96,12 @@ t_token					*parse_cmd_block(t_token *cur, t_cmd *cmd, char **envp,
 							t_exec_state *state);
 t_token					*parse_arguments(t_token *cur, t_cmd *cmd, char **envp,
 							t_exec_state *state);
-t_token					*parse_arguments_ctx(t_token *cur, t_proc_ctx *ctx);
-t_token					*parse_redirections(t_token *cur, t_cmd *cmd);
-t_redir					*create_redir(t_token *cur);
-char					**collect_heredoc_content(const char *delimiter,
+t_token				*parse_arguments_ctx(t_token *cur, t_proc_ctx *ctx);
+t_redir				*create_redir(t_token *cur);
+char				**collect_heredoc_content(const char *delimiter,
 							bool quoted);
+t_token				*parse_redirections(t_token *cur, t_cmd *cmd,
+							char **envp, t_exec_state *state);
 
 /* ************************************************************************** */
 /*                       Nodes Ceation & Management                           */

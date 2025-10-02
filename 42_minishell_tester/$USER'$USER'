@@ -1,7 +1,0 @@
-minishell$ cat "$USER'$USER'"
-minishell$ /bin/rm -f "$USER'$USER'"
-minishell$ minishell$ cat "$USER'$USER'"
-minishell$ /bin/rm -f "$USER'$USER'"
-minishell$ minishell$ cat "$USER'$USER'"
-minishell$ /bin/rm -f "$USER'$USER'"
-minishell$ 

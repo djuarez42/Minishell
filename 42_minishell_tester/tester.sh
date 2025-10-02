@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# Change if you store the tester in another PATH
-export MINISHELL_PATH=../
+# Compute tester script directory so tester can be invoked from any CWD
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# MINISHELL_PATH should point to the project root (one level above tester)
+export MINISHELL_PATH="$SCRIPT_DIR/.."
 export EXECUTABLE=minishell
-RUNDIR=/home/djuarez/minishell/42_minishell_tester
+RUNDIR="$SCRIPT_DIR"
 
 NL=$'\n'
 TAB=$'\t'
