@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils9.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 21:13:01 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/25 17:49:17 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	free_lines(char **lines, int count)
-{
-	while (count > 0)
-		free(lines[--count]);
-	free(lines);
-}
 
 static char	**init_heredoc_lines(int *capacity)
 {
@@ -31,7 +24,7 @@ static char	**init_heredoc_lines(int *capacity)
 }
 
 static int	store_heredoc_line(char **lines, char *line, int *count,
-			int *capacity)
+		int *capacity)
 {
 	if (*count >= *capacity - 1)
 	{
@@ -47,8 +40,18 @@ static int	store_heredoc_line(char **lines, char *line, int *count,
 	return (1);
 }
 
-static char	**collect_heredoc_loop(const char *delimiter,
-			int interactive, char **lines, int *capacity)
+static void	print_heredoc_warning(const char *delimiter)
+{
+	ft_putstr_fd("warning: here-document at line 1 delimited by ",
+		STDERR_FILENO);
+	ft_putstr_fd("end-of-file (wanted `", STDERR_FILENO);
+	if (delimiter)
+		ft_putstr_fd((char *)delimiter, STDERR_FILENO);
+	ft_putendl_fd("')", STDERR_FILENO);
+}
+
+static char	**collect_heredoc_loop(const char *delimiter, int interactive,
+		char **lines, int *capacity)
 {
 	char	*line;
 	int		count;
@@ -59,8 +62,8 @@ static char	**collect_heredoc_loop(const char *delimiter,
 		line = read_heredoc_line(interactive);
 		if (!line)
 		{
-			free_lines(lines, count);
-			return (NULL);
+			print_heredoc_warning(delimiter);
+			break ;
 		}
 		if (is_delimiter(line, delimiter))
 		{

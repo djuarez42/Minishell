@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 02:34:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/02 17:14:30 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,6 @@ int	is_dollar_string(const char *input, int pos)
 	return (input[pos] == '$' && input[pos + 1] && (input[pos + 1] == '"'
 			|| input[pos + 1] == '\''));
 }
-
-/* handle_escaped_dollar removed: parity-aware handling implemented inline in
-	expand_variables (counts backslashes and decides whether to expand $ or
-	emit a literal '$'). */
 
 static char	*handle_dollar(const char *input, int *i,
 		char *tmp, t_dollar_ctx *ctx)
@@ -43,28 +39,35 @@ static char	*handle_dollar(const char *input, int *i,
 	return (tmp);
 }
 
-static char	*handle_literal(const char *input, int *i, char *tmp)
+static char	*append_char_or_escape(const char *input, int *i, char *tmp,
+		int is_backslash)
 {
-	char	*piece;
+	char	buf[2];
 
-	piece = (char *)malloc(2);
-	if (!piece)
-		return (NULL);
-	piece[0] = input[*i];
-	piece[1] = '\0';
-	tmp = str_append(tmp, piece);
-	free(piece);
+	if (is_backslash && input[*i + 1])
+	{
+		buf[0] = input[*i + 1];
+		buf[1] = '\0';
+		tmp = str_append(tmp, buf);
+		*i += 2;
+		return (tmp);
+	}
+	if (is_backslash)
+		buf[0] = '\\';
+	else
+		buf[0] = input[*i];
+	buf[1] = '\0';
+	tmp = str_append(tmp, buf);
 	(*i)++;
 	return (tmp);
 }
 
 char	*expand_variables(const char *input, char **envp,
-				t_exec_state *state, t_quote_type quote)
+	t_exec_state *state, t_quote_type quote)
 {
 	int				i;
 	char			*tmp;
 	t_dollar_ctx	ctx;
-	/* parity temporaries removed */
 
 	if (!input)
 		return (NULL);
@@ -78,33 +81,11 @@ char	*expand_variables(const char *input, char **envp,
 	while (input[i])
 	{
 		if (input[i] == '\\')
-		{
-			/* simple behavior: if next char exists, consume the backslash
-			   and append the next char literally (escape); otherwise emit
-			   the backslash */
-			if (input[i + 1])
-			{
-				char esc[2];
-
-				esc[0] = input[i + 1];
-				esc[1] = '\0';
-				tmp = str_append(tmp, esc);
-				i += 2;
-				if (!tmp)
-					return (NULL);
-				continue;
-			}
-			/* trailing backslash */
-			tmp = str_append(tmp, "\\");
-			i++;
-			if (!tmp)
-				return (NULL);
-			continue;
-		}
+			tmp = append_char_or_escape(input, &i, tmp, 1);
 		else if (input[i] == '$')
 			tmp = handle_dollar(input, &i, tmp, &ctx);
 		else
-			tmp = handle_literal(input, &i, tmp);
+			tmp = append_char_or_escape(input, &i, tmp, 0);
 		if (!tmp)
 			return (NULL);
 	}

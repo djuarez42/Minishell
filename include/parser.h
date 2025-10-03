@@ -30,6 +30,7 @@ typedef struct s_redir
 	char				*file;
 	int					type;
 	bool				quoted;
+	int					id;
 	char				**heredoc_content;
 	struct s_redir		*next;
 	t_fragment			*fragments;
@@ -96,11 +97,11 @@ t_token					*parse_cmd_block(t_token *cur, t_cmd *cmd, char **envp,
 							t_exec_state *state);
 t_token					*parse_arguments(t_token *cur, t_cmd *cmd, char **envp,
 							t_exec_state *state);
-t_token				*parse_arguments_ctx(t_token *cur, t_proc_ctx *ctx);
-t_redir				*create_redir(t_token *cur);
-char				**collect_heredoc_content(const char *delimiter,
+t_token					*parse_arguments_ctx(t_token *cur, t_proc_ctx *ctx);
+t_redir					*create_redir(t_token *cur);
+char					**collect_heredoc_content(const char *delimiter,
 							bool quoted);
-t_token				*parse_redirections(t_token *cur, t_cmd *cmd,
+t_token					*parse_redirections(t_token *cur, t_cmd *cmd,
 							char **envp, t_exec_state *state);
 
 /* ************************************************************************** */

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 21:06:03 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/27 19:20:46 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 13:32:07 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,12 @@ static t_redir	*init_redir(t_token *cur)
 
 t_redir	*create_redir(t_token *cur)
 {
-	t_redir	*redir;
+	t_redir		*redir;
+	static int	redir_counter = 0;
 
 	redir = init_redir(cur);
 	if (!redir)
 		return (NULL);
+	redir->id = ++redir_counter;
 	return (redir);
 }

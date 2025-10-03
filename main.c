@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/30 16:12:35 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,52 +30,46 @@ static void	run_interactive_shell(char ***envp_copy, t_exec_state *state)
 	}
 }
 
-/*int	main(int argc, char **argv, char **envp)
+static void	process_non_interactive_line(char *line, char ***envp_copy,
+		t_exec_state *state)
 {
-	char			**envp_copy;
-	t_exec_state	state;
+	char	*input;
+	char	**delimiters;
+	char	*heredoc_bodies;
 
-	(void)argc;
-	(void)argv;
-	envp_copy = new_envp(envp);
-	if (!envp_copy)
-		return (1);
-	update_shlvl(envp_copy);
-	state.last_status = 0;
-	run_interactive_shell(&envp_copy, &state);
-	free_envp(envp_copy);
-	return (state.last_status);
-}*/
+	input = ft_strdup(line);
+	if (!input)
+		return ;
+	delimiters = find_heredoc_delimiters(input);
+	if (delimiters)
+	{
+		heredoc_bodies = collect_heredoc_bodies_into_buffer(delimiters);
+		if (heredoc_bodies)
+		{
+			heredoc_buffer_init(heredoc_bodies);
+			free(heredoc_bodies);
+		}
+		free_split(delimiters);
+	}
+	process_input(input, envp_copy, state);
+	heredoc_buffer_free();
+	free(input);
+}
 
 static void	run_non_interactive_shell(char ***envp_copy,
-					t_exec_state *state)
+		t_exec_state *state)
 {
 	char	*line;
-	char	*input;
-	size_t	len;
-	ssize_t	read_len;
 
-	line = NULL;
-	len = 0;
-	read_len = getline(&line, &len, stdin);
-	while (read_len != -1)
+	line = get_next_line(STDIN_FILENO);
+	while (line)
 	{
-		if (read_len > 0 && line[read_len - 1] == '\n')
-			line[read_len - 1] = '\0';
-		input = ft_strdup(line);
-		if (!input)
-			break ;
-		process_input(input, envp_copy, state);
-		if (state->last_status == 2)
-		{
-			free(input);
-			break ;
-		}
-		free(input);
-		read_len = getline(&line, &len, stdin);
-	}
-	if (line)
+		process_non_interactive_line(line, envp_copy, state);
 		free(line);
+		if (state->last_status == 2)
+			break ;
+		line = get_next_line(STDIN_FILENO);
+	}
 }
 
 int	main(int argc, char **argv, char **envp)

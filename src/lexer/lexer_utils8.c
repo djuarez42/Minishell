@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 21:30:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/10/02 17:14:30 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,36 +58,37 @@ void	append_char_to_buf(char **buf, char c)
 	*buf = tmp;
 }
 
+static int	handle_backslash_in_dquote(const char *text, int *i, char **buf)
+{
+	if (text[*i + 1])
+	{
+		if (text[*i + 1] == '"' || text[*i + 1] == '\\'
+			|| text[*i + 1] == '`')
+		{
+			append_char_to_buf(buf, text[*i + 1]);
+			*i += 2;
+			return (1);
+		}
+		append_char_to_buf(buf, '\\');
+		(*i)++;
+		return (1);
+	}
+	append_char_to_buf(buf, '\\');
+	(*i)++;
+	return (1);
+}
+
 char	*collect_double_quote_text(const char *text, int *i)
 {
 	char	*buf;
-	/* local variables used previously for parity handling removed */
 
 	buf = NULL;
 	while (text[*i] && text[*i] != '"')
 	{
 		if (text[*i] == '\\')
 		{
-			/* simple escape handling: if next char exists, append it
-			   (backslash consumes next char inside double quotes for \", \\, ` and $ is handled later) */
-			if (text[*i + 1])
-			{
-				/* if next is a special escapable char, append that char */
-				if (text[*i + 1] == '"' || text[*i + 1] == '\\' || text[*i + 1] == '`')
-				{
-					append_char_to_buf(&buf, text[*i + 1]);
-					*i += 2;
-					continue;
-				}
-				/* otherwise keep the backslash as literal */
-				append_char_to_buf(&buf, '\\');
-				(*i)++;
-				continue;
-			}
-			/* trailing backslash at end */
-			append_char_to_buf(&buf, '\\');
-			(*i)++;
-			continue;
+			if (handle_backslash_in_dquote(text, i, &buf))
+				continue ;
 		}
 		append_char_to_buf(&buf, text[*i]);
 		(*i)++;

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
+#    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/09/28 20:48:39 by djuarez          ###   ########.fr        #
+#    Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,10 @@ INCLUDES += $(READLINE_INC)
 SRC = main.c \
 		src/main/error_format.c \
 		src/main/process_input.c \
+		src/main/heredoc_reader.c \
+		src/main/heredoc_helpers.c \
+		src/main/heredoc_collection.c \
+		src/utils/get_next_line.c \
 		src/lexer/tokenizer.c \
 		src/lexer/lexer_utils1.c \
 		src/lexer/lexer_utils2.c \
@@ -59,6 +63,7 @@ SRC = main.c \
 		src/parser/parser_utils11.c \
 		src/parser/parser_utils12.c \
 		src/parser/parser_utils13.c \
+		src/parser/heredoc_assignment.c \
 		src/executor/executor.c \
 		src/executor/executor_utils.c \
 		src/parser/parser_helpers.c \

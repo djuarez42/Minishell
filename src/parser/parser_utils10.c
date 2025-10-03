@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 21:36:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/26 14:17:01 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 13:26:51 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ char	*read_heredoc_line(int interactive)
 
 	line = NULL;
 	ret = 0;
+	if (heredoc_buffer_active())
+		return (heredoc_buffer_readline());
 	if (interactive)
 		return (readline("> "));
 	while (1)
