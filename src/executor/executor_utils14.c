@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/27 19:51:45 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:02 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	write_single_line(t_heredoc_args *args)
 	int			interactive;
 
 	interactive = isatty(STDIN_FILENO);
-	line = read_heredoc_line(interactive);
+	line = read_heredoc_line(interactive, args->state);
 	if (!line)
 		return (130);
 	cmp = get_cmp_for_heredoc(line, &expanded_line, args);

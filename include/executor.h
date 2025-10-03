@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:23:23 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/30 17:15:59 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:01 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTOR_H
 # define EXECUTOR_H
 
-# include "exec_state.h"
 # include "lexer.h"
 # include "parser.h"
 # include <stdbool.h>
@@ -24,6 +23,13 @@
 /* ************************************************************************** */
 /*                                Structures                                  */
 /* ************************************************************************** */
+
+typedef struct s_exec_state
+{
+	int		last_status;
+	char	*heredoc_buffer;
+	char	*heredoc_position;
+}	t_exec_state;
 
 typedef struct s_heredoc_args
 {

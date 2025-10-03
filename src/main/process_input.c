@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 17:42:00 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/03 13:26:51 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:04 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	process_input(char *input, char ***envp_copy, t_exec_state *state)
 	cmds = parser_tokens(tokens, *envp_copy, state);
 	if (cmds)
 	{
-		assign_heredocs_from_buffer(cmds);
+		assign_heredocs_from_buffer(cmds, state);
 		execute_or_redir(cmds, envp_copy, state);
 		free_cmds(cmds);
 	}

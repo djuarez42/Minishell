@@ -6,53 +6,52 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 12:30:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/10/03 13:26:51 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:05 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*g_heredoc_state[2];
-
-void	heredoc_buffer_init(const char *content)
+void	heredoc_buffer_init(t_exec_state *state, const char *content)
 {
-	if (g_heredoc_state[0])
-		free(g_heredoc_state[0]);
-	g_heredoc_state[0] = ft_strdup(content);
-	g_heredoc_state[1] = g_heredoc_state[0];
+	if (state->heredoc_buffer)
+		free(state->heredoc_buffer);
+	state->heredoc_buffer = ft_strdup(content);
+	state->heredoc_position = state->heredoc_buffer;
 }
 
-void	heredoc_buffer_free(void)
+void	heredoc_buffer_free(t_exec_state *state)
 {
-	if (g_heredoc_state[0])
+	if (state->heredoc_buffer)
 	{
-		free(g_heredoc_state[0]);
-		g_heredoc_state[0] = NULL;
+		free(state->heredoc_buffer);
+		state->heredoc_buffer = NULL;
 	}
-	g_heredoc_state[1] = NULL;
+	state->heredoc_position = NULL;
 }
 
-char	*heredoc_buffer_readline(void)
+char	*heredoc_buffer_readline(t_exec_state *state)
 {
 	char	*line;
 	char	*start;
 	char	*end;
 
-	if (!g_heredoc_state[0] || !g_heredoc_state[1] || !(*g_heredoc_state[1]))
+	if (!state->heredoc_buffer || !state->heredoc_position
+		|| !(*state->heredoc_position))
 		return (NULL);
-	start = g_heredoc_state[1];
+	start = state->heredoc_position;
 	end = start;
 	while (*end && *end != '\n')
 		end++;
 	line = ft_strndup(start, end - start);
 	if (*end == '\n')
-		g_heredoc_state[1] = end + 1;
+		state->heredoc_position = end + 1;
 	else
-		g_heredoc_state[1] = end;
+		state->heredoc_position = end;
 	return (line);
 }
 
-int	heredoc_buffer_active(void)
+int	heredoc_buffer_active(t_exec_state *state)
 {
-	return (g_heredoc_state[0] != NULL);
+	return (state->heredoc_buffer != NULL);
 }

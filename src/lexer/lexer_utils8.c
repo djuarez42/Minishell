@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 21:30:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:04 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,16 @@ static int	handle_backslash_in_dquote(const char *text, int *i, char **buf)
 			*i += 2;
 			return (1);
 		}
+		if (text[*i + 1] == '$')
+		{
+			append_char_to_buf(buf, 1);
+			append_char_to_buf(buf, '$');
+			*i += 2;
+			return (1);
+		}
 		append_char_to_buf(buf, '\\');
-		(*i)++;
+		append_char_to_buf(buf, text[*i + 1]);
+		*i += 2;
 		return (1);
 	}
 	append_char_to_buf(buf, '\\');

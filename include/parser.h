@@ -13,9 +13,11 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "exec_state.h"
 # include "lexer.h"
 # include <stdbool.h>
+
+/* Forward declaration */
+typedef struct s_exec_state	t_exec_state;
 
 # define MAX_ARGS 1024
 
@@ -23,7 +25,7 @@
 /*                                Strucures                                   */
 /* ************************************************************************** */
 
-typedef struct s_token	t_token;
+typedef struct s_token		t_token;
 
 typedef struct s_redir
 {
@@ -100,7 +102,7 @@ t_token					*parse_arguments(t_token *cur, t_cmd *cmd, char **envp,
 t_token					*parse_arguments_ctx(t_token *cur, t_proc_ctx *ctx);
 t_redir					*create_redir(t_token *cur);
 char					**collect_heredoc_content(const char *delimiter,
-							bool quoted);
+							bool quoted, t_exec_state *state);
 t_token					*parse_redirections(t_token *cur, t_cmd *cmd,
 							char **envp, t_exec_state *state);
 
@@ -157,7 +159,8 @@ int						validate_redirection(t_token *cur);
 /*                             Heredoc Utilities                              */
 /* ************************************************************************** */
 
-char					*read_heredoc_line(int interactive);
+char					*read_heredoc_line(int interactive,
+							t_exec_state *state);
 int						is_delimiter(const char *line, const char *delimiter);
 char					**expand_lines_array(char **lines, int *capacity,
 							int count);

@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 18:27:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:54 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@
 # include "libft.h"
 # include "signals.h"
 # include "builtins.h"
-# include "exec_state.h"
 
 //Global constants
 # define PROMPT "minishell$ "
@@ -44,10 +43,10 @@ void	print_execve_error(const char *filename);
 void	print_errno(const char *context);
 
 /* Heredoc buffer for non-interactive mode */
-void	heredoc_buffer_init(const char *content);
-void	heredoc_buffer_free(void);
-char	*heredoc_buffer_readline(void);
-int		heredoc_buffer_active(void);
+void	heredoc_buffer_init(t_exec_state *state, const char *content);
+void	heredoc_buffer_free(t_exec_state *state);
+char	*heredoc_buffer_readline(t_exec_state *state);
+int		heredoc_buffer_active(t_exec_state *state);
 
 /* Heredoc helpers */
 int		count_heredocs(const char *line);
@@ -56,7 +55,7 @@ char	**find_heredoc_delimiters(const char *cmd_line);
 char	*collect_heredoc_bodies_into_buffer(char **delimiters);
 
 /* Heredoc assignment from buffer to AST */
-void	assign_heredocs_from_buffer(t_cmd *cmd_list);
+void	assign_heredocs_from_buffer(t_cmd *cmd_list, t_exec_state *state);
 
 /* get_next_line */
 char	*get_next_line(int fd);

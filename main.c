@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:03 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ static void	process_non_interactive_line(char *line, char ***envp_copy,
 		heredoc_bodies = collect_heredoc_bodies_into_buffer(delimiters);
 		if (heredoc_bodies)
 		{
-			heredoc_buffer_init(heredoc_bodies);
+			heredoc_buffer_init(state, heredoc_bodies);
 			free(heredoc_bodies);
 		}
 		free_split(delimiters);
 	}
 	process_input(input, envp_copy, state);
-	heredoc_buffer_free();
+	heredoc_buffer_free(state);
 	free(input);
 }
 
@@ -84,6 +84,8 @@ int	main(int argc, char **argv, char **envp)
 	if (!envp_copy)
 		return (1);
 	state.last_status = 0;
+	state.heredoc_buffer = NULL;
+	state.heredoc_position = NULL;
 	is_interactive = isatty(STDIN_FILENO);
 	if (is_interactive)
 		run_interactive_shell(&envp_copy, &state);

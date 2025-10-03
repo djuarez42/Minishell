@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 21:36:06 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/03 13:26:51 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:03 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*str_append_char(char *s, char c)
 	return (append_char_existing(s, c));
 }
 
-char	*read_heredoc_line(int interactive)
+char	*read_heredoc_line(int interactive, t_exec_state *state)
 {
 	char	c;
 	char	*line;
@@ -85,8 +85,8 @@ char	*read_heredoc_line(int interactive)
 
 	line = NULL;
 	ret = 0;
-	if (heredoc_buffer_active())
-		return (heredoc_buffer_readline());
+	if (heredoc_buffer_active(state))
+		return (heredoc_buffer_readline(state));
 	if (interactive)
 		return (readline("> "));
 	while (1)

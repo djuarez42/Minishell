@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:00:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/10/03 13:25:16 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:05 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	store_heredoc_line(char **lines, int *count,
 	return (1);
 }
 
-static char	**split_heredoc_body(const char *delimiter)
+static char	**split_heredoc_body(const char *delimiter, t_exec_state *state)
 {
 	char	*line;
 	char	**lines;
@@ -58,7 +58,7 @@ static char	**split_heredoc_body(const char *delimiter)
 	count = 0;
 	while (1)
 	{
-		line = heredoc_buffer_readline();
+		line = heredoc_buffer_readline(state);
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			if (line)
@@ -72,27 +72,27 @@ static char	**split_heredoc_body(const char *delimiter)
 	return (lines);
 }
 
-static void	assign_heredoc_to_redir(t_redir *redir)
+static void	assign_heredoc_to_redir(t_redir *redir, t_exec_state *state)
 {
 	while (redir)
 	{
-		if (redir->type == TOKEN_HEREDOC && heredoc_buffer_active())
-			redir->heredoc_content = split_heredoc_body(redir->file);
+		if (redir->type == TOKEN_HEREDOC && heredoc_buffer_active(state))
+			redir->heredoc_content = split_heredoc_body(redir->file, state);
 		redir = redir->next;
 	}
 }
 
-void	assign_heredocs_from_buffer(t_cmd *cmd_list)
+void	assign_heredocs_from_buffer(t_cmd *cmd_list, t_exec_state *state)
 {
 	t_cmd	*cmd;
 
-	if (!heredoc_buffer_active())
+	if (!heredoc_buffer_active(state))
 		return ;
 	cmd = cmd_list;
 	while (cmd)
 	{
 		if (cmd->redirs)
-			assign_heredoc_to_redir(cmd->redirs);
+			assign_heredoc_to_redir(cmd->redirs, state);
 		cmd = cmd->next;
 	}
 }

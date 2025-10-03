@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 02:34:34 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 16:59:04 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,25 @@ static char	*append_char_or_escape(const char *input, int *i, char *tmp,
 	return (tmp);
 }
 
+static char	*process_expansion_char(const char *input, int *i,
+		char *tmp, t_dollar_ctx *ctx)
+{
+	if (input[*i] == 1 && input[*i + 1] == '$')
+	{
+		tmp = str_append(tmp, "$");
+		*i += 2;
+	}
+	else if (input[*i] == '\\' && ctx->quote != QUOTE_DOUBLE)
+		tmp = append_char_or_escape(input, i, tmp, 1);
+	else if (input[*i] == '$')
+		tmp = handle_dollar(input, i, tmp, ctx);
+	else if (input[*i] >= 32 || input[*i] == '\t' || input[*i] == '\n')
+		tmp = append_char_or_escape(input, i, tmp, 0);
+	else
+		(*i)++;
+	return (tmp);
+}
+
 char	*expand_variables(const char *input, char **envp,
 	t_exec_state *state, t_quote_type quote)
 {
@@ -80,12 +99,7 @@ char	*expand_variables(const char *input, char **envp,
 	ctx.quote = quote;
 	while (input[i])
 	{
-		if (input[i] == '\\')
-			tmp = append_char_or_escape(input, &i, tmp, 1);
-		else if (input[i] == '$')
-			tmp = handle_dollar(input, &i, tmp, &ctx);
-		else
-			tmp = append_char_or_escape(input, &i, tmp, 0);
+		tmp = process_expansion_char(input, &i, tmp, &ctx);
 		if (!tmp)
 			return (NULL);
 	}
