@@ -94,19 +94,18 @@ char	**find_heredoc_delimiters(const char *cmd_line)
 	delims = init_delims_array(count_heredocs(cmd_line));
 	if (!delims)
 		return (NULL);
-	i = 0;
+	i = -1;
 	idx = 0;
 	in_quote = 0;
-	while (cmd_line[i])
+	while (cmd_line[++i])
 	{
-		update_quote_state(cmd_line[i], &in_quote);
-		if (!in_quote && cmd_line[i] == '<' && cmd_line[i + 1] == '<'
+		if ((!in_quote && (cmd_line[i] == '\'' || cmd_line[i] == '"')))
+			in_quote = cmd_line[i];
+		else if (in_quote && cmd_line[i] == in_quote)
+			in_quote = 0;
+		else if (!in_quote && cmd_line[i] == '<' && cmd_line[i + 1] == '<'
 			&& cmd_line[i + 2] != '<')
-		{
 			process_heredoc_in_line(cmd_line, &i, delims, &idx);
-			continue ;
-		}
-		i++;
 	}
 	delims[idx] = NULL;
 	return (delims);

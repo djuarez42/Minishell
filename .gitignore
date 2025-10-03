@@ -21,7 +21,8 @@ minishell_test_results.log
 minishell_tester_v2.sh
 # 42 tester and related artifacts
 42_minishell_tester/
-Criterion/
+Criterion/./
+42_minishell_tester/*/*
 
 # Tester / helper scripts
 **/*tester*.sh
