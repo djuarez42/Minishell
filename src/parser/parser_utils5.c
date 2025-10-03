@@ -6,7 +6,7 @@
 /*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 20:47:45 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/02 16:47:02 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 17:26:46 by ekakhmad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,14 +94,21 @@ void	copy_fragment_to_buffer(t_fragment *frag, t_word_builder *wb)
 
 int	validate_redirection(t_token *cur)
 {
+	const char	*token_name;
+
 	if (!cur->next || cur->next->type != TOKEN_WORD)
 	{
 		if (cur->next && cur->next->fragments
 			&& cur->next->fragments->expanded_text
 			&& cur->next->fragments->expanded_text[0] != '\0')
 			return (1);
-		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
-			2);
+		if (cur->next && is_redirection_token(cur->next->type))
+			token_name = "newline";
+		else
+			token_name = get_token_name(cur->next);
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+		ft_putstr_fd((char *)token_name, 2);
+		ft_putendl_fd("'", 2);
 		return (0);
 	}
 	return (1);
