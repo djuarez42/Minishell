@@ -66,7 +66,7 @@ t_fragment	*handle_backslashes_odd_dollar(int keep, const char *text, int *i)
 	t_fragment	*f;
 
 	j = 0;
-	buflen = keep + 1;
+	buflen = keep + 2;
 	buf = malloc((size_t)buflen + 1);
 	if (!buf)
 		return (NULL);
@@ -75,7 +75,8 @@ t_fragment	*handle_backslashes_odd_dollar(int keep, const char *text, int *i)
 		buf[j] = '\\';
 		j++;
 	}
-	buf[keep] = '$';
+	buf[keep] = 1;
+	buf[keep + 1] = '$';
 	buf[buflen] = '\0';
 	(*i)++;
 	space_after = text[*i] && ft_isspace((unsigned char)text[*i]);

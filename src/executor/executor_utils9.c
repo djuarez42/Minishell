@@ -70,7 +70,7 @@ static char	*process_expansion_char(const char *input, int *i,
 		tmp = str_append(tmp, "$");
 		*i += 2;
 	}
-	else if (input[*i] == '\\' && ctx->quote != QUOTE_DOUBLE)
+	else if (input[*i] == '\\' && ctx->quote == QUOTE_DOUBLE)
 		tmp = append_char_or_escape(input, i, tmp, 1);
 	else if (input[*i] == '$')
 		tmp = handle_dollar(input, i, tmp, ctx);
