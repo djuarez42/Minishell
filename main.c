@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:30:46 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/03 16:59:03 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/03 18:17:44 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	main(int argc, char **argv, char **envp)
 	envp_copy = new_envp(envp);
 	if (!envp_copy)
 		return (1);
+	update_shlvl(envp_copy);
 	state.last_status = 0;
 	state.heredoc_buffer = NULL;
 	state.heredoc_position = NULL;
