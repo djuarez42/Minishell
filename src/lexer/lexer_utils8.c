@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils8.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 21:30:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/10/03 16:59:04 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/05 16:34:28 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,14 +102,4 @@ char	*collect_double_quote_text(const char *text, int *i)
 		(*i)++;
 	}
 	return (buf);
-}
-
-bool	compute_space_after(const char *text, int i)
-{
-	if (text[i + 1])
-	{
-		if (ft_isspace((unsigned char)text[i + 1]))
-			return (true);
-	}
-	return (false);
 }

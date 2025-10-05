@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/28 16:09:51 by djuarez           #+#    #+#              #
-#    Updated: 2025/10/03 13:57:43 by ekakhmad         ###   ########.fr        #
+#    Updated: 2025/10/05 15:59:14 by djuarez          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g  #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address
 
 INCLUDES = -Iinclude -Ilibft
 

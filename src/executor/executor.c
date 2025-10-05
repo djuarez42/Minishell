@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 17:42:15 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/29 17:56:16 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/05 16:06:27 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,9 @@ t_cmd	*hndle_emptargs(t_cmd *cur, char ***penvp, t_exec_state *state);
 
 static t_cmd	*handle_cmd(t_cmd *cur, char ***penvp, t_exec_state *state)
 {
-	char	**envp;
 	size_t	n;
 	int		status;
 
-	envp = *penvp;
 	n = count_pipeline_cmds(cur);
 	if (n == 1 && is_builtin(cur->argv[0]) && cur->pipe == 0)
 		status = run_parent_bi(cur, penvp, state);

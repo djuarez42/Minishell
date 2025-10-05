@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:09:48 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/01 17:17:17 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/05 16:28:41 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,30 @@ t_token	*create_token(t_token_type type, bool space_before)
 	tok->final_text = NULL;
 	tok->next = NULL;
 	return (tok);
+}
+
+t_fragment	*new_fragment(const char *start, size_t len, t_quote_type qtype,
+				bool space_after)
+{
+	t_fragment	*frag;
+
+	frag = malloc(sizeof(t_fragment));
+	if (!frag)
+		return (NULL);
+	frag->text = malloc(len + 1);
+	if (!frag->text)
+	{
+		free(frag);
+		return (NULL);
+	}
+	ft_memcpy(frag->text, start, len);
+	frag->text[len] = '\0';
+	frag->expanded_text = NULL;
+	frag->quote_type = qtype;
+	frag->has_space_after = space_after;
+	frag->is_variable = false;
+	frag->next = NULL;
+	return (frag);
 }
 
 /*
@@ -110,27 +134,3 @@ void	print_tokens_raw(t_token *tokens)
 	}
 }
 */
-
-t_fragment	*new_fragment(const char *start, size_t len, t_quote_type qtype,
-				bool space_after)
-{
-	t_fragment	*frag;
-
-	frag = malloc(sizeof(t_fragment));
-	if (!frag)
-		return (NULL);
-	frag->text = malloc(len + 1);
-	if (!frag->text)
-	{
-		free(frag);
-		return (NULL);
-	}
-	ft_memcpy(frag->text, start, len);
-	frag->text[len] = '\0';
-	frag->expanded_text = NULL;
-	frag->quote_type = qtype;
-	frag->has_space_after = space_after;
-	frag->is_variable = false;
-	frag->next = NULL;
-	return (frag);
-}

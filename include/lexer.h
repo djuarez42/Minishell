@@ -97,7 +97,6 @@ void			handle_backslash_in_double(const char *text, int *i,
 					char **buf);
 char			*reduce_backslashes_literal(int count, char next_char);
 char			*collect_double_quote_text(const char *text, int *i);
-bool			compute_space_after(const char *text, int i);
 
 /* ************************************************************************** */
 /*                           Tokenization core                                */
