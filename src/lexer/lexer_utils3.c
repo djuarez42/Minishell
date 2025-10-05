@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 18:27:29 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/16 18:09:17 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/05 19:05:50 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_fragment	*handle_single_quotes(const char *text, int *i)
 	while (text[*i] && text[*i] != '\'')
 		(*i)++;
 	len = *i - start;
-	space_after = text[*i + 1] && ft_isspace((unsigned char)text[*i + 1]);
+	space_after = calc_space_after(text, *i);
 	frag = new_fragment(&text[start], (size_t)len, QUOTE_SINGLE, space_after);
 	if (text[*i] == '\'')
 		(*i)++;
