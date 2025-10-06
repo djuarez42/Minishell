@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils14.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:26:28 by djuarez           #+#    #+#             */
-/*   Updated: 2025/10/03 16:59:02 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/06 14:29:15 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,10 @@ void	print_error_file(const char *context)
 
 	write(2, "minishell: line 1: ", 20);
 	if (context)
-		write(2, context, strlen(context));
+		write(2, context, ft_strlen(context));
 	write(2, ": ", 2);
 	err_msg = strerror(errno);
 	if (err_msg)
-		write(2, err_msg, strlen(err_msg));
+		write(2, err_msg, ft_strlen(err_msg));
 	write(2, "\n", 1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils_names.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 22:20:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/23 22:07:29 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/06 13:40:12 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	export_utils_cmp_env(const void *a, const void *b)
 	}
 	a_name = export_utils_dup_name(sa);
 	b_name = export_utils_dup_name(sb);
-	res = strcmp(a_name, b_name);
+	res = ft_strcmp(a_name, b_name);
 	free(a_name);
 	free(b_name);
 	return (res);

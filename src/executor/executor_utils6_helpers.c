@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils6_helpers.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 21:06:04 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/27 21:23:08 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/06 14:12:11 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,5 @@ void	handle_execve_error_helper(char *exec_path, char **argv)
 		print_execve_error(exec_path);
 		code = 1;
 	}
-	_exit(code);
+	exit(code);
 }

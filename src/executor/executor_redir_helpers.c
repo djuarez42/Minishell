@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   executor_redir_helpers.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 19:40:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/27 20:09:57 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/06 13:30:29 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	expand_home_marker(const char *filename, char *expanded,
-		const char **target)
+			const char **target)
 {
 	char	*home;
 
@@ -23,7 +23,7 @@ int	expand_home_marker(const char *filename, char *expanded,
 		home = getenv("HOME");
 		if (home)
 		{
-			snprintf(expanded, sizeof(expanded), "%s", home);
+			ft_strlcpy(expanded, home, ft_strlen(home) + 1);
 			*target = expanded;
 		}
 	}

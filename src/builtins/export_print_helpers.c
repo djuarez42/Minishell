@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_print_helpers.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekakhmad <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 22:05:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/23 22:18:52 by ekakhmad         ###   ########.fr       */
+/*   Updated: 2025/10/06 13:39:03 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	export_cmp_env(const void *a, const void *b)
 	}
 	a_name = export_dup_name(sa);
 	b_name = export_dup_name(sb);
-	res = strcmp(a_name, b_name);
+	res = ft_strcmp(a_name, b_name);
 	free(a_name);
 	free(b_name);
 	return (res);

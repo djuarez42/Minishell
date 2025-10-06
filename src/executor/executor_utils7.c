@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 21:38:58 by djuarez           #+#    #+#             */
-/*   Updated: 2025/09/21 22:08:17 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/06 14:11:54 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	exec_subst_child(const char *cmd, char **envp, int fd[2])
 	argv[2] = (char *)cmd;
 	argv[3] = NULL;
 	execve("/bin/sh", argv, envp);
-	_exit(127);
+	exit(127);
 }
 
 static char	*append_buffer(char *result, size_t size,
