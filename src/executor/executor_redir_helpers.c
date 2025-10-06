@@ -6,7 +6,7 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 19:40:00 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/10/06 13:30:29 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/06 15:48:32 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	expand_home_marker(const char *filename, char *expanded,
 	char	*home;
 
 	*target = filename;
-	if (filename[0] == '$' && strcmp(filename, "$HOME") == 0)
+	if (filename[0] == '$' && ft_strcmp(filename, "$HOME") == 0)
 	{
 		home = getenv("HOME");
 		if (home)
