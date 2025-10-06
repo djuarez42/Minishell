@@ -6,17 +6,26 @@
 /*   By: djuarez <djuarez@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:15 by ekakhmad          #+#    #+#             */
-/*   Updated: 2025/09/28 18:17:00 by djuarez          ###   ########.fr       */
+/*   Updated: 2025/10/06 15:13:25 by djuarez          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	get_fake_pid(void)
+{
+	static int	fake_pid;
+
+	fake_pid = 1000;
+	fake_pid++;
+	return (fake_pid);
+}
+
 static char	*try_open_heredoc(int *out_fd, int *counter, char *count_str)
 {
 	char	*path;
 
-	itoa_buffer_int(getpid(), count_str);
+	itoa_buffer_int(get_fake_pid(), count_str);
 	path = ft_strjoin("/tmp/.heredoc_", count_str);
 	itoa_buffer_int((*counter)++, count_str);
 	path = ft_strjoin_free(path, "_");
@@ -34,7 +43,7 @@ static char	*try_open_heredoc_fallback(int *out_fd, int *counter,
 	char	*path;
 	char	*tmp;
 
-	itoa_buffer_int(getpid(), count_str);
+	itoa_buffer_int(get_fake_pid(), count_str);
 	path = ft_strjoin(".heredoc_", count_str);
 	itoa_buffer_int((*counter)++, count_str);
 	tmp = ft_strjoin_free(path, "_");
